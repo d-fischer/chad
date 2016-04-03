@@ -1,11 +1,16 @@
 {
   "name": "chad",
   "productName": "Chad",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A chat client for Twitch",
-  "main": "main.js",
+  "main": "app/main.js",
   "scripts": {
-    "start": "electron main.js"
+    "postinstall": "install-app-deps",
+    "pack": "build",
+    "dist": "npm run dist:osx && npm run dist:win32 && npm run dist:win64",
+    "dist:osx": "build --platform darwin",
+    "dist:win32": "build --platform win32 --arch ia32",
+    "dist:win64": "build --platform win32 --arch x64"
   },
   "keywords": [
     "chad",
@@ -14,12 +19,14 @@
     "irc"
   ],
   "author": "D_4_ni",
-  "license": "MIT",
-  "devDependencies": {
-    "electron-prebuilt": "^0.36.0"
+  "license": "GPL-3.0",
+  "build": {
+    "app-bundle-id": "com.d-4-ni.chad",
+    "app-category-type": "public.app-category.entertainment",
+    "iconUrl": "https://raw.githubusercontent.com/d-4-ni/chad/master/chad.ico"
   },
-  "dependencies": {
-    "electron-settings": "^1.0.2",
-    "tmi.js": "0.0.28"
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.0",
+    "electron-builder": "^3.2.0"
   }
 }
