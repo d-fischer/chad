@@ -89,11 +89,13 @@ button {
 
 .loading-spinner {
     animation: spin 1s linear infinite;
-    transform-origin: 0 100%;
+    /*noinspection CssRedundantUnit*/
+    transform-origin: 0% 100%;
 }
 
 .loading-spinner.second {
-    transform-origin: 100% 0;
+    /*noinspection CssRedundantUnit*/
+    transform-origin: 100% 0%;
 }
 
 #channel-add {
