@@ -1,0 +1,25 @@
+{
+  "name": "chad",
+  "productName": "Chad",
+  "version": "0.1",
+  "description": "A chat client for Twitch",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js"
+  },
+  "keywords": [
+    "chad",
+    "chat",
+    "twitch",
+    "irc"
+  ],
+  "author": "D_4_ni",
+  "license": "MIT",
+  "devDependencies": {
+    "electron-prebuilt": "^0.36.0"
+  },
+  "dependencies": {
+    "electron-settings": "^1.0.2",
+    "tmi.js": "0.0.28"
+  }
+}

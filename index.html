@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chad</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<template id="channel-window-template">
+    <div class="channel-window tab">
+        <div class="top-bar"></div>
+        <ul class="messages"></ul>
+        <form class="message-form">
+            <input class="message-box"/>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+    <li></li>
+</template>
+<template id="channel-list-item-template">
+    <li class="channel-list-item">
+        <div class="user-picture"></div>
+        <div class="user-name"></div>
+        <div class="user-game"></div>
+        <div class="user-status"></div>
+    </li>
+</template>
+
+<div id="loading-overlay" class="overlay">
+    <div class="indicator" id="loading-error-indicator"></div>
+    <svg class="indicator" id="loading-indicator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" stroke="#d3d3d3">
+        <path d="M32,32 m-30,0 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0z" fill="none" stroke-width="2" opacity=".25"></path>
+        <path class="loading-spinner" d="M32,32 m0,-30 a30,30 0 0,1 30,30" fill="none" stroke-width="2"></path>
+        <path class="loading-spinner second" d="M32,32 m0,30 a30,30 0 0,1 -30,-30" fill="none" stroke-width="2"></path>
+    </svg>
+    <div id="loading-status">Loading</div>
+</div>
+
+<div id="dialogs">
+    <div class="dialog tab-container" id="settings-dialog">
+        <div class="dialog-menu tab-list">
+            <ul>
+                <li class="menu-item tab-link" data-tab="connection">Connection</li>
+                <li class="menu-item tab-link" data-tab="other">Other</li>
+            </ul>
+        </div>
+        <div class="dialog-body tabs">
+            <div class="dialog-section tab" data-name="connection">
+                <label>
+                    Username
+                    <input type="text" data-setting="connection.username"/>
+                </label>
+                <label>
+                    OAuth token <a href="https://twitchapps.com/tmi/" class="external-link" tabindex="-1">(get)</a>
+                    <input type="password" data-setting="connection.token"/>
+                </label>
+                <div id="connection-warning"></div>
+                <button id="reconnect-button">Reconnect</button>
+            </div>
+            <div class="dialog-section tab" data-name="other"></div>
+        </div>
+    </div>
+    <div class="dialog" id="channel-add-dialog">
+        <div class="dialog-body">
+            <label>
+                Search channel:
+                <input id="channel-add-search"/>
+            </label>
+            <ul id="channel-add-list"></ul>
+        </div>
+    </div>
+</div>
+<div id="active-dialog" class="overlay hidden"></div>
+<div id="titlebar">
+    <div class="system-buttons" id="system-buttons-windows">
+        <button class="system-button min"></button>
+        <button class="system-button max"></button>
+        <button class="system-button close"></button>
+    </div>
+    <div class="system-buttons" id="system-buttons-mac">
+        <button class="system-button close"></button>
+        <button class="system-button min"></button>
+        <button class="system-button max"></button>
+    </div>
+</div>
+<div id="main-window" class="tab-container">
+    <div id="sidebar">
+        <div class="top-bar"></div>
+        <ul id="channel-list" class="tab-list">
+            <li id="channel-add" class="menu-item">
+                <button>Add channel</button>
+            </li>
+        </ul>
+    </div>
+    <div id="main">
+        <div id="channel-windows" class="tabs">
+            <div class="channel-window tab dummy active">
+                <div class="top-bar"></div>
+                <div class="messages">
+                    <div class="arrow-text">
+                        Choose or add a channel
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="index.js"></script>
+</html>
