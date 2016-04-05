@@ -445,7 +445,7 @@ button {
     text-overflow: ellipsis;
 }
 
-.channel-list-item .user-game:before {
+.channel-list-item .user-game:not(:empty):before {
     content: 'playing ';
     color: #6e6e6e;
 }

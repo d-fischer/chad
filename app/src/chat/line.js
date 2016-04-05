@@ -62,6 +62,12 @@ class ChatLine {
             badgesPart.appendChild(modBadge);
         }
 
+        if (this._user.isSub) {
+            let subBadge = document.createElement('i');
+            subBadge.classList.add('badge', 'sub');
+            badgesPart.appendChild(subBadge);
+        }
+
         elem.appendChild(badgesPart);
 
         let userPart = document.createElement('span');

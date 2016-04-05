@@ -1,6 +1,7 @@
 'use strict';
 
 const DomEvents = require('../dom/events');
+const JSONPRequest = require('../request/jsonp');
 
 let channels = {};
 
@@ -20,7 +21,42 @@ class ChatChannel {
         this._isScrolledToBottom = true;
         this._listElement = undefined;
         this._element = undefined;
+        this._channelData = undefined;
+        this._badgeData = undefined;
+        this._badgeStyle = document.createElement('style');
+        this.initData();
         noGui || this.showGui();
+    }
+    
+    initData() {
+        this.updateData();
+        this.updateBadges();
+    }
+
+    updateData() {
+        (new JSONPRequest(`https://api.twitch.tv/kraken/channels/${this._name}`, (data, success) => {
+            if (success) {
+                console.log(this._name, 'channelData', data);
+                this._channelData = data;
+                this._displayName = this._listElement.textContent = data.display_name;
+            }
+        })).call();
+    }
+
+    updateBadges() {
+        (new JSONPRequest(`https://api.twitch.tv/kraken/chat/${this._name}/badges`, (data, success) => {
+            if (success) {
+                console.log(this._name, 'badgeData', data);
+                this._badgeData = data;
+                if (data.subscriber) {
+                    this._badgeStyle.textContent = `
+                        .channel-window[data-name=${this._name}] .badges .sub {
+                            background-image: url(${data.subscriber.image});
+                        }
+                    `;
+                }
+            }
+        })).call();
     }
     
     get name() {
@@ -40,6 +76,7 @@ class ChatChannel {
             let channelWindows = document.getElementById('channel-windows');
             let channelWindowFrag = document.querySelector('#channel-window-template').content.cloneNode(true);
             this._element = channelWindowFrag.querySelector('.channel-window');
+            this._element.insertBefore(this._badgeStyle, this._element.firstChild);
             this._element.dataset.name = this._name;
             this._element.addEventListener('tab:activate', () => {
                 this.autoScroll();

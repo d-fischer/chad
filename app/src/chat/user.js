@@ -64,6 +64,10 @@ class ChatUser {
     get isTurbo() {
         return this._data.turbo;
     }
+
+    get isSub() {
+        return this._data.subscriber;
+    }
 }
 
 module.exports = ChatUser;
