@@ -548,6 +548,6 @@ button {
     clear: both;
 }
 
-.darwin #system-buttons-mac, .windows #system-buttons-windows {
+.darwin #system-buttons-mac, .win32 #system-buttons-windows {
     display: block;
 }
