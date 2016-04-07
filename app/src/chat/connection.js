@@ -62,7 +62,20 @@ class ChatConnection {
                     let line = new ChatLine(channel, userData, message, self);
                     let lineContainer = document.createElement('li');
 
-                    line.parseInto(lineContainer);
+                    line.parseInto(lineContainer, false);
+
+                    linesList.appendChild(lineContainer);
+
+                    this._channels[channelName].autoScroll();
+                });
+
+                _client.on('action', (channel, userData, message, self) => {
+                    let channelName = channel.substring(1);
+                    let linesList = document.querySelector('.channel-window[data-name="' + channelName + '"] .messages');
+                    let line = new ChatLine(channel, userData, message, self);
+                    let lineContainer = document.createElement('li');
+
+                    line.parseInto(lineContainer, true);
 
                     linesList.appendChild(lineContainer);
 

@@ -65,10 +65,7 @@ DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.messa
     let box = this.querySelector('.message-box');
     let message = box.value;
     box.value = '';
-    irc.say(channelWindow.dataset.name, message).then(function (data) {
-    }).catch(function (err) {
-        console.error(err);
-    });
+    irc.say(channelWindow.dataset.name, message);
 });
 
 document.body.classList.add(process.platform);

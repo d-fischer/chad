@@ -21,7 +21,7 @@ class ChatLine {
         return this._message;
     }
 
-    parseInto(elem) {
+    parseInto(elem, isAction) {
         let timePart = document.createElement('time');
         timePart.setAttribute('datetime', this._time.toISOString());
         timePart.appendChild(document.createTextNode(this._time.toLocaleTimeString()));
@@ -73,13 +73,16 @@ class ChatLine {
         let userPart = document.createElement('span');
         userPart.classList.add('username');
         userPart.style.color = this._user.color;
-        userPart.appendChild(document.createTextNode(this._user.displayName));
+        userPart.textContent = this._user.displayName;
         elem.appendChild(userPart);
 
-        elem.appendChild(document.createTextNode(': '));
+        elem.appendChild(document.createTextNode(isAction ? ' ' : ': '));
 
         let textPart = document.createElement('span');
         textPart.classList.add('message');
+        if (isAction) {
+            textPart.style.color = this._user.color;
+        }
         this._message.parseInto(textPart);
         elem.appendChild(textPart);
     }

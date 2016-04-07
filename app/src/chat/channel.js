@@ -36,7 +36,6 @@ class ChatChannel {
     updateData() {
         (new JSONPRequest(`https://api.twitch.tv/kraken/channels/${this._name}`, (data, success) => {
             if (success) {
-                console.log(this._name, 'channelData', data);
                 this._channelData = data;
                 this._displayName = this._listElement.textContent = data.display_name;
             }
@@ -46,7 +45,6 @@ class ChatChannel {
     updateBadges() {
         (new JSONPRequest(`https://api.twitch.tv/kraken/chat/${this._name}/badges`, (data, success) => {
             if (success) {
-                console.log(this._name, 'badgeData', data);
                 this._badgeData = data;
                 if (data.subscriber) {
                     this._badgeStyle.textContent = `
