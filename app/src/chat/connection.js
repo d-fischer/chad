@@ -2,9 +2,9 @@
 
 const tmi = require('tmi.js');
 const settings = require('./../settings');
+const events = require('./events');
 
 const ChatChannel = require('./channel');
-const ChatLine = require('./line');
 const ObjectTools = require('../tools/object');
 const ArrayTools = require('../tools/array');
 
@@ -56,31 +56,11 @@ class ChatConnection {
                     },
                     channels: (this._config.channels || []).map(channel => '#' + channel)
                 });
-                _client.on('chat', (channel, userData, message, self) => {
-                    let channelName = channel.substring(1);
-                    let linesList = document.querySelector('.channel-window[data-name="' + channelName + '"] .messages');
-                    let line = new ChatLine(channel, userData, message, self);
-                    let lineContainer = document.createElement('li');
-
-                    line.parseInto(lineContainer, false);
-
-                    linesList.appendChild(lineContainer);
-
-                    this._channels[channelName].autoScroll();
-                });
-
-                _client.on('action', (channel, userData, message, self) => {
-                    let channelName = channel.substring(1);
-                    let linesList = document.querySelector('.channel-window[data-name="' + channelName + '"] .messages');
-                    let line = new ChatLine(channel, userData, message, self);
-                    let lineContainer = document.createElement('li');
-
-                    line.parseInto(lineContainer, true);
-
-                    linesList.appendChild(lineContainer);
-
-                    this._channels[channelName].autoScroll();
-                });
+                let forwardEvent = function(eventName) {
+                    _client.on(eventName, events.emit.bind(events, eventName));
+                };
+                forwardEvent('chat');
+                forwardEvent('action');
                 _client.connect().then(resolve, err => {
                     reject(new ChatConnectionError(err));
                 });
