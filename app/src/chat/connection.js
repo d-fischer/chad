@@ -2,7 +2,7 @@
 
 const tmi = require('tmi.js');
 const settings = require('./../settings');
-const events = require('./events');
+const chatEvents = require('./events');
 
 const ChatChannel = require('./channel');
 const ObjectTools = require('../tools/object');
@@ -56,11 +56,14 @@ class ChatConnection {
                     },
                     channels: (this._config.channels || []).map(channel => '#' + channel)
                 });
-                let forwardEvent = function(eventName) {
-                    _client.on(eventName, events.emit.bind(events, eventName));
-                };
-                forwardEvent('chat');
-                forwardEvent('action');
+                // forward events
+                for (let eventName of [
+                    'action', 'chat', 'emotesets', 'hosted', 'hosting', 'notice',
+                    'r9kbeta', 'slowmode', 'subanniversary', 'subscribers', 'subscription',
+                    'timeout', 'unhost', 'whisper'
+                ]) {
+                    _client.on(eventName, chatEvents.emit.bind(chatEvents, eventName));
+                }
                 _client.connect().then(resolve, err => {
                     reject(new ChatConnectionError(err));
                 });

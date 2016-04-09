@@ -253,6 +253,10 @@ button {
     font-weight: bold;
 }
 
+.messages li.event .message {
+    color: #666;
+}
+
 #dialogs {
     display: none;
 }

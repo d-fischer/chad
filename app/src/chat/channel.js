@@ -4,7 +4,7 @@ const DomEvents = require('../dom/events');
 const JSONPRequest = require('../request/jsonp');
 const ChatLine = require('./line');
 
-const events = require('./events');
+const chatEvents = require('./events');
 
 let channels = {};
 
@@ -29,6 +29,10 @@ class ChatChannel {
         this._badgeStyle = document.createElement('style');
         this.initData();
         noGui || this.showGui();
+    }
+
+    get element() {
+        return this._element;
     }
     
     initData() {
@@ -112,11 +116,30 @@ class ChatChannel {
             messages.scrollTop = messages.scrollHeight - messages.clientHeight;
         }
     }
+
+    displayEvent(message) {
+        let linesList = this._element.querySelector('.messages');
+        let lineContainer = document.createElement('li');
+        lineContainer.classList.add('event');
+
+        let timePart = document.createElement('time');
+        let time = new Date();
+        timePart.setAttribute('datetime', time.toISOString());
+        timePart.appendChild(document.createTextNode(time.toLocaleTimeString()));
+        lineContainer.appendChild(timePart);
+
+        let textPart = document.createElement('span');
+        textPart.classList.add('message');
+        textPart.textContent = message;
+        lineContainer.appendChild(textPart);
+
+        linesList.appendChild(lineContainer);
+    }
 }
 
-events.on('chat', (channel, userData, message, self) => {
+chatEvents.on('chat', (channel, userData, message, self) => {
     let channelName = channel.substring(1);
-    let linesList = document.querySelector('.channel-window[data-name="' + channelName + '"] .messages');
+    let linesList = ChatChannel.get(channelName).element.querySelector('.messages');
     let line = new ChatLine(channel, userData, message, self);
     let lineContainer = document.createElement('li');
 
@@ -125,11 +148,9 @@ events.on('chat', (channel, userData, message, self) => {
     linesList.appendChild(lineContainer);
 
     this._channels[channelName].autoScroll();
-});
-
-events.on('action', (channel, userData, message, self) => {
+}).on('action', (channel, userData, message, self) => {
     let channelName = channel.substring(1);
-    let linesList = document.querySelector('.channel-window[data-name="' + channelName + '"] .messages');
+    let linesList = ChatChannel.get(channelName).element.querySelector('.messages');
     let line = new ChatLine(channel, userData, message, self);
     let lineContainer = document.createElement('li');
 
@@ -138,6 +159,46 @@ events.on('action', (channel, userData, message, self) => {
     linesList.appendChild(lineContainer);
 
     this._channels[channelName].autoScroll();
+}).on('hosted', (channel, username, viewers) => {
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(`${username} is hosting you with ${viewers} viewers!`);
+}).on('hosting', (channel, target) => {
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(`Now hosting ${target}.`);
+}).on('notice', (channel, msgid, message) => {
+    // TODO customize via msgid
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(message);
+}).on('r9kbeta', (channel, enabled) => {
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(`r9k mode has been ${enabled ? 'enabled' : 'disabled'}.`);
+}).on('slowmode', (channel, enabled, seconds) => {
+    // TODO block sending messages too fast while in slow mode
+    let channelName = channel.substring(1);
+    let message;
+    if (enabled) {
+        message = `Slow mode has been enabled. You may send messages every ${seconds} seconds.`;
+    }
+    else {
+        message = `Slow mode has been disabled.`;
+    }
+    ChatChannel.get(channelName).displayEvent(message);
+}).on('subanniversary', (channel, username, months) => {
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(`${username} has subscribed for ${months} months in a row!`);
+}).on('subscribers', (channel, enabled) => {
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(`Subscribers-only mode has been ${enabled ? 'enabled' : 'disabled'}.`);
+}).on('subscription', (channel, username) => {
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(`${username} just subscribed!`);
+}).on('timeout', (channel, username) => {
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(`${username} has been timed out.`);
+}).on('unhost', (channel) => {
+    // TODO save who is being hosted, output here
+    let channelName = channel.substring(1);
+    ChatChannel.get(channelName).displayEvent(`No longer hosting someone else.`);
 });
 
 module.exports = { get: ChatChannel.get.bind(ChatChannel.constructor) };
