@@ -134,31 +134,31 @@ class ChatChannel {
         lineContainer.appendChild(textPart);
 
         linesList.appendChild(lineContainer);
+
+        this.autoScroll();
     }
 }
 
-chatEvents.on('chat', (channel, userData, message, self) => {
-    let channelName = channel.substring(1);
-    let linesList = ChatChannel.get(channelName).element.querySelector('.messages');
+chatEvents.on('chat', (channelName, userData, message, self) => {
+    channelName = channelName.substring(1);
+    let channel = ChatChannel.get(channelName);
+    let linesList = channel.element.querySelector('.messages');
     let line = new ChatLine(channel, userData, message, self);
     let lineContainer = document.createElement('li');
 
     line.parseInto(lineContainer, false);
-
     linesList.appendChild(lineContainer);
-
-    this._channels[channelName].autoScroll();
-}).on('action', (channel, userData, message, self) => {
-    let channelName = channel.substring(1);
-    let linesList = ChatChannel.get(channelName).element.querySelector('.messages');
+    channel.autoScroll();
+}).on('action', (channelName, userData, message, self) => {
+    channelName = channelName.substring(1);
+    let channel = ChatChannel.get(channelName);
+    let linesList = channel.element.querySelector('.messages');
     let line = new ChatLine(channel, userData, message, self);
     let lineContainer = document.createElement('li');
 
     line.parseInto(lineContainer, true);
-
     linesList.appendChild(lineContainer);
-
-    this._channels[channelName].autoScroll();
+    channel.autoScroll();
 }).on('hosted', (channel, username, viewers) => {
     let channelName = channel.substring(1);
     ChatChannel.get(channelName).displayEvent(`${username} is hosting you with ${viewers} viewers!`);
