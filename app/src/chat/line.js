@@ -21,7 +21,7 @@ class ChatLine {
         return this._message;
     }
 
-    parseInto(elem, isAction) {
+    parseInto(elem, self, isAction) {
         let timePart = document.createElement('time');
         timePart.setAttribute('datetime', this._time.toISOString());
         timePart.appendChild(document.createTextNode(this._time.toLocaleTimeString()));
@@ -83,7 +83,7 @@ class ChatLine {
         if (isAction) {
             textPart.style.color = this._user.color;
         }
-        this._message.parseInto(textPart);
+        this._message.parseInto(textPart, self);
         elem.appendChild(textPart);
     }
 }

@@ -158,7 +158,7 @@ button {
 #channel-list {
     flex: 1;
     border-left: 1px solid black;
-    overflow: scroll;
+    overflow: auto;
 }
 
 #main {
@@ -185,7 +185,7 @@ button {
 
 .messages {
     flex: 1;
-    overflow: scroll;
+    overflow: auto;
     -webkit-user-select: auto;
     padding: 5px 15px 0;
     margin: 0;
@@ -295,7 +295,7 @@ button {
 .dialog-body {
     flex: 1 1 0;
     padding: 15px;
-    overflow: scroll;
+    overflow: auto;
 }
 
 .dialog-section {
@@ -401,7 +401,7 @@ button {
 
 #channel-add-dialog #channel-add-list {
     flex: 2 2 0;
-    overflow: scroll;
+    overflow: auto;
 }
 
 #channel-add-dialog .channel-list-item {

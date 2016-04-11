@@ -106,7 +106,9 @@ class ChatChannel {
         delete channels[this._name];
         if (this._guiShown) {
             this._listElement.remove();
+            this._listElement = undefined;
             this._element.remove();
+            this._element = undefined;
         }
     }
 
@@ -146,7 +148,7 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     let line = new ChatLine(channel, userData, message, self);
     let lineContainer = document.createElement('li');
 
-    line.parseInto(lineContainer, false);
+    line.parseInto(lineContainer, self, false);
     linesList.appendChild(lineContainer);
     channel.autoScroll();
 }).on('action', (channelName, userData, message, self) => {
@@ -156,7 +158,7 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     let line = new ChatLine(channel, userData, message, self);
     let lineContainer = document.createElement('li');
 
-    line.parseInto(lineContainer, true);
+    line.parseInto(lineContainer, self, true);
     linesList.appendChild(lineContainer);
     channel.autoScroll();
 }).on('hosted', (channel, username, viewers) => {
