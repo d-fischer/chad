@@ -6,6 +6,7 @@ const RegexDictionary = require('../regex/dictionary');
 const events = require('./events');
 
 let _ownSubEmotes = [];
+let domParser = new DOMParser();
 
 class ChatEmotes {
     static getOwnSubEmotes() {
@@ -18,9 +19,12 @@ events.on('emotesets', sets => {
         if (success) {
             _ownSubEmotes = {};
             for (let emoteSet in data.emoticon_sets) {
-                for (let emote of data.emoticon_sets[emoteSet]) {
-                    for (let emoteName of RegexDictionary.getAllMatches(emote.code)) {
-                        _ownSubEmotes[emoteName] = emote.id;
+                if (data.emoticon_sets.hasOwnProperty(emoteSet)) {
+                    for (let emote of data.emoticon_sets[emoteSet]) {
+                        for (let emoteName of RegexDictionary.getAllMatches(emote.code)) {
+                            emoteName = domParser.parseFromString(emoteName, 'text/html').documentElement.textContent;
+                            _ownSubEmotes[emoteName] = emote.id;
+                        }
                     }
                 }
             }
