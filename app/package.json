@@ -1,7 +1,7 @@
 {
   "name": "chad",
   "productName": "Chad",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "A chat client for Twitch",
   "main": "main.js",
   "keywords": [
@@ -14,6 +14,8 @@
   "license": "GPL-3.0",
   "dependencies": {
     "electron-settings": "^1.0.2",
+    "merge": "^1.2.0",
+    "request": "^2.71.0",
     "tmi.js": "0.0.28"
   }
 }

@@ -85,10 +85,10 @@ document.body.classList.add(process.platform);
     window.close();
 }));
 
-[].forEach.call(document.getElementsByClassName('external-link'), link => link.addEventListener('click', function (e) {
+DomEvents.delegate(document.body, 'click', '.external-link', function (e) {
     e.preventDefault();
     shell.openExternal(this.href);
-}));
+});
 
 function handleConnect(...otherPromises) {
     document.getElementById('loading-status').textContent = 'Loading';

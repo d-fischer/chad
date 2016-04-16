@@ -6,6 +6,8 @@ const ChatLine = require('./line');
 
 const chatEvents = require('./events');
 
+const request = require('request');
+
 let channels = {};
 
 class ChatChannel {
@@ -26,6 +28,7 @@ class ChatChannel {
         this._element = undefined;
         this._channelData = undefined;
         this._badgeData = undefined;
+        this._bttvEmotes = {};
         this._badgeStyle = document.createElement('style');
         this.initData();
         noGui || this.showGui();
@@ -38,6 +41,7 @@ class ChatChannel {
     initData() {
         this.updateData();
         this.updateBadges();
+        this.updateBttvData();
     }
 
     updateData() {
@@ -63,9 +67,28 @@ class ChatChannel {
             }
         })).call();
     }
+
+    updateBttvData() {
+        request(`https://api.betterttv.net/2/channels/${this._name}`, (err, res, data) => {
+            if (!err && res.statusCode === 200) {
+                data = JSON.parse(data);
+                let urlTemplate = data.urlTemplate;
+                this._bttvEmotes = {};
+                for (let emote of data.emotes) {
+                    this._bttvEmotes[emote.code] = {
+                        url: urlTemplate.replace('{{id}}', emote.id).replace('{{image}}', '1x')
+                    }
+                }
+            }
+        });
+    }
     
     get name() {
         return this._name;
+    }
+
+    get bttvEmotes() {
+        return this._bttvEmotes;
     }
 
     showGui() {
@@ -145,7 +168,7 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     channelName = channelName.substring(1);
     let channel = ChatChannel.get(channelName);
     let linesList = channel.element.querySelector('.messages');
-    let line = new ChatLine(channel, userData, message, self);
+    let line = new ChatLine(message, channel, userData, self);
     let lineContainer = document.createElement('li');
 
     line.parseInto(lineContainer, self, false);
@@ -155,7 +178,7 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     channelName = channelName.substring(1);
     let channel = ChatChannel.get(channelName);
     let linesList = channel.element.querySelector('.messages');
-    let line = new ChatLine(channel, userData, message, self);
+    let line = new ChatLine(message, channel, userData, self);
     let lineContainer = document.createElement('li');
 
     line.parseInto(lineContainer, self, true);

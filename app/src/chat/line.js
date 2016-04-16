@@ -4,12 +4,12 @@ let ChatUser = require('./user');
 let ChatMessage = require('./message');
 
 class ChatLine {
-    constructor(channel, userData, message, self, time) {
+    constructor(message, channel, userData, self, time) {
         this._channel = channel;
         this._userData = userData;
         this._self = self;
         this._user = new ChatUser(userData);
-        this._message = new ChatMessage(message, userData.emotes);
+        this._message = new ChatMessage(message, channel, userData.emotes);
         this._time = time || new Date();
     }
 

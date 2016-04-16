@@ -58,7 +58,7 @@ class ChatConnection {
                 });
                 // forward events
                 for (let eventName of [
-                    'action', 'chat', 'emotesets', 'hosted', 'hosting', 'notice',
+                    'action', 'chat', 'emotesets', 'hosted', 'hosting', 'logon', 'notice',
                     'r9kbeta', 'slowmode', 'subanniversary', 'subscribers', 'subscription',
                     'timeout', 'unhost', 'whisper'
                 ]) {
