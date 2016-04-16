@@ -171,7 +171,7 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     let line = new ChatLine(message, channel, userData, self);
     let lineContainer = document.createElement('li');
 
-    line.parseInto(lineContainer, self, false);
+    line.parseInto(lineContainer, false);
     linesList.appendChild(lineContainer);
     channel.autoScroll();
 }).on('action', (channelName, userData, message, self) => {
@@ -181,7 +181,7 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     let line = new ChatLine(message, channel, userData, self);
     let lineContainer = document.createElement('li');
 
-    line.parseInto(lineContainer, self, true);
+    line.parseInto(lineContainer, true);
     linesList.appendChild(lineContainer);
     channel.autoScroll();
 }).on('hosted', (channel, username, viewers) => {

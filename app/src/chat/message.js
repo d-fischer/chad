@@ -6,24 +6,25 @@ const ChatEmotes = require('./emotes');
 const urlRegex = /(https?:\/\/.)?(?:www\.)?[-a-z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b[-a-z0-9@:%_+.~#?&/=]*/i;
 
 class ChatMessage {
-    constructor(text, channel, tagEmotes) {
+    constructor(text, channel, self, tagEmotes) {
         this._text = text;
         this._channel = channel;
+        this._self = self;
         this._tagEmotes = tagEmotes;
         this._currentText = '';
         this._elem = undefined;
     }
 
-    parseInto(elem, self) {
+    parseInto(elem) {
         let text = this._text;
         this._elem = elem;
-        if (self) {
+        if (this._self) {
             this.parseTokenized(this._text);
         }
         else {
             let emotes = this._tagEmotes;
             if (!emotes) {
-                elem.textContent = text;
+                this.parseTokenized(text);
                 return;
             }
 
@@ -57,7 +58,7 @@ class ChatMessage {
             }
 
             if (currentPosition < length) {
-                this.parseTokenized(text.substring(currentPosition, length))
+                this.parseTokenized(text.substring(currentPosition, length));
             }
         }
     }
@@ -79,7 +80,7 @@ class ChatMessage {
     parseWord(word) {
         let twitchEmotes = ChatEmotes.getOwnTwitchEmotes();
         let bttvEmotes = ChatEmotes.getBttvEmotes(this._channel);
-        if (word in twitchEmotes) {
+        if (!this._self && word in twitchEmotes) {
             this.appendCurrentText();
             this.appendEmote(twitchEmotes[word], word);
         }

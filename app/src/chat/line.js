@@ -8,8 +8,8 @@ class ChatLine {
         this._channel = channel;
         this._userData = userData;
         this._self = self;
-        this._user = new ChatUser(userData);
-        this._message = new ChatMessage(message, channel, userData.emotes);
+        this._user = new ChatUser(userData, channel);
+        this._message = new ChatMessage(message, channel, self, userData.emotes);
         this._time = time || new Date();
     }
 
@@ -21,7 +21,7 @@ class ChatLine {
         return this._message;
     }
 
-    parseInto(elem, self, isAction) {
+    parseInto(elem, isAction) {
         let timePart = document.createElement('time');
         timePart.setAttribute('datetime', this._time.toISOString());
         timePart.appendChild(document.createTextNode(this._time.toLocaleTimeString()));
@@ -83,7 +83,7 @@ class ChatLine {
         if (isAction) {
             textPart.style.color = this._user.color;
         }
-        this._message.parseInto(textPart, self);
+        this._message.parseInto(textPart);
         elem.appendChild(textPart);
     }
 }

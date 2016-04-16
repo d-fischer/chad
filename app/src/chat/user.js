@@ -19,8 +19,9 @@ const defaultColors = [
 ];
 
 class ChatUser {
-    constructor(userData) {
+    constructor(userData, channel) {
         this._data = userData;
+        this._channel = channel;
     }
     
     get name() {
@@ -42,7 +43,7 @@ class ChatUser {
     }
 
     get isBroadcaster() {
-        return this._data['user-id'] && (this._data['room-id'] === this._data['user-id']);
+        return this._data.username === this._channel.name;
     }
 
     get isStaff() {
