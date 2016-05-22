@@ -80,7 +80,7 @@ class ChatMessage {
     parseWord(word) {
         let twitchEmotes = ChatEmotes.getOwnTwitchEmotes();
         let bttvEmotes = ChatEmotes.getBttvEmotes(this._channel);
-        if (!this._self && word in twitchEmotes) {
+        if (this._self && word in twitchEmotes) {
             this.appendCurrentText();
             this.appendEmote(twitchEmotes[word], word);
         }
