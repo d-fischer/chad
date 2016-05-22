@@ -29,7 +29,10 @@ class ChatChannel {
         this._channelData = undefined;
         this._badgeData = undefined;
         this._bttvEmotes = {};
+        this._channelLogo = 'img/default-user.svg';
         this._badgeStyle = document.createElement('style');
+        this._gameName = '';
+        this._statusText = '';
         this.initData();
         noGui || this.showGui();
     }
@@ -48,7 +51,11 @@ class ChatChannel {
         (new JSONPRequest(`https://api.twitch.tv/kraken/channels/${this._name}`, (data, success) => {
             if (success) {
                 this._channelData = data;
-                this._displayName = this._listElement.textContent = data.display_name;
+                this._channelLogo = data.logo || this._channelLogo;
+                this._displayName = data.display_name;
+                this._gameName = data.game || '';
+                this._statusText = data.status || '';
+                this.updateGuiWithChannelData();
             }
         })).call();
     }
@@ -96,9 +103,17 @@ class ChatChannel {
             let channelList = document.getElementById('channel-list');
             let channelAdd = document.getElementById('channel-add');
             this._listElement = document.createElement('li');
-            this._listElement.classList.add('menu-item', 'tab-link');
+            this._listElement.classList.add('menu-item', 'tab-link', 'channel-link');
             this._listElement.dataset.tab = this._name;
-            this._listElement.textContent = this._name;
+
+            let channelIcon = document.createElement('img');
+            channelIcon.classList.add('logo', 'menu-icon');
+            this._listElement.appendChild(channelIcon);
+
+            let channelName = document.createElement('span');
+            channelName.classList.add('name', 'menu-title');
+            this._listElement.appendChild(channelName);
+
             channelList.insertBefore(this._listElement, channelAdd);
 
             let channelWindows = document.getElementById('channel-windows');
@@ -120,6 +135,8 @@ class ChatChannel {
             });
 
             channelWindows.appendChild(channelWindowFrag);
+
+            this.updateGuiWithChannelData();
 
             this._guiShown = true;
         }
@@ -161,6 +178,14 @@ class ChatChannel {
         linesList.appendChild(lineContainer);
 
         this.autoScroll();
+    }
+
+    updateGuiWithChannelData() {
+        this._listElement.querySelector('.logo').src = this._channelLogo;
+        this._listElement.querySelector('.name').textContent = this._displayName;
+        this._element.querySelector('.channel-info .name').textContent = this._displayName;
+        this._element.querySelector('.channel-info .game').textContent = this._gameName || '';
+        this._element.querySelector('.channel-info .status').textContent = this._statusText;
     }
 }
 

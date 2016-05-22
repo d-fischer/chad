@@ -3,7 +3,7 @@
 const ChatEmotes = require('./emotes');
 
 /** @var RegExp */
-const urlRegex = /(https?:\/\/.)?(?:www\.)?[-a-z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b[-a-z0-9@:%_+.~#?&/=]*/i;
+const urlRegex = /(https?:\/\/.)?(?:www\.)?(?:(?:[-a-z0-9@:%_\+~#=])+\.)+[a-z]{2,6}\b[-a-z0-9@:%_+.~#?&/=]*/i;
 
 class ChatMessage {
     constructor(text, channel, self, tagEmotes) {

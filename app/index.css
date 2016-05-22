@@ -131,7 +131,7 @@ button {
 }
 
 .top-bar {
-    flex: 0 0 40px;
+    flex: 0 0 57px;
     border-bottom: 1px solid rgba(255, 255, 255, .06);
     -webkit-app-region: drag;
 }
@@ -181,6 +181,24 @@ button {
 
 .channel-window.active {
     display: flex;
+}
+
+.channel-info {
+    padding: 10px;
+}
+
+.channel-info .heading {
+    font-size: 16px;
+}
+
+.channel-info .game:not(:empty):before {
+    content: 'playing ';
+    color: #6e6e6e;
+}
+
+.channel-info .status {
+    color: #6e6e6e;
+    line-height: 1.5;
 }
 
 .messages {
@@ -431,7 +449,7 @@ button {
 }
 
 .channel-list-item .user-picture {
-    background-image: url(img/default-user.png);
+    background-image: url(img/default-user.svg);
     float: left;
     height: 50px;
     width: 50px;
@@ -464,6 +482,22 @@ button {
     content: '';
     display: block;
     clear: both;
+}
+
+.channel-link {
+    padding: 5px 10px 5px 5px;
+}
+
+.channel-link .logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.channel-link .name {
+    vertical-align: middle;
 }
 
 #titlebar {
