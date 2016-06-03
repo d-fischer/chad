@@ -24,15 +24,15 @@ class ChatConnection {
             let addedChannelNames = ArrayTools.diff(newChannelNames, oldChannelNames);
             let removedChannelNames = ArrayTools.diff(oldChannelNames, newChannelNames);
 
-            for (let channel of addedChannelNames) {
-                this._channels[channel] = ChatChannel.get(channel);
-                this._client.join('#' + channel);
-            }
-            
             for (let channel of removedChannelNames) {
                 this._client.part('#' + channel);
                 this._channels[channel].destroy();
                 delete this._channels[channel];
+            }
+
+            for (let channel of addedChannelNames) {
+                this._channels[channel] = ChatChannel.get(channel);
+                this._client.join('#' + channel);
             }
         });
     }

@@ -27,12 +27,16 @@ class ChatChannel {
         this._listElement = undefined;
         this._element = undefined;
         this._channelData = undefined;
+        this._streamData = undefined;
         this._badgeData = undefined;
         this._bttvEmotes = {};
         this._channelLogo = 'img/default-user.svg';
         this._badgeStyle = document.createElement('style');
         this._gameName = '';
         this._statusText = '';
+        this._online = false;
+        this._updateTimer = undefined;
+        this._updateInterval = 10;
         this.initData();
         noGui || this.showGui();
     }
@@ -40,11 +44,19 @@ class ChatChannel {
     get element() {
         return this._element;
     }
-    
+
     initData() {
         this.updateData();
+        this.startAutoUpdate();
         this.updateBadges();
         this.updateBttvData();
+    }
+
+    startAutoUpdate() {
+        if (this._updateTimer) {
+            clearInterval(this._updateTimer);
+        }
+        this._updateTimer = setInterval(() => this.updateData(), this._updateInterval * 60 * 1000);
     }
 
     updateData() {
@@ -56,6 +68,18 @@ class ChatChannel {
                 this._gameName = data.game || '';
                 this._statusText = data.status || '';
                 this.updateGuiWithChannelData();
+            }
+        })).call();
+
+        (new JSONPRequest(`https://api.twitch.tv/kraken/streams/${this._name}`, (data, success) => {
+            if (success) {
+                this._streamData = data.stream;
+                if (data.stream === null) {
+                    this._online = false;
+                }
+                else {
+                    this._online = true;
+                }
             }
         })).call();
     }
@@ -89,7 +113,7 @@ class ChatChannel {
             }
         });
     }
-    
+
     get name() {
         return this._name;
     }
@@ -106,9 +130,14 @@ class ChatChannel {
             this._listElement.classList.add('menu-item', 'tab-link', 'channel-link');
             this._listElement.dataset.tab = this._name;
 
+            let channelIconWrap = document.createElement('div');
+            channelIconWrap.classList.add('logo-wrap');
+
             let channelIcon = document.createElement('img');
             channelIcon.classList.add('logo', 'menu-icon');
-            this._listElement.appendChild(channelIcon);
+            channelIconWrap.appendChild(channelIcon)
+
+            this._listElement.appendChild(channelIconWrap);
 
             let channelName = document.createElement('span');
             channelName.classList.add('name', 'menu-title');
@@ -123,8 +152,9 @@ class ChatChannel {
             this._element.dataset.name = this._name;
             this._element.addEventListener('tab:activate', () => {
                 this.autoScroll();
+                this.markRead();
             });
-            
+
             DomEvents.delegate(this._element, 'load', 'img', () => {
                 this.autoScroll();
             }, true);
@@ -159,6 +189,16 @@ class ChatChannel {
         }
     }
 
+    markNewMessage() {
+        if (!this._listElement.classList.contains('active')) {
+            this._listElement.classList.add('new-message');
+        }
+    }
+
+    markRead() {
+        this._listElement.classList.remove('new-message');
+    }
+
     displayEvent(message) {
         let linesList = this._element.querySelector('.messages');
         let lineContainer = document.createElement('li');
@@ -183,6 +223,14 @@ class ChatChannel {
     updateGuiWithChannelData() {
         this._listElement.querySelector('.logo').src = this._channelLogo;
         this._listElement.querySelector('.name').textContent = this._displayName;
+        if (this._online) {
+            this._listElement.classList.add('online');
+            this._element.classList.add('online');
+        }
+        else {
+            this._listElement.classList.remove('online');
+            this._element.classList.remove('online');
+        }
         this._element.querySelector('.channel-info .name').textContent = this._displayName;
         this._element.querySelector('.channel-info .game').textContent = this._gameName || '';
         this._element.querySelector('.channel-info .status').textContent = this._statusText;
@@ -199,6 +247,7 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     line.parseInto(lineContainer, false);
     linesList.appendChild(lineContainer);
     channel.autoScroll();
+    channel.markNewMessage();
 }).on('action', (channelName, userData, message, self) => {
     channelName = channelName.substring(1);
     let channel = ChatChannel.get(channelName);
@@ -209,6 +258,7 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     line.parseInto(lineContainer, true);
     linesList.appendChild(lineContainer);
     channel.autoScroll();
+    channel.markNewMessage();
 }).on('hosted', (channel, username, viewers) => {
     let channelName = channel.substring(1);
     ChatChannel.get(channelName).displayEvent(`${username} is hosting you with ${viewers} viewers!`);
@@ -251,4 +301,4 @@ chatEvents.on('chat', (channelName, userData, message, self) => {
     ChatChannel.get(channelName).displayEvent(`No longer hosting someone else.`);
 });
 
-module.exports = { get: ChatChannel.get.bind(ChatChannel.constructor) };
+module.exports = {get: ChatChannel.get.bind(ChatChannel.constructor)};

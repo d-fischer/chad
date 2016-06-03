@@ -131,7 +131,7 @@ button {
 }
 
 .top-bar {
-    flex: 0 0 57px;
+    flex: 0 0 53px;
     border-bottom: 1px solid rgba(255, 255, 255, .06);
     -webkit-app-region: drag;
 }
@@ -184,7 +184,7 @@ button {
 }
 
 .channel-info {
-    padding: 10px;
+    padding: 10px 10px 6px;
 }
 
 .channel-info .heading {
@@ -194,6 +194,19 @@ button {
 .channel-info .game:not(:empty):before {
     content: 'playing ';
     color: #6e6e6e;
+}
+
+.channel-window.online .channel-info .heading:after {
+    content: 'Online';
+    border: 1px solid;
+    color: green;
+    font-size: .5em;
+    border-radius: .5em;
+    vertical-align: top;
+    padding: 0 2px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-top: 3px;
 }
 
 .channel-info .status {
@@ -390,7 +403,7 @@ button {
 }
 
 .badges .staff {
-    background: #200f33 url(https://web-cdn.ttvnw.net/images/xarth/badge_staff.svg);
+    background: #06c url(https://web-cdn.ttvnw.net/images/xarth/badge_staff.svg);
 }
 
 .badges .global-moderator {
@@ -486,6 +499,19 @@ button {
 
 .channel-link {
     padding: 5px 10px 5px 5px;
+    position: relative;
+}
+
+.channel-link.new-message:after {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    bottom: 10px;
+    content: '';
+    display: block;
+    background: currentColor;
+    width: 5px;
+    border-radius: 4px 0 0 4px;
 }
 
 .channel-link .logo {
@@ -493,7 +519,26 @@ button {
     height: 40px;
     border-radius: 50%;
     vertical-align: middle;
+    border: 1px solid;
+}
+
+.channel-link .logo-wrap {
+    position: relative;
+    display: inline-block;
     margin-right: 5px;
+}
+
+.channel-link.online .logo-wrap:after {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    background-color: green;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    border: 1px solid;
 }
 
 .channel-link .name {
