@@ -42,7 +42,13 @@ class RegexDictionary {
                     literalNext = true;
                     break;
                 case '?':
-                    this._tokens.push(new OptionalToken);
+                    // drop "non-capturing group" regex feature - we don't capture anyway
+                    if (this._regex[i + 1] === ':' && this._tokens[this._tokens.length - 1] instanceof OpenGroupToken) {
+                        i++;
+                    }
+                    else {
+                        this._tokens.push(new OptionalToken);
+                    }
                     break;
                 case '|':
                     this._tokens.push(new AlternationToken);
@@ -55,7 +61,7 @@ class RegexDictionary {
     }
 
     group() {
-        this._groupedTokens = (function innerGroup(tokens) {
+        let innerGroup = tokens => {
             let token;
             let groupedTokens = [];
             let currentAlternative = [];
@@ -93,7 +99,9 @@ class RegexDictionary {
                 groupedTokens.push(currentAlternative);
             }
             return groupedTokens;
-        })(this._tokens);
+        };
+
+        this._groupedTokens = innerGroup(this._tokens);
     }
 
     getAllMatches() {

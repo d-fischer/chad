@@ -34,7 +34,7 @@ class ChatChannel {
         this._badgeStyle = document.createElement('style');
         this._gameName = '';
         this._statusText = '';
-        this._online = false;
+        this._online = undefined;
         this._updateTimer = undefined;
         this._updateInterval = 10;
         this.initData();
@@ -74,12 +74,24 @@ class ChatChannel {
         (new JSONPRequest(`https://api.twitch.tv/kraken/streams/${this._name}`, (data, success) => {
             if (success) {
                 this._streamData = data.stream;
+                let oldOnline = this._online;
+
                 if (data.stream === null) {
                     this._online = false;
                 }
                 else {
                     this._online = true;
                 }
+
+                if (oldOnline === false && this._online) {
+                    let ntf = new Notification(`${data.stream.channel.display_name} is now online`, {
+                        body: data.stream.channel.status,
+                        icon: data.stream.channel.logo,
+                        silent: true
+                    });
+                }
+
+                this.updateGuiWithChannelData();
             }
         })).call();
     }
