@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Chad</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -34,41 +34,13 @@
         <div class="user-status"></div>
     </li>
 </template>
-
-<div id="loading-overlay" class="overlay">
-    <div class="indicator" id="loading-error-indicator"></div>
-    <svg class="indicator" id="loading-indicator" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" stroke="#d3d3d3">
-        <path d="M32,32 m-30,0 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0z" fill="none" stroke-width="2" opacity=".25"></path>
-        <path class="loading-spinner" d="M32,32 m0,-30 a30,30 0 0,1 30,30" fill="none" stroke-width="2"></path>
-        <path class="loading-spinner second" d="M32,32 m0,30 a30,30 0 0,1 -30,-30" fill="none" stroke-width="2"></path>
-    </svg>
-    <div id="loading-status">Loading</div>
-</div>
+<template id="chat-message-template">
+    <li>
+        <time></time><span class="badges"></span><span class="username"></span><span class="sep"></span><span class="message"></span>
+    </li>
+</template>
 
 <div id="dialogs">
-    <div class="dialog tab-container" id="settings-dialog">
-        <div class="dialog-menu tab-list">
-            <ul>
-                <li class="menu-item tab-link" data-tab="connection">Connection</li>
-                <li class="menu-item tab-link" data-tab="other">Other</li>
-            </ul>
-        </div>
-        <div class="dialog-body tabs">
-            <div class="dialog-section tab" data-name="connection">
-                <label>
-                    Username
-                    <input type="text" data-setting="connection.username"/>
-                </label>
-                <label>
-                    OAuth token <a href="https://twitchapps.com/tmi/" class="external-link" tabindex="-1">(get)</a>
-                    <input type="password" data-setting="connection.token"/>
-                </label>
-                <div id="connection-warning"></div>
-                <button id="reconnect-button">Reconnect</button>
-            </div>
-            <div class="dialog-section tab" data-name="other"></div>
-        </div>
-    </div>
     <div class="dialog" id="channel-add-dialog">
         <div class="dialog-body">
             <label>
@@ -115,5 +87,6 @@
     </div>
 </div>
 </body>
-<script src="index.js"></script>
+<script src="scripts/common.js"></script>
+<script src="scripts/main.js"></script>
 </html>

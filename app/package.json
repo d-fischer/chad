@@ -1,9 +1,9 @@
 {
   "name": "chad",
   "productName": "Chad",
-  "version": "0.8.0",
+  "version": "0.11.0",
   "description": "A chat client for Twitch",
-  "main": "main.js",
+  "main": "src/main.js",
   "keywords": [
     "chad",
     "chat",
@@ -13,9 +13,12 @@
   "author": "D_4_ni",
   "license": "GPL-3.0",
   "dependencies": {
-    "electron-settings": "^1.0.2",
+    "app-root-path": "^2.0.1",
+    "electron-settings": "^2.2.2",
+    "html-entities": "^1.2.0",
     "merge": "^1.2.0",
     "request": "^2.71.0",
-    "tmi.js": "^1.1.1"
+    "tinycolor2": "^1.4.1",
+    "tmi.js": "d-4-ni/tmi.js#resub-message"
   }
 }

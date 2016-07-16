@@ -42,32 +42,44 @@ class ChatUser {
         }
     }
 
+    _is(type) {
+        return this._data.badges && this._data.badges[type];
+    }
+
     get isBroadcaster() {
-        return this._data.username === this._channel.name;
+        return this._is('broadcaster');
     }
 
     get isStaff() {
-        return this._data['user-type'] === 'staff';
+        return this._is('staff');
     }
 
     get isAdmin() {
-        return this._data['user-type'] === 'admin';
+        return this._is('admin');
     }
 
     get isGlobalMod() {
-        return this._data['user-type'] === 'global_mod';
+        return this._is('global_mod');
     }
 
     get isModerator() {
-        return this._data.mod;
+        return this._is('moderator');
+    }
+
+    get isPrime() {
+        return this._is('premium');
     }
 
     get isTurbo() {
-        return this._data.turbo;
+        return this._is('turbo');
     }
 
-    get isSub() {
-        return this._data.subscriber;
+    get subLevel() {
+        return this._is('subscriber');
+    }
+
+    get cheerLevel() {
+        return this._is('bits');
     }
 }
 

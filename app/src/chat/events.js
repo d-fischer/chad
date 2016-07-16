@@ -1,5 +1,14 @@
 'use strict';
 
-const EventEmitter = require('events').EventEmitter;
+const {EventEmitter} = require('events');
 
-module.exports = new EventEmitter;
+class ChatEvents extends EventEmitter {
+    emit(...args) {
+        if (args[0] !== 'chat' && args[0] !== 'action') {
+            console.log(...args);
+        }
+        super.emit(...args);
+    }
+}
+
+module.exports = new ChatEvents;

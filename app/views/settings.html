@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chad</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="dialog tab-container" id="settings-dialog">
+    <div class="dialog-menu tab-list">
+        <ul>
+            <li class="menu-item tab-link" data-tab="connection">Connection</li>
+            <li class="menu-item tab-link" data-tab="other">Other</li>
+        </ul>
+    </div>
+    <div class="dialog-body">
+        <div class="dialog-panels tabs">
+            <div class="dialog-panel tab" data-name="connection">
+                <label>
+                    Username
+                    <input type="text" data-setting="connection.username"/>
+                </label>
+                <label>
+                    OAuth token <a href="https://twitchapps.com/tmi/" class="external-link" tabindex="-1">(get)</a>
+                    <input type="password" data-setting="connection.token"/>
+                </label>
+                <div id="connection-warning"></div>
+                <div class="panel-buttons">
+                    <button class="reconnect-button">Reconnect</button>
+                </div>
+            </div>
+            <div class="dialog-panel tab" data-name="other">
+                Nothing's here yet, stay tuned!
+            </div>
+        </div>
+        <div class="dialog-buttons">
+            <div id="panel-buttons"></div>
+            <button id="close-button">Close</button>
+        </div>
+    </div>
+</div>
+<script src="scripts/common.js"></script>
+<script src="scripts/settings.js"></script>
+</body>
+</html>

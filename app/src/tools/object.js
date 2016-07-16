@@ -7,6 +7,10 @@ class ObjectTools {
             return obj;
         }, {}) : null;
     }
+
+    static isEmpty(o) {
+        return Object.getOwnPropertyNames(o).length === 0;
+    }
 }
 
 module.exports = ObjectTools;

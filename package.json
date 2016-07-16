@@ -1,7 +1,7 @@
 {
   "name": "chad",
   "productName": "Chad",
-  "version": "0.8.0",
+  "version": "0.11.0",
   "description": "A chat client for Twitch",
   "main": "app/main.js",
   "scripts": {
@@ -21,12 +21,17 @@
   "author": "D_4_ni",
   "license": "GPL-3.0",
   "build": {
-    "app-bundle-id": "com.d-4-ni.chad",
-    "app-category-type": "public.app-category.entertainment",
-    "iconUrl": "https://raw.githubusercontent.com/d-4-ni/chad/master/chad.ico"
+    "appId": "com.d-4-ni.chad",
+    "mac": {
+      "category": "public.app-category.entertainment",
+      "iconUrl": "https://raw.githubusercontent.com/d-4-ni/chad/master/build/chad.icns"
+    },
+    "win": {
+      "iconUrl": "https://raw.githubusercontent.com/d-4-ni/chad/master/build/chad.ico"
+    }
   },
   "devDependencies": {
-    "electron-prebuilt": "^0.36.0",
-    "electron-builder": "^3.2.0"
+    "electron-prebuilt": "^1.4.12",
+    "electron-builder": "^10.6.1"
   }
 }

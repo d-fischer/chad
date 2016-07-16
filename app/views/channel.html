@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chad</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="channel-window">
+<template id="channel-list-item-template">
+    <li class="channel-list-item">
+        <div class="user-picture"></div>
+        <div class="user-name"></div>
+        <div class="user-game"></div>
+        <div class="user-status"></div>
+    </li>
+</template>
+
+<div class="dialog" id="channel-add-dialog">
+    <div class="dialog-menu">
+        <label>
+            Search channel:
+            <input id="channel-add-search"/>
+        </label>
+    </div>
+    <div class="dialog-body">
+        <div class="dialog-panels">
+            <ul id="channel-add-list"></ul>
+        </div>
+        <div class="dialog-buttons">
+            <button id="close-button">Close</button>
+        </div>
+    </div>
+</div>
+<script src="scripts/common.js"></script>
+<script src="scripts/channel.js"></script>
+</body>
+</html>
