@@ -12,8 +12,7 @@ class UIChannelManager {
     }
 
     add(channelName) {
-        let channel = new UIChannel(channelName);
-        this._channels[channelName] = channel;
+        this._channels[channelName] = new UIChannel(channelName);
     }
 
     getAll() {
@@ -33,6 +32,15 @@ class UIChannelManager {
     remove(channelName) {
         this._channels[channelName].destroy();
         delete this._channels[channelName];
+    }
+
+    removeAll() {
+        for (let channelName in this._channels) {
+            if (this._channels.hasOwnProperty(channelName)) {
+                this._channels[channelName].destroy();
+            }
+        }
+        this._channels = {};
     }
 }
 

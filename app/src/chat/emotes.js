@@ -1,19 +1,18 @@
 'use strict';
 
-const remote = require('electron').remote;
+const channelManager = require('./channelManager');
 
-const chatEvents = remote.require('./chat/events');
+const ObjectTools = require('../tools/object');
 
-const uiChannelManager = require("../channelManager.js");
+const chatEvents = require('./events');
 
-const RegexDictionary = require('../../regex/dictionary');
-const ObjectTools = require('../../tools/object');
+const RegexDictionary = require('../regex/dictionary');
 const htmlEntities = new require('html-entities').AllHtmlEntities;
 
 const request = require('request');
 const merge = require('merge');
 
-class UIChatEmotes {
+class ChatEmotes {
     constructor() {
         this._ownTwitchEmotes = {};
         this._globalBttvEmotes = {};
@@ -22,8 +21,10 @@ class UIChatEmotes {
 
     init() {
         let _this = this;
+
         chatEvents.on('emotesets', (_, emoteSets) => {
             _this._ownTwitchEmotes = {};
+
             for (let emoteSet in emoteSets) {
                 if (emoteSets.hasOwnProperty(emoteSet)) {
                     for (let emote of emoteSets[emoteSet]) {
@@ -44,13 +45,17 @@ class UIChatEmotes {
         });
     }
 
+    updateOwnTwitchEmotes(emotes) {
+        this._ownTwitchEmotes = emotes;
+    }
+
     getOwnTwitchEmotes() {
         return this._ownTwitchEmotes;
     }
 
     getBttvEmotes(channelName) {
-        return merge(this._globalBttvEmotes, uiChannelManager.get(channelName).bttvEmotes);
+        return merge(this._globalBttvEmotes, channelManager.get(channelName).bttvEmotes);
     }
 }
 
-module.exports = new UIChatEmotes;
+module.exports = new ChatEmotes;

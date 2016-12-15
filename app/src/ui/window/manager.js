@@ -21,6 +21,8 @@ class WindowManager {
                 return this._windows[name] = wnd;
             }
         }
+
+        return null;
     }
 
     destroyWindow(wnd) {

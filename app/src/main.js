@@ -45,7 +45,7 @@ function initConnection() {
 
             chatEvents.on('disconnected', reason => {
                 console.log(`Disconnected: ${reason}`)
-            })
+            });
         }
     }
 }

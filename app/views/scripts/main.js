@@ -1,11 +1,12 @@
 'use strict';
 
-const uiChannelManager = require('./../src/ui/channelManager');
-const uiChatMessageHandler = require('./../src/ui/chat/handler/message');
-const uiChatEventHandler = require('./../src/ui/chat/handler/event');
+const uiChannelManager = require('../src/ui/channelManager');
+const uiChatMessageHandler = require('../src/ui/chat/handler/message');
+const uiChatEventHandler = require('../src/ui/chat/handler/event');
 
-const UIChatEmotes = require('./../src/ui/chat/emotes');
+const UIEventHandler = require('../src/ui/eventHandler');
 
+const chatEmotes = remote.require('./chat/emotes');
 const channelManager = remote.require('./chat/channelManager');
 
 DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.message-form', function (e) {
@@ -20,9 +21,15 @@ DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.messa
 
 uiChannelManager.addAll(channelManager.getAllNames());
 channelManager.on('channel-added', channel => uiChannelManager.add(channel));
-UIChatEmotes.init();
+chatEmotes.init();
 
 function windowLoaded(thisBrowserWindow) {
+    window.closeWindow = () => {
+        UIEventHandler.removeAll();
+        uiChannelManager.removeAll();
+        thisBrowserWindow.close()
+    };
+
     [].forEach.call(document.querySelectorAll(".system-button.min"),
         button => button.addEventListener("click", () => thisBrowserWindow.minimize()));
 
@@ -30,14 +37,9 @@ function windowLoaded(thisBrowserWindow) {
         button => button.addEventListener("click", () => thisBrowserWindow.maximize()));
 
     [].forEach.call(document.querySelectorAll(".system-button.close"),
-        button => button.addEventListener("click", () => thisBrowserWindow.close()));
+        button => button.addEventListener("click", window.closeWindow));
 
     document.getElementById('channel-add').addEventListener('click', () => {
         remote.require('./ui/window/manager').getWindow('channel').show('main');
-    });
-
-    thisBrowserWindow.on('close', () => {
-        uiChatEventHandler.removeEventHandlers();
-        uiChatMessageHandler.removeEventHandlers();
     });
 }

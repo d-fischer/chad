@@ -1,7 +1,9 @@
 'use strict';
 
 const ChatUser = require('./../../chat/user');
-const UIChatEmotes = require('./emotes');
+
+const {remote} = require('electron');
+const chatEmotes = remote.require('./chat/emotes');
 
 const TinyColor = require('tinycolor2');
 
@@ -181,8 +183,8 @@ class UIChatLine {
     }
 
     parseWord(word) {
-        let twitchEmotes = UIChatEmotes.getOwnTwitchEmotes();
-        let bttvEmotes = UIChatEmotes.getBttvEmotes(this._channel._name);
+        let twitchEmotes = chatEmotes.getOwnTwitchEmotes();
+        let bttvEmotes = chatEmotes.getBttvEmotes(this._channel._name);
         let cheerMatch = word.match(/^cheer(\d+)$/);
         if (!this._self && cheerMatch) {
             this.appendCurrentText();

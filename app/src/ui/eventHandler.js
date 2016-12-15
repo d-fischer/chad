@@ -1,7 +1,10 @@
 'use strict';
 
+let _instances = [];
+
 class UIEventHandler {
     constructor(emitter) {
+        _instances.push(this);
         this._emitter = emitter;
         this._events = {};
     }
@@ -29,6 +32,10 @@ class UIEventHandler {
 
             delete this._events[type];
         }
+    }
+
+    static removeAll() {
+        _instances.forEach(handler => handler.removeEventHandlers());
     }
 }
 

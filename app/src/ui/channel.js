@@ -17,16 +17,10 @@ class UIChannel {
         backend.on('online', this.notifyOnline.bind(this));
         this._listElement = undefined;
         this._element = undefined;
-        this._bttvEmotes = {};
         this._badgeStyle = document.createElement('style');
         this._isScrolledToBottom = true;
         this.showGui();
         this.updateBadges();
-        this.updateBttvData();
-    }
-
-    get bttvEmotes() {
-        return this._bttvEmotes;
     }
 
     get backend() {
@@ -68,19 +62,6 @@ class UIChannel {
                     }
 
                     this._badgeStyle.textContent = style;
-                }
-            }
-        });
-    }
-
-    updateBttvData() {
-        request(`https://api.betterttv.net/2/channels/${this._name}`, (err, res, data) => {
-            if (!err && res.statusCode === 200) {
-                data = JSON.parse(data);
-                let urlTemplate = data.urlTemplate;
-                this._bttvEmotes = {};
-                for (let emote of data.emotes) {
-                    this._bttvEmotes[emote.code] = emote;
                 }
             }
         });
@@ -137,7 +118,9 @@ class UIChannel {
     }
 
     destroy() {
-        this.backend.off('updated', this.updateGuiWithChannelData.bind(this));
+        let backend = this.backend;
+        backend.off('updated', this.updateGuiWithChannelData.bind(this));
+        backend.off('online', this.notifyOnline.bind(this));
 
         if (this._guiShown) {
             this._listElement.remove();

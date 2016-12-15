@@ -36,6 +36,7 @@ class ChatChannel {
     initData() {
         this.updateData();
         this.startAutoUpdate();
+        this.updateBttvData();
     }
 
     startAutoUpdate() {
@@ -82,6 +83,18 @@ class ChatChannel {
 
                 if (oldOnline === false && this._online) {
                     this._internalEvents.emit('online');
+                }
+            }
+        });
+    }
+
+    updateBttvData() {
+        request(`https://api.betterttv.net/2/channels/${this._name}`, (err, res, data) => {
+            if (!err && res.statusCode === 200) {
+                data = JSON.parse(data);
+                this._bttvEmotes = {};
+                for (let emote of data.emotes) {
+                    this._bttvEmotes[emote.code] = emote;
                 }
             }
         });
