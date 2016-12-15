@@ -29,6 +29,7 @@ class UIChatMessageHandler extends UIEventHandler {
         let line = new UIChatLine(message, channel.backend, userData, self);
         let lineContainer = line.parse(false);
         linesList.appendChild(lineContainer);
+        [].forEach.call(linesList.querySelectorAll('li:nth-last-child(n+1001)'), line => linesList.removeChild(line));
         channel.autoScroll();
         channel.markNewMessage();
     }

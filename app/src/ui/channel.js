@@ -182,6 +182,8 @@ class UIChannel {
 
         linesList.appendChild(lineContainer);
 
+        [].forEach.call(linesList.querySelectorAll('li:nth-last-child(n+1001)'), line => linesList.removeChild(line));
+
         this.autoScroll();
     }
 
