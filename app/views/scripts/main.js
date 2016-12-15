@@ -8,6 +8,7 @@ const UIEventHandler = require('../src/ui/eventHandler');
 
 const chatEmotes = remote.require('./chat/emotes');
 const channelManager = remote.require('./chat/channelManager');
+const chatConnection = remote.require('./chat/connection');
 
 DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.message-form', function (e) {
     e.preventDefault();
@@ -42,4 +43,26 @@ function windowLoaded(thisBrowserWindow) {
     document.getElementById('channel-add').addEventListener('click', () => {
         remote.require('./ui/window/manager').getWindow('channel').show('main');
     });
+
+    let toggleStreamerMode = () => {
+        let me = chatConnection.userName;
+        if (!channelManager.get(me)) {
+            uiChannelManager.on('channel-added', function addedCallback(channel) {
+                if (channel === me) {
+                    uiChannelManager.removeListener('channel-added', addedCallback);
+                    toggleStreamerMode();
+                }
+            });
+            channelManager.add(me);
+        }
+        else if (document.body.classList.contains('streamer-mode')) {
+            document.body.classList.remove('streamer-mode');
+        }
+        else {
+            activateTab(document.getElementById('main-window'), me);
+            document.body.classList.add('streamer-mode');
+        }
+    }
+
+    document.getElementById('streamer-mode-toggle').addEventListener('click', toggleStreamerMode);
 }

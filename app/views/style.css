@@ -723,3 +723,33 @@ body.darwin .dialog {
 .darwin #system-buttons-mac, .win32 #system-buttons-windows {
     display: block;
 }
+
+body.streamer-mode #sidebar {
+    display: none;
+}
+
+body.darwin.streamer-mode .channel-info {
+    padding-left: 64px;
+}
+
+body.streamer-mode .name {
+    display: none;
+}
+
+body.streamer-mode .channel-info .game:not(:empty):before {
+    content: 'Playing ';
+}
+
+#streamer-mode-toggle {
+    width: 24px;
+    height: 24px;
+    color: #535559;
+    margin: 6px;
+    clear: both;
+    float: left;
+    cursor: pointer;
+}
+
+body.streamer-mode #streamer-mode-toggle {
+    color: #d3d3d3;
+}

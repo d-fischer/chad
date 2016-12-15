@@ -2,8 +2,11 @@
 
 const UIChannel = require('./channel');
 
-class UIChannelManager {
+const {EventEmitter} = require('events');
+
+class UIChannelManager extends EventEmitter {
     constructor() {
+        super();
         this._channels = {};
     }
 
@@ -13,6 +16,7 @@ class UIChannelManager {
 
     add(channelName) {
         this._channels[channelName] = new UIChannel(channelName);
+        this.emit('channel-added', channelName);
     }
 
     getAll() {

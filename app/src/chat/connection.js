@@ -13,12 +13,14 @@ class ChatConnection {
         this._config = settings.getSync('connection') || {};
         this._emoteSets = {};
         this._connectStatus = undefined;
+        this._userName = undefined;
     }
 
     connect() {
         let connectPromise = new Promise((resolve, reject) => {
             this._config = settings.getSync('connection') || {};
             if (this._config && this._config.username && this._config.token) {
+                this._userName = this._config.username;
                 if (this._chatInterface) {
                     this._chatInterface.disconnect();
                     this._connectStatus = undefined;
@@ -74,6 +76,10 @@ class ChatConnection {
 
     get emoteSets() {
         return this._emoteSets;
+    }
+
+    get userName() {
+        return this._userName;
     }
 }
 
