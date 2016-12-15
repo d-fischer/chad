@@ -67,8 +67,11 @@ app.on('ready', function () {
     createWindow();
 });
 
-// this keeps the process open
+// TODO: tray icon for Windows here
 app.on('window-all-closed', function () {
+    if (process.platform !== 'darwin') {
+        app.quit();
+    }
 });
 
 app.on('activate', function () {
