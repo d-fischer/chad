@@ -744,10 +744,19 @@ body.streamer-mode .channel-info .game:not(:empty):before {
     width: 24px;
     height: 24px;
     color: #535559;
-    margin: 6px;
     clear: both;
-    float: left;
     cursor: pointer;
+    -webkit-app-region: no-drag;
+}
+
+body.win32 #streamer-mode-toggle {
+    margin: 0 8px;
+    float: right;
+}
+
+body.darwin #streamer-mode-toggle {
+    margin: 6px;
+    float: left;
 }
 
 body.streamer-mode #streamer-mode-toggle {

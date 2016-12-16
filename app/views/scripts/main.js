@@ -62,7 +62,7 @@ function windowLoaded(thisBrowserWindow) {
             activateTab(document.getElementById('main-window'), me);
             document.body.classList.add('streamer-mode');
         }
-    }
+    };
 
     document.getElementById('streamer-mode-toggle').addEventListener('click', toggleStreamerMode);
 }
