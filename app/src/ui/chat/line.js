@@ -33,6 +33,9 @@ const _cheerEmotes = {
     }
 };
 
+const _cheerTypes = ['cheer', 'kappa', 'kreygasm', 'swiftrage', 'muxy', 'streamlabs'];
+const _cheerAlternation = _cheerTypes.join('|');
+
 class UIChatLine {
     constructor(text, channel, userState, self, time) {
         this._channel = channel;
@@ -44,8 +47,15 @@ class UIChatLine {
         this._time = time || new Date();
     }
 
+    get isCheer() {
+        return this._userState['message-type'] === 'cheer';
+    }
+
+    get isAction() {
+        return this._userState['message-type'] === 'action';
+    }
+
     parse() {
-        let isAction = this._userState['message-type'] === 'action';
         let userColor = UIChatLine._adjustColor(this._user.color);
 
         let lineFrag = document.getElementById('chat-message-template').content.cloneNode(true);
@@ -109,10 +119,10 @@ class UIChatLine {
         userPart.style.color = userColor;
         userPart.textContent = this._user.displayName;
 
-        lineFrag.querySelector('.sep').textContent = isAction ? ' ' : ': ';
+        lineFrag.querySelector('.sep').textContent = this.isAction ? ' ' : ': ';
 
         let textPart = lineFrag.querySelector('.message');
-        if (isAction) {
+        if (this.isAction) {
             textPart.style.color = userColor;
         }
         this.parseTextInto(textPart);
@@ -185,10 +195,10 @@ class UIChatLine {
     parseWord(word) {
         let twitchEmotes = chatEmotes.getOwnTwitchEmotes();
         let bttvEmotes = chatEmotes.getBttvEmotes(this._channel._name);
-        let cheerMatch = word.match(/^cheer(\d+)$/);
-        if (!this._self && cheerMatch) {
+        let cheerMatch = word.match(new RegExp(`^(${_cheerAlternation})(\\d+)$`, 'i'));
+        if (this.isCheer && cheerMatch) {
             this.appendCurrentText();
-            this.appendCheerEmote(cheerMatch[1]);
+            this.appendCheerEmote(cheerMatch[2], cheerMatch[1]);
         }
         else if (this._self && word in twitchEmotes) {
             this.appendCurrentText();
@@ -252,7 +262,7 @@ class UIChatLine {
         this._textElem.appendChild(img);
     }
 
-    appendCheerEmote(count) {
+    appendCheerEmote(count, type = null) {
         count = +count;
         let img = document.createElement('img');
         img.classList.add('emote');
@@ -260,9 +270,17 @@ class UIChatLine {
         let highestEmote = Object.keys(_cheerEmotes).sort((a, b) => b - a).filter(a => a <= count)[0] || 1;
         let emoteData = _cheerEmotes[highestEmote];
 
-        img.src = `http://static-cdn.jtvnw.net/bits/dark/animated/${emoteData.image}/1`;
-        img.setAttribute('srcset', `http://static-cdn.jtvnw.net/bits/dark/animated/${emoteData.image}/2 2x`);
-        img.setAttribute('alt', `cheer${count}`);
+        let imgBaseUrl;
+        if (!type || type === 'cheer') {
+            imgBaseUrl = `https://static-cdn.jtvnw.net/bits/dark/animated/${emoteData.image}`;
+        }
+        else {
+            imgBaseUrl = `https://d3aqoihi2n8ty8.cloudfront.net/actions/${type}/dark/animated/${highestEmote}`;
+        }
+
+        img.src = `${imgBaseUrl}/1.gif`;
+        img.setAttribute('srcset', `${imgBaseUrl}/2.gif 2x`);
+        img.setAttribute('alt', `${type || 'cheer'}${count}`);
         this._textElem.appendChild(img);
 
         let countElem = document.createElement('strong');
