@@ -64,5 +64,5 @@ function windowLoaded(thisBrowserWindow) {
         }
     };
 
-    document.getElementById('streamer-mode-toggle').addEventListener('click', toggleStreamerMode);
+    DomEvents.delegate(document.body, 'click', '.streamer-mode-toggle', toggleStreamerMode());
 }

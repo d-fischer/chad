@@ -20,6 +20,23 @@
         </div>
         <ul class="messages"></ul>
         <form class="message-form">
+            <div class="streamer-mode-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
+                    <defs>
+                        <mask id="tower-mask">
+                            <rect x="0" y="0" width="320" height="320" fill="white" ></rect>
+                            <polygon points="100,300 220,300 160,140" fill="white" stroke="black" stroke-width="20" ></polygon>
+                        </mask>
+                    </defs>
+                    <circle cx="160" cy="120" r="20" fill="currentColor" ></circle>
+                    <g mask="url(#tower-mask)">
+                        <circle cx="160" cy="120" r="40" stroke-width="4" stroke="currentColor" fill="none" ></circle>
+                        <circle cx="160" cy="120" r="72" stroke-width="6" stroke="currentColor" fill="none" ></circle>
+                        <circle cx="160" cy="120" r="106" stroke-width="8" stroke="currentColor" fill="none" ></circle>
+                    </g>
+                    <polygon points="100,300 220,300 160,140" fill="currentColor" ></polygon>
+                </svg>
+            </div>
             <input class="message-box"/>
             <button type="submit">Send</button>
         </form>
@@ -40,18 +57,6 @@
     </li>
 </template>
 
-<div id="dialogs">
-    <div class="dialog" id="channel-add-dialog">
-        <div class="dialog-body">
-            <label>
-                Search channel:
-                <input id="channel-add-search"/>
-            </label>
-            <ul id="channel-add-list"></ul>
-        </div>
-    </div>
-</div>
-<div id="active-dialog" class="overlay hidden"></div>
 <div id="main-window" class="tab-container">
     <div id="sidebar">
         <div class="top-bar"></div>
@@ -60,6 +65,25 @@
                 <button>Add channel</button>
             </li>
         </ul>
+        <form id="settings-footer">
+            <div class="streamer-mode-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
+                    <defs>
+                        <mask id="tower-mask">
+                            <rect x="0" y="0" width="320" height="320" fill="white" ></rect>
+                            <polygon points="100,300 220,300 160,140" fill="white" stroke="black" stroke-width="20" ></polygon>
+                        </mask>
+                    </defs>
+                    <circle cx="160" cy="120" r="20" fill="currentColor" ></circle>
+                    <g mask="url(#tower-mask)">
+                        <circle cx="160" cy="120" r="40" stroke-width="4" stroke="currentColor" fill="none" ></circle>
+                        <circle cx="160" cy="120" r="72" stroke-width="6" stroke="currentColor" fill="none" ></circle>
+                        <circle cx="160" cy="120" r="106" stroke-width="8" stroke="currentColor" fill="none" ></circle>
+                    </g>
+                    <polygon points="100,300 220,300 160,140" fill="currentColor" ></polygon>
+                </svg>
+            </div>
+        </form>
     </div>
     <div id="main">
         <div id="channel-windows" class="tabs">
@@ -84,23 +108,6 @@
         <button class="system-button close"></button>
         <button class="system-button min"></button>
         <button class="system-button max"></button>
-    </div>
-    <div id="streamer-mode-toggle">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
-            <defs>
-                <mask id="tower-mask">
-                    <rect x="0" y="0" width="320" height="320" fill="white" ></rect>
-                    <polygon points="100,300 220,300 160,140" fill="white" stroke="black" stroke-width="20" ></polygon>
-                </mask>
-            </defs>
-            <circle cx="160" cy="120" r="20" fill="currentColor" ></circle>
-            <g mask="url(#tower-mask)">
-                <circle cx="160" cy="120" r="40" stroke-width="4" stroke="currentColor" fill="none" ></circle>
-                <circle cx="160" cy="120" r="72" stroke-width="6" stroke="currentColor" fill="none" ></circle>
-                <circle cx="160" cy="120" r="106" stroke-width="8" stroke="currentColor" fill="none" ></circle>
-            </g>
-            <polygon points="100,300 220,300 160,140" fill="currentColor" ></polygon>
-        </svg>
     </div>
 </div>
 </body>

@@ -27,7 +27,7 @@ a {
 }
 
 button {
-    border: 2px solid #555;
+    border: 1px solid #555;
     background: none;
     color: #d3d3d3;
     border-radius: 3px;
@@ -143,8 +143,7 @@ button {
 }
 
 #sidebar {
-    flex: 0;
-    flex-basis: 200px;
+    flex: 0 0 200px;
     display: flex;
     flex-direction: column;
     background: #141414;
@@ -215,6 +214,8 @@ button {
     -webkit-user-select: auto;
     padding: 5px 15px 0;
     margin: 0;
+    /*noinspection CssInvalidPropertyValue*/
+    word-break: break-word;
 }
 
 .arrow-text {
@@ -228,7 +229,7 @@ button {
     font-size: 18px;
 }
 
-.message-form {
+.message-form, #settings-footer {
     flex: 0 0;
     flex-basis: 30px;
     display: flex;
@@ -238,7 +239,7 @@ button {
 }
 
 .message-form input, .message-form button {
-    border: 2px solid #555;
+    border: 1px solid #555;
     color: #888;
 }
 
@@ -280,7 +281,7 @@ button {
 
 .emote + .emote-bttv-58487cc6f52be01a7ee5f205 {
     margin-left: -34px;
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
 
 .emote + .emote-bttv-5849c9c8f52be01a7ee5f79e {
@@ -740,25 +741,26 @@ body.streamer-mode .channel-info .game:not(:empty):before {
     content: 'Playing ';
 }
 
-#streamer-mode-toggle {
+.streamer-mode-toggle {
+    display: block;
     width: 24px;
     height: 24px;
     color: #535559;
     clear: both;
     cursor: pointer;
     -webkit-app-region: no-drag;
+    margin: 2px;
 }
 
-body.win32 #streamer-mode-toggle {
-    margin: 0 8px;
-    float: right;
+.channel-window .streamer-mode-toggle {
+    display: none;
 }
 
-body.darwin #streamer-mode-toggle {
-    margin: 6px;
-    float: left;
+body.streamer-mode .streamer-mode-toggle {
+    display: block;
+    margin-right: 10px;
 }
 
-body.streamer-mode #streamer-mode-toggle {
+body.streamer-mode .streamer-mode-toggle {
     color: #d3d3d3;
 }
