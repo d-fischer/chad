@@ -39,4 +39,47 @@ function activateTab(tabContainer, tabName) {
     });
 }
 
+DomEvents.delegate(document.body, 'mouseenter', '[data-title]', function(e) {
+    if (this.dataset.title) {
+        let tip = document.createElement('div');
+        tip.classList.add('tooltip');
+        tip.textContent = this.dataset.title;
+        let left = getScrollLeftFrom(this, document.body);
+        left += this.offsetWidth / 2;
+        tip.style.left = left + 'px';
+        let top = getScrollTopFrom(this, document.body);
+        top += this.offsetHeight;
+        tip.style.top = top + 'px';
+        document.body.appendChild(tip);
+        this.addEventListener('mouseleave', function removeTooltip() {
+            document.body.removeChild(tip);
+            this.removeEventListener('mouseleave', removeTooltip);
+        });
+    }
+}, true);
+
+function getScrollLeftFrom(el, ancestor) {
+    let offset = 0;
+    do {
+        if (!isNaN(el.scrollLeft)) {
+            offset -= el.scrollLeft;
+            offset += el.offsetLeft;
+            console.log('left', offset);
+        }
+    } while (el !== ancestor && (el = el.offsetParent));
+    return offset;
+}
+
+function getScrollTopFrom(el, ancestor) {
+    let offset = 0;
+    do {
+        if (!isNaN(el.scrollTop)) {
+            offset -= el.scrollTop;
+            offset += el.offsetTop;
+            console.log('top', offset);
+        }
+    } while (el !== ancestor && (el = el.offsetParent));
+    return offset;
+}
+
 document.body.classList.add(process.platform);

@@ -242,6 +242,7 @@ class UIChatLine {
         img.src = `http://static-cdn.jtvnw.net/emoticons/v1/${emote.id}/1.0`;
         img.setAttribute('srcset', `http://static-cdn.jtvnw.net/emoticons/v1/${emote.id}/2.0 2x`);
         img.setAttribute('alt', text);
+        img.dataset.title = text;
         this._textElem.appendChild(img);
     }
 
@@ -253,6 +254,7 @@ class UIChatLine {
         img.src = `https://cdn.betterttv.net/emote/${emote.id}/1x`;
         img.setAttribute('srcset', `https://cdn.betterttv.net/emote/${emote.id}/2x 2x`);
         img.setAttribute('alt', text);
+        img.dataset.title = text;
         if ('width' in emote) {
             img.setAttribute('width', emote.width);
         }
@@ -280,7 +282,9 @@ class UIChatLine {
 
         img.src = `${imgBaseUrl}/1.gif`;
         img.setAttribute('srcset', `${imgBaseUrl}/2.gif 2x`);
-        img.setAttribute('alt', `${type || 'cheer'}${count}`);
+        let name = `${type || 'cheer'}${count}`;
+        img.setAttribute('alt', name);
+        img.dataset.title = name;
         this._textElem.appendChild(img);
 
         let countElem = document.createElement('strong');
