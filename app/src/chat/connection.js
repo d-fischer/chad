@@ -11,24 +11,20 @@ class ChatConnection {
     constructor() {
         this._chatInterface = undefined;
         this._config = settings.getSync('connection') || {};
-        this._emoteSets = {};
-        this._connectStatus = undefined;
         this._userName = undefined;
     }
 
     connect() {
-        let connectPromise = new Promise((resolve, reject) => {
+        let connectFn = (resolve, reject) => {
             this._config = settings.getSync('connection') || {};
             if (this._config && this._config.username && this._config.token) {
                 this._userName = this._config.username;
                 if (this._chatInterface) {
-                    this._chatInterface.disconnect();
-                    this._connectStatus = undefined;
+                    throw new Error('can\'t connect twice at the same time');
                 }
-                let _client = this._chatInterface = new tmi.client({
+                this._chatInterface = new tmi.client({
                     debug: true,
                     connection: {
-                        // cluster: 'aws',
                         reconnect: true
                     },
                     identity: {
@@ -43,22 +39,26 @@ class ChatConnection {
                     'timeout', 'unhost', 'whisper',
                     'connecting', 'connected', 'disconnected'
                 ]) {
-                    _client.on(eventName, chatEvents.emit.bind(chatEvents, eventName));
+                    this._chatInterface.on(eventName, function (...args) {
+                        chatEvents.emit(eventName, ...args);
+                    });
                 }
-                _client.on('emotesets', sets => this._emoteSets = sets);
-                _client.connect().then(resolve, err => {
+                this._chatInterface.connect().then(resolve, err => {
                     reject(new ChatConnectionError(err));
                 });
             }
             else {
                 reject(new SettingsMissingError);
             }
-        });
+        };
         if (this.isConnected) {
-            return this._chatInterface.disconnect().then(connectPromise);
+            return this._chatInterface.disconnect().then(() => {
+                this._chatInterface = undefined;
+                return new Promise(connectFn);
+            });
         }
         else {
-            return connectPromise;
+            return new Promise(connectFn);
         }
     }
 
@@ -72,10 +72,6 @@ class ChatConnection {
 
     get chatInterface() {
         return this._chatInterface;
-    }
-
-    get emoteSets() {
-        return this._emoteSets;
     }
 
     get userName() {

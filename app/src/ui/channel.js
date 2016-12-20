@@ -13,8 +13,15 @@ class UIChannel {
         this._name = name;
         this._guiShown = false;
         let backend = this.backend;
-        backend.on('updated', this.updateGuiWithChannelData.bind(this));
-        backend.on('online', this.notifyOnline.bind(this));
+        let updateGuiCb = this.updateGuiWithChannelData.bind(this);
+        let onlineCb = this.notifyOnline.bind(this);
+        backend.on('updated', updateGuiCb);
+        backend.on('online', onlineCb);
+        this.destroyEvents = () => {
+            let backend = this.backend;
+            backend.off('updated', updateGuiCb);
+            backend.off('online', onlineCb);
+        };
         this._listElement = undefined;
         this._element = undefined;
         this._badgeStyle = document.createElement('style');
@@ -118,9 +125,7 @@ class UIChannel {
     }
 
     destroy() {
-        let backend = this.backend;
-        backend.off('updated', this.updateGuiWithChannelData.bind(this));
-        backend.off('online', this.notifyOnline.bind(this));
+        this.destroyEvents();
 
         if (this._guiShown) {
             this._listElement.remove();

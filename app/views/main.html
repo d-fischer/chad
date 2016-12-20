@@ -20,22 +20,71 @@
         </div>
         <ul class="messages"></ul>
         <form class="message-form">
-            <div class="streamer-mode-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
-                    <defs>
-                        <mask id="tower-mask">
-                            <rect x="0" y="0" width="320" height="320" fill="white" ></rect>
-                            <polygon points="100,300 220,300 160,140" fill="white" stroke="black" stroke-width="20" ></polygon>
-                        </mask>
-                    </defs>
-                    <circle cx="160" cy="120" r="20" fill="currentColor" ></circle>
-                    <g mask="url(#tower-mask)">
-                        <circle cx="160" cy="120" r="40" stroke-width="4" stroke="currentColor" fill="none" ></circle>
-                        <circle cx="160" cy="120" r="72" stroke-width="6" stroke="currentColor" fill="none" ></circle>
-                        <circle cx="160" cy="120" r="106" stroke-width="8" stroke="currentColor" fill="none" ></circle>
-                    </g>
-                    <polygon points="100,300 220,300 160,140" fill="currentColor" ></polygon>
-                </svg>
+            <div class="settings-footer">
+                <div class="settings-button streamer-mode-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
+                        <defs>
+                            <mask id="tower-mask">
+                                <rect x="0" y="0" width="320" height="320" fill="white" ></rect>
+                                <polygon points="100,300 220,300 160,140" fill="white" stroke="black" stroke-width="20" ></polygon>
+                            </mask>
+                        </defs>
+                        <circle cx="160" cy="120" r="20" fill="currentColor" ></circle>
+                        <g mask="url(#tower-mask)">
+                            <circle cx="160" cy="120" r="40" stroke-width="4" stroke="currentColor" fill="none" ></circle>
+                            <circle cx="160" cy="120" r="72" stroke-width="6" stroke="currentColor" fill="none" ></circle>
+                            <circle cx="160" cy="120" r="106" stroke-width="8" stroke="currentColor" fill="none" ></circle>
+                        </g>
+                        <polygon points="100,300 220,300 160,140" fill="currentColor" ></polygon>
+                    </svg>
+                </div>
+                <div class="settings-button open-settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2">
+                        <defs>
+                            <mask id="center-circle-mask">
+                                <rect x="0" y="0" width="2" height="2" fill="white" ></rect>
+                                <circle cx="1" cy="1" r="0.4" fill="black" ></circle>
+                            </mask>
+                        </defs>
+                        <g mask="url(#center-circle-mask)">
+                            <path d="
+                                M
+                                1.7071067811865,1.7071067811865
+                                Q
+                                1.1414213562373,0.8585786437627 0.2928932188135,0.2928932188135
+                                0.8585786437627,1.1414213562373 1.7071067811865,1.7071067811865
+                                Z
+                                " stroke-width="0.3" stroke="currentColor" ></path>
+
+                            <path d="
+                                M
+                                1.7071067811865,0.2928932188135
+                                Q
+                                1.1414213562373,1.1414213562373 0.2928932188135,1.7071067811865
+                                0.8585786437627,0.8585786437627 1.7071067811865,0.2928932188135
+                                Z
+                                " stroke-width="0.3" stroke="currentColor" ></path>
+
+                            <path d="
+                                M
+                                1,0
+                                Q
+                                0.8,1 1,2
+                                1.2,1 1,0
+                                " stroke-width="0.3" stroke="currentColor" ></path>
+
+                            <path d="
+                                M
+                                0,1
+                                Q
+                                1,0.8 2,1
+                                1,1.2 0,1
+                                " stroke-width="0.3" stroke="currentColor" ></path>
+
+                            <circle fill="currentColor" cx="1" cy="1" r="0.8" ></circle>
+                        </g>
+                    </svg>
+                </div>
             </div>
             <input class="message-box"/>
             <button type="submit">Send</button>
@@ -65,8 +114,8 @@
                 <button>Add channel</button>
             </li>
         </ul>
-        <form id="settings-footer">
-            <div class="streamer-mode-toggle">
+        <div class="settings-footer">
+            <div class="settings-button streamer-mode-toggle">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
                     <defs>
                         <mask id="tower-mask">
@@ -83,7 +132,54 @@
                     <polygon points="100,300 220,300 160,140" fill="currentColor" ></polygon>
                 </svg>
             </div>
-        </form>
+            <div class="settings-button open-settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2">
+                    <defs>
+                        <mask id="center-circle-mask">
+                            <rect x="0" y="0" width="2" height="2" fill="white" ></rect>
+                            <circle cx="1" cy="1" r="0.4" fill="black" ></circle>
+                        </mask>
+                    </defs>
+                    <g mask="url(#center-circle-mask)">
+                        <path d="
+                            M
+                            1.7071067811865,1.7071067811865
+                            Q
+                            1.1414213562373,0.8585786437627 0.2928932188135,0.2928932188135
+                            0.8585786437627,1.1414213562373 1.7071067811865,1.7071067811865
+                            Z
+                            " stroke-width="0.3" stroke="currentColor" ></path>
+
+                        <path d="
+                            M
+                            1.7071067811865,0.2928932188135
+                            Q
+                            1.1414213562373,1.1414213562373 0.2928932188135,1.7071067811865
+                            0.8585786437627,0.8585786437627 1.7071067811865,0.2928932188135
+                            Z
+                            " stroke-width="0.3" stroke="currentColor" ></path>
+
+                        <path d="
+                            M
+                            1,0
+                            Q
+                            0.8,1 1,2
+                            1.2,1 1,0
+                            " stroke-width="0.3" stroke="currentColor" ></path>
+
+                        <path d="
+                            M
+                            0,1
+                            Q
+                            1,0.8 2,1
+                            1,1.2 0,1
+                            " stroke-width="0.3" stroke="currentColor" ></path>
+
+                        <circle fill="currentColor" cx="1" cy="1" r="0.8" ></circle>
+                    </g>
+                </svg>
+            </div>
+        </div>
     </div>
     <div id="main">
         <div id="channel-windows" class="tabs">

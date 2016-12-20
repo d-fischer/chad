@@ -32,7 +32,7 @@ class WindowManager {
     }
 
     closeAll() {
-        for (let wnd in this._windows) {
+        for (let wnd of Object.keys(this._windows).reverse()) {
             if (this._windows.hasOwnProperty(wnd)) {
                 this._windows[wnd].close();
             }

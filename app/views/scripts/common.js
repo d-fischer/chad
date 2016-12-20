@@ -64,7 +64,6 @@ function getScrollLeftFrom(el, ancestor) {
         if (!isNaN(el.scrollLeft)) {
             offset -= el.scrollLeft;
             offset += el.offsetLeft;
-            console.log('left', offset);
         }
     } while (el !== ancestor && (el = el.offsetParent));
     return offset;
@@ -76,7 +75,6 @@ function getScrollTopFrom(el, ancestor) {
         if (!isNaN(el.scrollTop)) {
             offset -= el.scrollTop;
             offset += el.offsetTop;
-            console.log('top', offset);
         }
     } while (el !== ancestor && (el = el.offsetParent));
     return offset;

@@ -22,7 +22,6 @@ class UIChatMessageHandler extends UIEventHandler {
     }
 
     handleMessage(channelName, userData, message, self) {
-        // console.log(channelName, userData, message, self);
         channelName = channelName.substring(1);
         let channel = uiChannelManager.get(channelName);
         let linesList = channel._element.querySelector('.messages');

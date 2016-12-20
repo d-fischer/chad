@@ -21,14 +21,16 @@ DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.messa
 });
 
 uiChannelManager.addAll(channelManager.getAllNames());
-channelManager.on('channel-added', channel => uiChannelManager.add(channel));
+let channelAddHandler = channel => uiChannelManager.add(channel);
+channelManager.on('channel-added', channelAddHandler);
 chatEmotes.init();
 
 function windowLoaded(thisBrowserWindow) {
     window.closeWindow = () => {
         UIEventHandler.removeAll();
         uiChannelManager.removeAll();
-        thisBrowserWindow.close()
+        channelManager.removeListener('channel-added', channelAddHandler);
+        thisBrowserWindow.close();
     };
 
     [].forEach.call(document.querySelectorAll(".system-button.min"),
@@ -65,4 +67,10 @@ function windowLoaded(thisBrowserWindow) {
     };
 
     DomEvents.delegate(document.body, 'click', '.streamer-mode-toggle', toggleStreamerMode);
+
+    DomEvents.delegate(document.body, 'click', '.open-settings', () => {
+        remote.require('./ui/window/manager').getWindow('settings').show('main', {
+            selectedPanel: 'connection'
+        });
+    });
 }

@@ -249,7 +249,6 @@ class UIChatLine {
     appendBttvEmote(emote, text) {
         let img = document.createElement('img');
         img.classList.add('emote', 'emote-bttv-' + emote.id);
-        console.log(emote);
 
         img.src = `https://cdn.betterttv.net/emote/${emote.id}/1x`;
         img.setAttribute('srcset', `https://cdn.betterttv.net/emote/${emote.id}/2x 2x`);

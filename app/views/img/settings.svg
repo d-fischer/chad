@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2">
+    <defs>
+        <mask id="center-circle-mask">
+            <rect x="0" y="0" width="2" height="2" fill="white" />
+            <circle cx="1" cy="1" r="0.4" fill="black" />
+        </mask>
+    </defs>
+    <g mask="url(#center-circle-mask)">
+        <path d="
+		M
+		1.7071067811865,1.7071067811865
+		Q
+		1.1414213562373,0.8585786437627 0.2928932188135,0.2928932188135
+		0.8585786437627,1.1414213562373 1.7071067811865,1.7071067811865
+		Z
+		" stroke-width="0.3" stroke="black" />
+
+        <path d="
+		M
+		1.7071067811865,0.2928932188135
+		Q
+		1.1414213562373,1.1414213562373 0.2928932188135,1.7071067811865
+		0.8585786437627,0.8585786437627 1.7071067811865,0.2928932188135
+		Z
+		" stroke-width="0.3" stroke="black" />
+
+        <path d="
+		M
+		1,0
+		Q
+		0.8,1 1,2
+		1.2,1 1,0
+		" stroke-width="0.3" stroke="black" />
+
+        <path d="
+		M
+		0,1
+		Q
+		1,0.8 2,1
+		1,1.2 0,1
+		" stroke-width="0.3" stroke="black" />
+
+        <circle fill="black" cx="1" cy="1" r="0.8" />
+    </g>
+</svg>
