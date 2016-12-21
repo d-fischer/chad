@@ -5,7 +5,7 @@ const {Menu, app, BrowserWindow} = electron;
 
 global['chatChannelManager'] = require('./chat/channelManager');
 
-const settings = require('./settings');
+const settings = require('./settings/settings');
 const windowManager = require('./ui/window/manager');
 const chatEvents = require('./chat/events');
 
@@ -27,11 +27,11 @@ function createWindow() {
 function initConnection() {
     if (!chatConnection)
     {
-        let connection = settings.getSync('connection');
+        let connection = settings.get('connection');
         if (connection && connection.username && connection.token) {
             chatConnection = require('./chat/connection');
             chatConnection.connect().then(() => {
-                let channels = settings.getSync('connection.channels') || [];
+                let channels = settings.get('connection:channels') || [];
                 chatChannelManager.addAll(channels);
             });
 
@@ -118,9 +118,6 @@ function initMenu() {
         {
             label: 'View',
             submenu: [
-                {
-                    role: 'reload'
-                },
                 {
                     role: 'toggledevtools'
                 },

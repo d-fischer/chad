@@ -1,10 +1,10 @@
 'use strict';
 
-const chatEvents = require('./events');
 const {EventEmitter} = require('events');
 
 const twitchAPIRequest = require('../request/twitchAPI');
 const request = require('request');
+const cache = require('../settings/cache');
 
 let channels = {};
 
@@ -34,6 +34,7 @@ class ChatChannel {
     }
 
     initData() {
+        this._setData(cache.get(`channel:${this._name}`));
         this.updateData();
         this.startAutoUpdate();
         this.updateBttvData();
@@ -46,11 +47,23 @@ class ChatChannel {
         this._updateTimer = setInterval(() => this.updateData(), this._updateInterval * 60 * 1000);
     }
 
+    _setData(data, fromCache = false) {
+        if (data) {
+            this._channelData = data;
+            this._channelLogo = data.logo || this._channelLogo;
+            this._displayName = data.display_name;
+            this._gameName = data.game || '';
+            this._statusText = data.status || '';
+
+            if (!fromCache) {
+                cache.set(`channel:${this._name}`, data);
+            }
+        }
+    }
+
     updateData() {
         twitchAPIRequest(`https://api.twitch.tv/kraken/streams/${this._name}`, (data, success) => {
             if (success) {
-                // this._streamData = data.stream;
-
                 let oldOnline = this._online;
 
                 if (!data.stream) {
@@ -58,26 +71,14 @@ class ChatChannel {
 
                     twitchAPIRequest(`https://api.twitch.tv/kraken/channels/${this._name}`, (data, success) => {
                         if (success) {
-                            this._channelData = data;
-                            this._channelLogo = data.logo || this._channelLogo;
-                            this._displayName = data.display_name;
-                            this._gameName = data.game || '';
-                            this._statusText = data.status || '';
-
+                            this._setData(data);
                             this._internalEvents.emit('updated');
                         }
                     });
                 }
                 else {
                     this._online = true;
-
-                    let channelData = data.stream.channel;
-                    this._channelData = channelData;
-                    this._channelLogo = channelData.logo || this._channelLogo;
-                    this._displayName = channelData.display_name;
-                    this._gameName = channelData.game || '';
-                    this._statusText = channelData.status || '';
-
+                    this._setData(data.stream.channel);
                     this._internalEvents.emit('updated');
                 }
 

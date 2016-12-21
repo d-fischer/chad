@@ -1,7 +1,7 @@
 'use strict';
 
 const tmi = require('tmi.js');
-const settings = require('../settings');
+const settings = require('../settings/settings');
 const chatEvents = require('./events');
 
 const ChatConnectionError = require('../error/chat-connection');
@@ -10,13 +10,13 @@ const SettingsMissingError = require('../error/settings-missing');
 class ChatConnection {
     constructor() {
         this._chatInterface = undefined;
-        this._config = settings.getSync('connection') || {};
+        this._config = settings.get('connection') || {};
         this._userName = undefined;
     }
 
     connect() {
         let connectFn = (resolve, reject) => {
-            this._config = settings.getSync('connection') || {};
+            this._config = settings.get('connection') || {};
             if (this._config && this._config.username && this._config.token) {
                 this._userName = this._config.username;
                 if (this._chatInterface) {

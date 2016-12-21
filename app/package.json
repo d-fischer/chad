@@ -14,9 +14,9 @@
   "license": "GPL-3.0",
   "dependencies": {
     "app-root-path": "^2.0.1",
-    "electron-settings": "^2.2.2",
     "html-entities": "^1.2.0",
     "merge": "^1.2.0",
+    "nconf": "^0.8.4",
     "request": "^2.71.0",
     "tinycolor2": "^1.4.1",
     "tmi.js": "d-4-ni/tmi.js#resub-message"

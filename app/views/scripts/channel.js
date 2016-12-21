@@ -1,4 +1,4 @@
-const settings = remote.require('./settings');
+const settings = remote.require('./settings/settings');
 const twitchAPIRequest = remote.require('./request/twitchAPI');
 const channelManager = remote.require('./chat/channelManager');
 
@@ -16,7 +16,7 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
     if (!e.target.value) {
         return;
     }
-    let currentChannels = settings.getSync('connection.channels') || [];
+    let currentChannels = settings.get('connection:channels') || [];
     const url = 'https://api.twitch.tv/kraken/search/channels?limit=25&q=' + encodeURIComponent(e.target.value);
     twitchAPIRequest(url, (data, success) => {
         // have we already sent another request after this one? then ignore this one
@@ -42,12 +42,12 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
 
 function windowLoaded(thisBrowserWindow) {
     DomEvents.delegate(list, 'click', '.channel-list-item', function() {
-        let currentChannels = (settings.getSync('connection.channels') || []).slice();
+        let currentChannels = (settings.get('connection:channels') || []).slice();
         let newChannel = this.dataset.name;
         if (currentChannels.indexOf(newChannel) === -1) {
             currentChannels.push(newChannel);
             this.classList.add('joined');
-            settings.set('connection.channels', currentChannels);
+            settings.set('connection:channels', currentChannels);
             channelManager.add(newChannel);
             thisBrowserWindow.close();
         }
