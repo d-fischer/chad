@@ -41,7 +41,7 @@ class UIChatLine {
         this._channel = channel;
         this._self = self;
         this._userState = userState;
-        this._user = new ChatUser(userState, channel);
+        this._user = new ChatUser(userState);
         this._text = text;
         this._textElem = undefined;
         this._time = time || new Date();
@@ -194,7 +194,7 @@ class UIChatLine {
 
     parseWord(word) {
         let twitchEmotes = chatEmotes.getOwnTwitchEmotes();
-        let bttvEmotes = chatEmotes.getBttvEmotes(this._channel._name);
+        let bttvEmotes = chatEmotes.getBttvEmotes(this._channel);
         let cheerMatch = word.match(new RegExp(`^(${_cheerAlternation})(\\d+)$`, 'i'));
         if (this.isCheer && cheerMatch) {
             this.appendCurrentText();

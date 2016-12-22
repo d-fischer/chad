@@ -15,12 +15,15 @@ class UIChannel {
         let backend = this.backend;
         let updateGuiCb = this.updateGuiWithChannelData.bind(this);
         let onlineCb = this.notifyOnline.bind(this);
+        let destroyCb = this.destroy.bind(this);
         backend.on('updated', updateGuiCb);
         backend.on('online', onlineCb);
+        backend.on('leaving', destroyCb);
         this.destroyEvents = () => {
             let backend = this.backend;
             backend.off('updated', updateGuiCb);
             backend.off('online', onlineCb);
+            backend.off('leaving', destroyCb);
         };
         this._listElement = undefined;
         this._element = undefined;
@@ -32,6 +35,10 @@ class UIChannel {
 
     get backend() {
         return channelManager.get(this._name);
+    }
+
+    get name() {
+        return this._name;
     }
 
     updateBadges() {

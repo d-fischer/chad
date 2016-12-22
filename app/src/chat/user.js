@@ -19,9 +19,8 @@ const defaultColors = [
 ];
 
 class ChatUser {
-    constructor(userData, channel) {
+    constructor(userData) {
         this._data = userData;
-        this._channel = channel;
     }
     
     get name() {

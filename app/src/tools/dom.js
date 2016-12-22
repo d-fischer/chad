@@ -2,7 +2,7 @@
 
 class DomTools {
     static clearChildren(node) {
-        var child;
+        let child;
         while (child = node.lastChild) {
             node.removeChild(child);
         }

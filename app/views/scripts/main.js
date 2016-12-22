@@ -10,6 +10,8 @@ const chatEmotes = remote.require('./chat/emotes');
 const channelManager = remote.require('./chat/channelManager');
 const chatConnection = remote.require('./chat/connection');
 
+const ChannelContextMenu = require('../src/ui/contextMenu/channel');
+
 DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.message-form', function (e) {
     e.preventDefault();
     let channelWindow = this.closest('.channel-window');
@@ -73,4 +75,12 @@ function windowLoaded(thisBrowserWindow) {
             selectedPanel: 'connection'
         });
     });
+
+    DomEvents.delegate(document.body, 'contextmenu', '.channel-link', function (e) {
+        if (!this._contextMenu) {
+            this._contextMenu = new ChannelContextMenu(uiChannelManager.get(this.dataset.tab));
+        }
+
+        this._contextMenu.show(e);
+    }, true)
 }
