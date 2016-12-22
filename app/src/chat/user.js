@@ -25,7 +25,7 @@ class ChatUser {
     }
     
     get name() {
-        return this._data.login;
+        return this._data.login || this._data.username;
     }
 
     get displayName() {
