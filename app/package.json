@@ -19,6 +19,7 @@
     "nconf": "^0.8.4",
     "request": "^2.71.0",
     "tinycolor2": "^1.4.1",
-    "tmi.js": "d-4-ni/tmi.js#resub-message"
+    "tmi.js": "d-4-ni/tmi.js#resub-message",
+    "vm2": "^3.1.0"
   }
 }
