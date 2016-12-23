@@ -54,4 +54,6 @@ function windowLoaded(thisBrowserWindow) {
     });
 
     document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
+
+    document.getElementById('channel-add-search').focus();
 }
