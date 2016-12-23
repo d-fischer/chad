@@ -10,6 +10,7 @@ const windowManager = require('./ui/window/manager');
 const chatEvents = require('./chat/events');
 
 let chatConnection;
+let keepAppOpen = false;
 
 function createWindow() {
     if (chatConnection) {
@@ -51,6 +52,7 @@ function initConnection() {
 }
 
 global.reconnect = () => {
+    keepAppOpen = true;
     windowManager.closeAll();
     if (chatConnection) {
         chatConnection.connect();
@@ -59,6 +61,7 @@ global.reconnect = () => {
         initConnection();
     }
     createWindow();
+    keepAppOpen = false;
 };
 
 app.on('ready', function () {
@@ -69,7 +72,7 @@ app.on('ready', function () {
 
 // TODO: tray icon for Windows here
 app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') {
+    if (process.platform !== 'darwin' && !keepAppOpen) {
         app.quit();
     }
 });
