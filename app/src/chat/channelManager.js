@@ -28,6 +28,10 @@ class ChatChannelManager extends EventEmitter {
         return Object.keys(this._channels);
     }
 
+    has(channelName) {
+        return channelName in this._channels;
+    }
+
     addAll(channelNames) {
         for (let channelName of channelNames) {
             this.add(channelName);

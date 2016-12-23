@@ -17,12 +17,14 @@ class ChannelContextMenu extends ContextMenu {
     }
 
     leave() {
-        let currentChannels = (settings.get('connection:channels') || []).slice();
         let removedChannel = this._channel.name;
-        let index = currentChannels.indexOf(removedChannel);
-        if (index !== -1) {
-            currentChannels.splice(index, 1);
-            settings.set('connection:channels', currentChannels);
+        if (channelManager.has(removedChannel)) {
+            let currentChannels = (settings.get('connection:channels') || []).slice();
+            let index = currentChannels.indexOf(removedChannel);
+            if (index !== -1) {
+                currentChannels.splice(index, 1);
+                settings.set('connection:channels', currentChannels);
+            }
             channelManager.remove(removedChannel);
         }
     }

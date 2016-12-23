@@ -42,13 +42,16 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
 
 function windowLoaded(thisBrowserWindow) {
     DomEvents.delegate(list, 'click', '.channel-list-item', function() {
-        let currentChannels = (settings.get('connection:channels') || []).slice();
         let newChannel = this.dataset.name;
+        let alreadyJoined = channelManager.has(newChannel);
+        let currentChannels = (settings.get('connection:channels') || []).slice();
         if (currentChannels.indexOf(newChannel) === -1) {
             currentChannels.push(newChannel);
-            this.classList.add('joined');
             settings.set('connection:channels', currentChannels);
-            channelManager.add(newChannel);
+            this.classList.add('joined');
+            if (!alreadyJoined) {
+                channelManager.add(newChannel);
+            }
             thisBrowserWindow.close();
         }
     });
