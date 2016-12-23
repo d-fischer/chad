@@ -116,7 +116,7 @@ button {
     opacity: .5;
 }
 
-.menu-item:hover {
+.menu-item:hover, .menu-item.has-context-menu {
     color: #e3e3e3;
     background-color: #343434;
 }
@@ -827,6 +827,12 @@ body.streamer-mode .settings-footer .streamer-mode-toggle {
     color: #b9b9b9;
     border-radius: 5px;
     overflow: hidden;
+    transition: transform .15s ease-out, opacity .15s ease-out;
+}
+
+.context-menu.hidden {
+    opacity: 0;
+    transform: translateX(-20px);
 }
 
 .context-menu-item {

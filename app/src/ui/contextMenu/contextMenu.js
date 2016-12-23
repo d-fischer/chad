@@ -1,18 +1,21 @@
 'use strict';
 
+const DomTools = require('../../tools/dom');
+
 class ContextMenu {
-    constructor() {
+    constructor(parentElem) {
         this._items = {
             oops: {
                 type: 'label',
                 label: 'If you see this, report a bug'
             }
         };
+        this._parentElem = parentElem;
         this._elem = undefined;
     }
 
-    _refreshDom(force=false) {
-        if (!this._elem || force) {
+    _refreshDom(force = false) {
+        if (!this._elem || this._elem.parentNode || force) {
             let menu = document.createElement('div');
             menu.classList.add('context-menu');
 
@@ -45,18 +48,27 @@ class ContextMenu {
     }
 
     show(mouseEvent) {
-        this._refreshDom();
         if (ContextMenu.current) {
             ContextMenu.current.hide();
         }
+        this._refreshDom();
         ContextMenu.current = this;
+        this._parentElem.classList.add('has-context-menu');
         this._elem.style.left = `${mouseEvent.clientX}px`;
         this._elem.style.top = `${mouseEvent.clientY}px`;
+        this._elem.classList.add('hidden');
         document.body.appendChild(this._elem);
+        DomTools.redraw(this._elem);
+        this._elem.classList.remove('hidden');
     }
 
     hide() {
-        document.body.removeChild(this._elem);
+        this._parentElem.classList.remove('has-context-menu');
+        DomTools.doAfterTransition(this._elem, function () {
+            document.body.removeChild(this);
+            this.classList.remove('hidden');
+        });
+        this._elem.classList.add('hidden');
         ContextMenu.current = null;
     }
 }

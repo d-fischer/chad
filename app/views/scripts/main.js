@@ -78,7 +78,7 @@ function windowLoaded(thisBrowserWindow) {
 
     DomEvents.delegate(document.body, 'contextmenu', '.channel-link', function (e) {
         if (!this._contextMenu) {
-            this._contextMenu = new ChannelContextMenu(uiChannelManager.get(this.dataset.tab));
+            this._contextMenu = new ChannelContextMenu(this, uiChannelManager.get(this.dataset.tab));
         }
 
         this._contextMenu.show(e);

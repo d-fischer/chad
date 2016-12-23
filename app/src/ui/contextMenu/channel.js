@@ -6,8 +6,8 @@ const settings = remote.require('./settings/settings');
 const channelManager = remote.require('./chat/channelManager');
 
 class ChannelContextMenu extends ContextMenu {
-    constructor(channel) {
-        super();
+    constructor(parentElem, channel) {
+        super(parentElem);
         this._items = {
             leave: {
                 label: 'Leave'
