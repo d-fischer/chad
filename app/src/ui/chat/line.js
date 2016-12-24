@@ -3,7 +3,6 @@
 const ChatUser = require('./../../chat/user');
 
 const {remote} = require('electron');
-const chatEmotes = remote.require('./chat/emotes');
 
 const TinyColor = require('tinycolor2');
 
@@ -193,6 +192,7 @@ class UIChatLine {
     }
 
     parseWord(word) {
+        let chatEmotes = remote.require('./chat/emotes');
         let twitchEmotes = chatEmotes.getOwnTwitchEmotes();
         let bttvEmotes = chatEmotes.getBttvEmotes(this._channel);
         let cheerMatch = word.match(new RegExp(`^(${_cheerAlternation})(\\d+)$`, 'i'));

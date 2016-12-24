@@ -16,35 +16,53 @@ class ContextMenu {
 
     _refreshDom(force = false) {
         if (!this._elem || this._elem.parentNode || force) {
-            let menu = document.createElement('div');
-            menu.classList.add('context-menu');
-
-            for (let itemName in this._items) {
-                if (this._items.hasOwnProperty(itemName)) {
-                    let item = this._items[itemName];
-                    let itemElem = document.createElement('div');
-                    if (item.type === 'divider') {
-                        itemElem.classList.add('context-menu-divider');
-                    } else {
-                        itemElem.classList.add('context-menu-item');
-                        itemElem.textContent = item.label || itemName;
-
-                        if (item.type === 'label') {
-                            itemElem.classList.add('label');
-                        }
-                        else {
-                            itemElem.onclick = () => {
-                                this[itemName].call(this);
-                                this.hide();
-                            };
-                        }
-                    }
-                    menu.appendChild(itemElem);
-                }
-            }
-
-            this._elem = menu;
+            this._elem = this._buildDom();
         }
+    }
+
+    _buildDom() {
+        let menu = document.createElement('div');
+        menu.classList.add('context-menu');
+
+        for (let itemName in this._items) {
+            if (this._items.hasOwnProperty(itemName)) {
+                let item = this._items[itemName];
+                let itemElem = document.createElement('div');
+                if (item.type === 'divider') {
+                    itemElem.classList.add('context-menu-divider');
+                } else {
+                    itemElem.classList.add('context-menu-item');
+                    itemElem.textContent = item.label || itemName;
+
+                    if (item.type === 'label') {
+                        itemElem.classList.add('label');
+                    }
+                    else {
+                        itemElem.onclick = () => {
+                            this[itemName].call(this);
+                            this.hide();
+                        };
+                    }
+                }
+                menu.appendChild(itemElem);
+            }
+        }
+
+        return menu;
+    }
+
+    _place(mouseEvent) {
+        let left = mouseEvent.clientX;
+        if (left + this._elem.offsetWidth > window.innerWidth) {
+            left -= this._elem.offsetWidth;
+        }
+        this._elem.style.left = `${left}px`;
+
+        let top = mouseEvent.clientY;
+        if (top + this._elem.offsetHeight > window.innerHeight) {
+            top -= this._elem.offsetHeight;
+        }
+        this._elem.style.top = `${top}px`;
     }
 
     show(mouseEvent) {
@@ -54,11 +72,10 @@ class ContextMenu {
         this._refreshDom();
         ContextMenu.current = this;
         this._parentElem.classList.add('has-context-menu');
-        this._elem.style.left = `${mouseEvent.clientX}px`;
-        this._elem.style.top = `${mouseEvent.clientY}px`;
         this._elem.classList.add('hidden');
         document.body.appendChild(this._elem);
         DomTools.redraw(this._elem);
+        this._place(mouseEvent);
         this._elem.classList.remove('hidden');
     }
 

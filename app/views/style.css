@@ -130,6 +130,8 @@ button {
     flex: 0 0 53px;
     border-bottom: 1px solid rgba(255, 255, 255, .06);
     -webkit-app-region: drag;
+    /*noinspection CssInvalidPropertyValue*/
+    word-break: break-word;
 }
 
 .top-bar:after {
@@ -240,24 +242,30 @@ button {
     border-top: 1px solid rgba(255, 255, 255, .06);
 }
 
-.message-form input, .message-form button {
+.message-box-wrap {
+    flex: 1;
+    display: flex;
     border: 1px solid #555;
+    border-right: none;
+    border-radius: 5px 0 0 5px;
+}
+
+.message-box {
+    flex: 1;
+    /* proper small size handling needs this */
+    width: 0;
+    background: transparent;
+    padding: 0 8px 1px;
+    border: 0 none;
+    outline: none;
     color: #888;
 }
 
-.message-form input {
-    flex: 1;
-    background: transparent;
-    border-right: none;
-    border-radius: 5px 0 0 5px;
-    padding: 0 8px 1px;
-    outline: none;
-}
-
 .message-form button {
-    flex: 0;
-    flex-basis: 80px;
+    flex: 0 0 60px;
     border-radius: 0 5px 5px 0;
+    border: 1px solid #555;
+    color: #888;
 }
 
 .messages li {
@@ -851,4 +859,107 @@ body.streamer-mode .settings-footer .streamer-mode-toggle {
 .context-menu-item.label {
     cursor: initial;
     color: #a9a9a9;
+}
+
+.message-emote-button {
+    flex: 0 0 20px;
+    padding: 4px;
+    color: #555;
+    transition: color .15s;
+    cursor: pointer;
+}
+
+.message-emote-button:hover {
+    color: #d3d3d3;
+}
+
+.emote-popover {
+    width: 70%;
+    max-width: 400px;
+    height: 50%;
+    max-height: 400px;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+}
+
+.emote-popover.hidden {
+    transform: translateY(10px);
+}
+
+.emote-list {
+    overflow-y: auto;
+    text-align: center;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+.emote-popover:before, .emote-popover:after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    top: 100%;
+    border: solid transparent;
+}
+
+.emote-popover:before {
+    right: 6px;
+    border-width: 8px;
+    border-bottom: 0 none;
+    border-top-color: #555;
+}
+
+.emote-popover:after {
+    right: 7px;
+    border-width: 7px;
+    border-bottom: 0 none;
+    border-top-color: #1e1e1e;
+}
+
+.emote-button {
+    width: 36px;
+    height: 36px;
+    margin: 2px;
+    border: 0 none;
+    padding: 2px;
+}
+
+.emote-button:hover {
+    background: #555;
+}
+
+.emote-button-img {
+    display: block;
+    margin: auto;
+    object-fit: scale-down;
+    width: 100%;
+    height: 100%;
+}
+
+.emote-tab-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.emote-tab-bar {
+    flex: 0 0 28px;
+    border-top: 1px solid #555;
+}
+
+.emote-tab {
+    padding: 6px;
+    display: block;
+    color: #555;
+    float: left;
+}
+
+.emote-tab.active {
+    color: #d3d3d3;
+    border-top: 1px solid;
+    padding-top: 5px;
 }

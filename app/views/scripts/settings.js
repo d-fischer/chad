@@ -1,7 +1,5 @@
 const settings = remote.require('./settings/settings');
 
-const DomTools = require('./../src/tools/dom');
-
 [].forEach.call(document.querySelectorAll('input[data-setting]'), input => {
     input.value = settings.get(input.dataset.setting) || '';
 });

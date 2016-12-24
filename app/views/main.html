@@ -86,7 +86,21 @@
                     </svg>
                 </div>
             </div>
-            <input class="message-box"/>
+            <div class="message-box-wrap">
+                <input class="message-box"/>
+                <div class="message-emote-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" stroke-width="5" stroke="currentColor" fill="none" ></circle>
+                        <circle stroke="none" fill="currentColor" r="5" cx="34.822330470336" cy="34.822330470336" ></circle>
+                        <circle stroke="none" fill="currentColor" r="5" cx="65.177669529664" cy="34.822330470336" ></circle>
+                        <path stroke="currentColor" fill="none" stroke-width="5" d="
+                            M
+                            67.677669529664,65.177669529664
+                            A
+                            25,25 0 0 1 32.322330470336,65.177669529664" ></path>
+                    </svg>
+                </div>
+            </div>
             <button type="submit">Send</button>
         </form>
     </div>
@@ -97,6 +111,26 @@
     <li>
         <time></time><span class="badges"></span><span class="username"></span><span class="sep"></span><span class="message"></span>
     </li>
+</template>
+
+<template id="emote-popover-template">
+    <div class="context-menu emote-popover">
+        <div class="emote-tab-wrapper tabs">
+            <div class="emote-list twitch" data-name="twitch">
+
+            </div>
+        </div>
+        <div class="emote-tab-bar">
+            <a class="tab-link emote-tab active" data-tab="twitch">
+                <!-- from Twitch brand assets - do NOT change -->
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 134" width="16" height="16">
+                    <path fill="currentColor" fill-rule="evenodd" transform="translate(-80 -77)"
+                          d="M89,77l-9,23v94h32v17h18l17-17h26l35-35V77H89Zm107,76-20,20H144l-17,17V173H100V89h96v64Zm-20-41v35H164V112h12Zm-32,0v35H132V112h12Z"
+                    ></path>
+                </svg>
+            </a>
+        </div>
+    </div>
 </template>
 
 <div id="main-window" class="tab-container">

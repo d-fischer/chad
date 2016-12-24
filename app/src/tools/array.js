@@ -12,6 +12,10 @@ class ArrayTools {
             }
         }
     }
+
+    static contains(arr, item) {
+        return !!~arr.indexOf(item);
+    }
 }
 
 module.exports = ArrayTools;

@@ -8,6 +8,28 @@ class DomTools {
         }
     }
 
+    static getScrollLeftFrom(el, ancestor) {
+        let offset = 0;
+        do {
+            if (!isNaN(el.scrollLeft)) {
+                offset -= el.scrollLeft;
+                offset += el.offsetLeft;
+            }
+        } while (el !== ancestor && (el = el.offsetParent));
+        return offset;
+    }
+
+    static getScrollTopFrom(el, ancestor) {
+        let offset = 0;
+        do {
+            if (!isNaN(el.scrollTop)) {
+                offset -= el.scrollTop;
+                offset += el.offsetTop;
+            }
+        } while (el !== ancestor && (el = el.offsetParent));
+        return offset;
+    }
+
     static doAfterTransition(elem, fn) {
         let transTime = window.getComputedStyle(elem).transitionDuration;
 

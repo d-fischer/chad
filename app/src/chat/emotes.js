@@ -45,10 +45,6 @@ class ChatEmotes {
         });
     }
 
-    updateOwnTwitchEmotes(emotes) {
-        this._ownTwitchEmotes = emotes;
-    }
-
     getOwnTwitchEmotes() {
         return this._ownTwitchEmotes;
     }
