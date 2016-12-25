@@ -869,7 +869,7 @@ body.streamer-mode .settings-footer .streamer-mode-toggle {
     cursor: pointer;
 }
 
-.message-emote-button:hover {
+.message-emote-button:hover, .message-emote-button.has-context-menu {
     color: #d3d3d3;
 }
 
