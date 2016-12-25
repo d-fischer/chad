@@ -963,3 +963,17 @@ body.streamer-mode .settings-footer .streamer-mode-toggle {
     border-top: 1px solid;
     padding-top: 5px;
 }
+
+.emote-group:not(:last-child) {
+    border-bottom: 1px solid #555;
+}
+
+.emote-group[data-name]:before {
+    content: attr(data-name);
+    display: block;
+    text-align: left;
+    padding: 5px 5px 0;
+    font-size: 11px;
+    color: #555;
+    text-transform: uppercase;
+}

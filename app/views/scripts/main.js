@@ -87,7 +87,8 @@ function windowLoaded(thisBrowserWindow) {
 
     DomEvents.delegate(document.body, 'click', '.message-emote-button', function (e) {
         if (!this._contextMenu) {
-            this._contextMenu = new EmotesContextMenu(this);
+            let channelName = this.closest('.channel-window').dataset.name;
+            this._contextMenu = new EmotesContextMenu(this, uiChannelManager.get(channelName));
         }
 
         this._contextMenu.show(e);

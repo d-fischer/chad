@@ -2,13 +2,17 @@
 
 const ContextMenu = require('./contextMenu');
 const DomTools = require('../../tools/dom');
-const uiChannelManager = require('../channelManager');
 
 const {remote} = require('electron');
 
 const arrayContains = require('../../tools/array').contains;
 
 class EmotesContextMenu extends ContextMenu {
+    constructor(parentElem, channel) {
+        super(parentElem);
+        this._channel = channel;
+    }
+
     _buildDom() {
         let menuFrag = document.getElementById('emote-popover-template').content.cloneNode(true);
         let menu = menuFrag.firstElementChild;
@@ -17,11 +21,44 @@ class EmotesContextMenu extends ContextMenu {
 
         let emotes = remote.require('./chat/emotes');
         let ownTwitchEmotes = emotes.getOwnTwitchEmotes();
+        let ownTwitchEmoteSetMap = emotes.getOwnTwitchEmoteSetMap();
+        let ownTwitchEmoteSets = Reflect.ownKeys(ownTwitchEmoteSetMap);
+        let channelName = this._channel.name;
+
+        let getEmoteSetCategory = function (emoteSet) {
+            let emoteSetName = emotes.getEmoteSetName(emoteSet);
+            if (!emoteSetName) {
+                return 0;
+            }
+            else if (emoteSetName === channelName) {
+                return 3;
+            }
+            else if (emoteSetName === 'Turbo/Prime') {
+                return 1;
+            }
+            else {
+                return 2;
+            }
+        };
+
+        ownTwitchEmoteSets.sort((a, b) => {
+            let catA = getEmoteSetCategory(a);
+            let catB = getEmoteSetCategory(b);
+            return catA === catB ? (b - a) : (catB - catA);
+        });
 
         let twitchEmotesAdded = [];
 
-        for (let ownEmote in ownTwitchEmotes) {
-            if (ownTwitchEmotes.hasOwnProperty(ownEmote)) {
+        for (let ownEmoteSet of ownTwitchEmoteSets) {
+            let emoteGroup = document.createElement('div');
+            emoteGroup.classList.add('emote-group');
+            emoteGroup.dataset.emoteSet = ownEmoteSet;
+            let emoteSetName = emotes.getEmoteSetName(ownEmoteSet);
+            if (emoteSetName) {
+                emoteGroup.dataset.name = emoteSetName;
+            }
+
+            for (let ownEmote of ownTwitchEmoteSetMap[ownEmoteSet]) {
                 let emote = ownTwitchEmotes[ownEmote];
                 if (!arrayContains(twitchEmotesAdded, emote.id)) {
                     twitchEmotesAdded.push(emote.id);
@@ -39,9 +76,11 @@ class EmotesContextMenu extends ContextMenu {
 
                     emoteItem.onclick = () => this._addEmoteToText(ownEmote);
 
-                    emoteList.appendChild(emoteItem);
+                    emoteGroup.appendChild(emoteItem);
                 }
             }
+
+            emoteList.appendChild(emoteGroup);
         }
 
         return menu;
