@@ -83,6 +83,75 @@ class EmotesContextMenu extends ContextMenu {
             emoteList.appendChild(emoteGroup);
         }
 
+        let bttvChannelEmoteGroup = menuFrag.querySelector('.bttv-emotes-channel');
+        let bttvChannelEmotes = emotes.getChannelBttvEmotes(channelName);
+        if (!Reflect.ownKeys(bttvChannelEmotes).length) {
+            bttvChannelEmoteGroup.parentNode.removeChild(bttvChannelEmoteGroup);
+        }
+        else {
+            bttvChannelEmoteGroup.dataset.name = channelName;
+            for (let bttvEmote in bttvChannelEmotes) {
+                if (bttvChannelEmotes.hasOwnProperty(bttvEmote)) {
+                    let emote = bttvChannelEmotes[bttvEmote];
+                    let emoteItem = document.createElement('button');
+                    emoteItem.classList.add('emote-button');
+
+                    let img = document.createElement('img');
+                    img.classList.add('emote-button-img');
+
+                    img.src = `https://cdn.betterttv.net/emote/${emote.id}/1x`;
+                    img.setAttribute('srcset', `https://cdn.betterttv.net/emote/${emote.id}/2x 2x`);
+                    img.setAttribute('alt', bttvEmote);
+                    img.dataset.title = bttvEmote;
+                    if ('width' in emote) {
+                        img.setAttribute('width', emote.width);
+                    }
+                    if ('height' in emote) {
+                        img.setAttribute('height', emote.height);
+                    }
+                    emoteItem.appendChild(img);
+
+                    emoteItem.onclick = () => this._addEmoteToText(bttvEmote);
+
+                    bttvChannelEmoteGroup.appendChild(emoteItem);
+                }
+            }
+        }
+
+        let bttvGlobalEmoteGroup = menuFrag.querySelector('.bttv-emotes-global');
+        let bttvGlobalEmotes = emotes.getGlobalBttvEmotes();
+        if (!Reflect.ownKeys(bttvGlobalEmotes).length) {
+            bttvGlobalEmoteGroup.parentNode.removeChild(bttvGlobalEmoteGroup);
+        }
+        else {
+            for (let bttvEmote in bttvGlobalEmotes) {
+                if (bttvGlobalEmotes.hasOwnProperty(bttvEmote)) {
+                    let emote = bttvGlobalEmotes[bttvEmote];
+                    let emoteItem = document.createElement('button');
+                    emoteItem.classList.add('emote-button');
+
+                    let img = document.createElement('img');
+                    img.classList.add('emote-button-img');
+
+                    img.src = `https://cdn.betterttv.net/emote/${emote.id}/1x`;
+                    img.setAttribute('srcset', `https://cdn.betterttv.net/emote/${emote.id}/2x 2x`);
+                    img.setAttribute('alt', bttvEmote);
+                    img.dataset.title = bttvEmote;
+                    if ('width' in emote) {
+                        img.setAttribute('width', emote.width);
+                    }
+                    if ('height' in emote) {
+                        img.setAttribute('height', emote.height);
+                    }
+                    emoteItem.appendChild(img);
+
+                    emoteItem.onclick = () => this._addEmoteToText(bttvEmote);
+
+                    bttvGlobalEmoteGroup.appendChild(emoteItem);
+                }
+            }
+        }
+
         return menu;
     }
 

@@ -172,11 +172,14 @@ button {
 
 .channel-window {
     flex: 1;
-    display: none;
     flex-direction: column;
 }
 
-.channel-window.active {
+.tab {
+    display: none;
+}
+
+.tab.active {
     display: flex;
 }
 
@@ -383,10 +386,6 @@ body.darwin .dialog {
     border-top: 1px solid rgba(255, 255, 255, .06);
     padding: 15px 0 0;
     box-sizing: border-box;
-}
-
-.dialog-panel {
-    display: none;
 }
 
 .dialog-panel.active {
@@ -895,6 +894,7 @@ body.streamer-mode .settings-footer .streamer-mode-toggle {
     right: 0;
     top: 0;
     bottom: 0;
+    flex-direction: column;
 }
 
 .emote-popover:before, .emote-popover:after {
@@ -948,6 +948,7 @@ body.streamer-mode .settings-footer .streamer-mode-toggle {
 
 .emote-tab-bar {
     flex: 0 0 28px;
+    height: 28px;
     border-top: 1px solid #555;
 }
 
@@ -956,12 +957,14 @@ body.streamer-mode .settings-footer .streamer-mode-toggle {
     display: block;
     color: #555;
     float: left;
+    cursor: pointer;
 }
 
 .emote-tab.active {
     color: #d3d3d3;
     border-top: 1px solid;
     padding-top: 5px;
+    cursor: initial;
 }
 
 .emote-group:not(:last-child) {

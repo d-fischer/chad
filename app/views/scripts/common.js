@@ -8,7 +8,7 @@ DomEvents.delegate(document.body, 'click', '.external-link', function (e) {
     shell.openExternal(this.href);
 });
 
-DomEvents.delegate('.tab-list', 'click', '.tab-link', function () {
+DomEvents.delegate(document.body, 'click', '.tab-list .tab-link', function () {
     let activeTab = this.dataset.tab;
     let container = this.closest('.tab-container');
     activateTab(container, activeTab);

@@ -73,7 +73,15 @@ class ChatEmotes {
     }
 
     getBttvEmotes(channelName) {
-        return merge(this._globalBttvEmotes, channelManager.get(channelName).bttvEmotes);
+        return merge(true, this.getGlobalBttvEmotes(), this.getChannelBttvEmotes(channelName));
+    }
+
+    getGlobalBttvEmotes() {
+        return this._globalBttvEmotes;
+    }
+
+    getChannelBttvEmotes(channelName) {
+        return channelManager.get(channelName).bttvEmotes;
     }
 
     getEmoteSetName(emoteSet) {

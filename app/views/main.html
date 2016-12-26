@@ -114,19 +114,29 @@
 </template>
 
 <template id="emote-popover-template">
-    <div class="context-menu emote-popover">
+    <div class="context-menu emote-popover tab-container">
         <div class="emote-tab-wrapper tabs">
-            <div class="emote-list twitch" data-name="twitch">
-
+            <div class="tab emote-list twitch active" data-name="twitch"></div>
+            <div class="tab emote-list" data-name="bttv">
+                <div class="emote-group bttv-emotes-channel"></div>
+                <div class="emote-group bttv-emotes-global"></div>
             </div>
         </div>
-        <div class="emote-tab-bar">
-            <a class="tab-link emote-tab active" data-tab="twitch">
+        <div class="emote-tab-bar tab-list">
+            <a class="tab-link emote-tab active" data-tab="twitch" data-title="Twitch">
                 <!-- from Twitch brand assets - do NOT change -->
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 134" width="16" height="16">
                     <path fill="currentColor" fill-rule="evenodd" transform="translate(-80 -77)"
                           d="M89,77l-9,23v94h32v17h18l17-17h26l35-35V77H89Zm107,76-20,20H144l-17,17V173H100V89h96v64Zm-20-41v35H164V112h12Zm-32,0v35H132V112h12Z"
                     ></path>
+                </svg>
+            </a>
+            <a class="tab-link emote-tab" data-tab="bttv" data-title="BTTV">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <polygon points="1,4 1,12 8,15 15,12 15,4 8,1" stroke="currentColor" stroke-width="1" fill="none"></polygon>
+                    <line x1="8" y1="7" x2="1" y2="4" stroke="currentColor" stroke-width="1"></line>
+                    <line x1="8" y1="7" x2="8" y2="15" stroke="currentColor" stroke-width="1"></line>
+                    <line x1="8" y1="7" x2="15" y2="4" stroke="currentColor" stroke-width="1"></line>
                 </svg>
             </a>
         </div>
