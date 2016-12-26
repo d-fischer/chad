@@ -65,13 +65,14 @@ class EmotesContextMenu extends ContextMenu {
 
                     let emoteItem = document.createElement('button');
                     emoteItem.classList.add('emote-button');
+                    emoteItem.dataset.title = ownEmote;
+
                     let img = document.createElement('img');
                     img.classList.add('emote-button-img');
 
                     img.src = `http://static-cdn.jtvnw.net/emoticons/v1/${emote.id}/1.0`;
                     img.setAttribute('srcset', `http://static-cdn.jtvnw.net/emoticons/v1/${emote.id}/2.0 2x`);
                     img.setAttribute('alt', ownEmote);
-                    img.dataset.title = ownEmote;
                     emoteItem.appendChild(img);
 
                     emoteItem.onclick = () => this._addEmoteToText(ownEmote);
@@ -95,6 +96,7 @@ class EmotesContextMenu extends ContextMenu {
                     let emote = bttvChannelEmotes[bttvEmote];
                     let emoteItem = document.createElement('button');
                     emoteItem.classList.add('emote-button');
+                    emoteItem.dataset.title = bttvEmote;
 
                     let img = document.createElement('img');
                     img.classList.add('emote-button-img');
@@ -102,7 +104,6 @@ class EmotesContextMenu extends ContextMenu {
                     img.src = `https://cdn.betterttv.net/emote/${emote.id}/1x`;
                     img.setAttribute('srcset', `https://cdn.betterttv.net/emote/${emote.id}/2x 2x`);
                     img.setAttribute('alt', bttvEmote);
-                    img.dataset.title = bttvEmote;
                     if ('width' in emote) {
                         img.setAttribute('width', emote.width);
                     }
@@ -129,6 +130,7 @@ class EmotesContextMenu extends ContextMenu {
                     let emote = bttvGlobalEmotes[bttvEmote];
                     let emoteItem = document.createElement('button');
                     emoteItem.classList.add('emote-button');
+                    emoteItem.dataset.title = bttvEmote;
 
                     let img = document.createElement('img');
                     img.classList.add('emote-button-img');
@@ -136,7 +138,6 @@ class EmotesContextMenu extends ContextMenu {
                     img.src = `https://cdn.betterttv.net/emote/${emote.id}/1x`;
                     img.setAttribute('srcset', `https://cdn.betterttv.net/emote/${emote.id}/2x 2x`);
                     img.setAttribute('alt', bttvEmote);
-                    img.dataset.title = bttvEmote;
                     if ('width' in emote) {
                         img.setAttribute('width', emote.width);
                     }
