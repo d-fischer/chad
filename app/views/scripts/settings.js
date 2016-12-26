@@ -34,6 +34,11 @@ function windowLoaded(thisBrowserWindow, options) {
         if (options.selectedPanel) {
             activateTab(document.getElementById('settings-dialog'), options.selectedPanel);
         }
+        if (options.connectError) {
+            let errElem = document.getElementById('connection-warning');
+            errElem.classList.remove('hidden');
+            errElem.textContent = 'Connection error: ' + options.connectError;
+        }
     }
     DomEvents.delegate(document.body, 'click', '.reconnect-button', () => (remote.getGlobal('reconnect'))());
     document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());

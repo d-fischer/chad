@@ -43,7 +43,7 @@ class Window extends EventEmitter {
             }
             this._browserWindow = new BrowserWindow(windowConf);
             this._browserWindow.webContents.on('will-navigate', e => e.preventDefault());
-            let optJSON = JSON.stringify(options);
+            let optJSON = JSON.stringify(options || {});
             let js = `window.windowLoaded && windowLoaded(BrowserWindow.fromId(${this._browserWindow.id}), ${optJSON});`;
             this._browserWindow.webContents.executeJavaScript(js);
             this._browserWindow.loadURL(`file://${appRoot}/views/${this._name}.html`);
