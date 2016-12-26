@@ -12,6 +12,7 @@ const chatConnection = remote.require('./chat/connection');
 
 const ChannelContextMenu = require('../src/ui/contextMenu/channel');
 const EmotesContextMenu = require('../src/ui/contextMenu/emotes');
+const SettingsContextMenu = require('../src/ui/contextMenu/settings');
 
 DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.message-form', function (e) {
     e.preventDefault();
@@ -49,7 +50,7 @@ function windowLoaded(thisBrowserWindow) {
         remote.require('./ui/window/manager').getWindow('channel').show('main');
     });
 
-    let toggleStreamerMode = () => {
+    window.toggleStreamerMode = () => {
         let me = chatConnection.userName;
         if (!channelManager.get(me)) {
             uiChannelManager.on('channel-added', function addedCallback(channel) {
@@ -69,12 +70,12 @@ function windowLoaded(thisBrowserWindow) {
         }
     };
 
-    DomEvents.delegate(document.body, 'click', '.streamer-mode-toggle', toggleStreamerMode);
+    DomEvents.delegate(document.body, 'click', '.open-settings', function (e) {
+        if (!this._contextMenu) {
+            this._contextMenu = new SettingsContextMenu(this);
+        }
 
-    DomEvents.delegate(document.body, 'click', '.open-settings', () => {
-        remote.require('./ui/window/manager').getWindow('settings').show('main', {
-            selectedPanel: 'connection'
-        });
+        this._contextMenu.show(e);
     });
 
     DomEvents.delegate(document.body, 'contextmenu', '.channel-link', function (e) {

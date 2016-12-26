@@ -787,10 +787,6 @@ body.streamer-mode .channel-window .settings-footer {
     display: flex;
 }
 
-body.streamer-mode .settings-footer .streamer-mode-toggle {
-    color: #d3d3d3;
-}
-
 .tooltip {
     position: absolute;
     padding: 3px 6px;
@@ -979,4 +975,26 @@ body.streamer-mode .settings-footer .streamer-mode-toggle {
     font-size: 11px;
     color: #555;
     text-transform: uppercase;
+}
+
+.context-menu-item.toggle {
+    padding-right: 28px;
+    position: relative;
+}
+
+.context-menu-item.toggle:after {
+    display: block;
+    position: absolute;
+    right: 8px;
+    top: 6px;
+    height: 15px;
+    width: 12px;
+    content: '';
+    text-align: center;
+    font-size: 15px;
+    line-height: 1;
+}
+
+.context-menu-item.toggle.enabled:after {
+    content: '\2713';
 }

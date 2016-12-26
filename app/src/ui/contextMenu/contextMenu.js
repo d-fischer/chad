@@ -4,12 +4,6 @@ const DomTools = require('../../tools/dom');
 
 class ContextMenu {
     constructor(parentElem) {
-        this._items = {
-            oops: {
-                type: 'label',
-                label: 'If you see this, report a bug'
-            }
-        };
         this._parentElem = parentElem;
         this._elem = undefined;
     }
@@ -18,37 +12,6 @@ class ContextMenu {
         if (!this._elem || this._elem.parentNode || force) {
             this._elem = this._buildDom();
         }
-    }
-
-    _buildDom() {
-        let menu = document.createElement('div');
-        menu.classList.add('context-menu');
-
-        for (let itemName in this._items) {
-            if (this._items.hasOwnProperty(itemName)) {
-                let item = this._items[itemName];
-                let itemElem = document.createElement('div');
-                if (item.type === 'divider') {
-                    itemElem.classList.add('context-menu-divider');
-                } else {
-                    itemElem.classList.add('context-menu-item');
-                    itemElem.textContent = item.label || itemName;
-
-                    if (item.type === 'label') {
-                        itemElem.classList.add('label');
-                    }
-                    else {
-                        itemElem.onclick = () => {
-                            this[itemName].call(this);
-                            this.hide();
-                        };
-                    }
-                }
-                menu.appendChild(itemElem);
-            }
-        }
-
-        return menu;
     }
 
     _place(mouseEvent) {
