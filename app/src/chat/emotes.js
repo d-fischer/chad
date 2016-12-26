@@ -52,7 +52,7 @@ class ChatEmotes {
         request('https://api.betterttv.net/2/emotes', (error, res, data) => {
             if (!error && res.statusCode === 200) {
                 data = JSON.parse(data);
-                let emotes = data.emotes.filter(emote => !emote.channel);
+                let emotes = data.emotes.filter(emote => !emote.restrictions.emoticonSet);
                 _this._globalBttvEmotes = ObjectTools.combine(emotes.map(emote => emote.code), emotes);
             }
         });
