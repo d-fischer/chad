@@ -14,6 +14,7 @@ class SettingsContextMenu extends BasicContextMenu {
             },
             streamerMode: {
                 type: 'toggle',
+                icon: 'broadcast',
                 label: 'Streamer mode'
             }
         };

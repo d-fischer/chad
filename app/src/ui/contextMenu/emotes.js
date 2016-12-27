@@ -14,7 +14,7 @@ class EmotesContextMenu extends ContextMenu {
     }
 
     _buildDom() {
-        let menuFrag = document.getElementById('emote-popover-template').content.cloneNode(true);
+        let menuFrag = DomTools.getTemplateContent(document.getElementById('emote-popover-template'));
         let menu = menuFrag.firstElementChild;
 
         let emoteList = menuFrag.querySelector('.emote-list.twitch');
@@ -184,6 +184,11 @@ class EmotesContextMenu extends ContextMenu {
         input.value = result;
         input.selectionStart = newCaretPos;
         input.selectionEnd = newCaretPos;
+    }
+
+    show(mouseEvent) {
+        super.show(mouseEvent);
+        DomTools.fixSvgUses(this._elem);
     }
 }
 

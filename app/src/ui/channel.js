@@ -7,6 +7,7 @@ const remote = require('electron').remote;
 const twitchAPIRequest = remote.require('./request/twitchAPI');
 
 const DomEvents = require('../dom/events');
+const DomTools = require('../tools/dom');
 
 class UIChannel {
     constructor(name) {
@@ -105,7 +106,7 @@ class UIChannel {
             channelList.insertBefore(this._listElement, channelAdd);
 
             let channelWindows = document.getElementById('channel-windows');
-            let channelWindowFrag = document.querySelector('#channel-window-template').content.cloneNode(true);
+            let channelWindowFrag = DomTools.getTemplateContent(document.querySelector('#channel-window-template'));
             this._element = channelWindowFrag.querySelector('.channel-window');
             this._element.insertBefore(this._badgeStyle, this._element.firstChild);
             this._element.dataset.name = this._name;
@@ -124,6 +125,7 @@ class UIChannel {
             });
 
             channelWindows.appendChild(channelWindowFrag);
+            DomTools.fixSvgUses(this._element);
 
             this.updateGuiWithChannelData();
 

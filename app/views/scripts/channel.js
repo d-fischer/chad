@@ -2,7 +2,8 @@ const settings = remote.require('./settings/settings');
 const twitchAPIRequest = remote.require('./request/twitchAPI');
 const channelManager = remote.require('./chat/channelManager');
 
-const FunctionTools = require('./../src/tools/function');
+const FunctionTools = require('../src/tools/function');
+const DomTools = require('../src/tools/dom');
 
 const list = document.getElementById('channel-add-list');
 const itemTpl = document.getElementById('channel-list-item-template');
@@ -21,7 +22,7 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
         // have we already sent another request after this one? then ignore this one
         if (success && mySeq === seq) {
             for (let channel of data.channels) {
-                let itemFrag = itemTpl.content.cloneNode(true);
+                let itemFrag = DomTools.getTemplateContent(itemTpl);
                 let item = itemFrag.querySelector('.channel-list-item');
                 item.dataset.name = channel.name;
                 if (currentChannels.indexOf(channel.name) !== -1) {

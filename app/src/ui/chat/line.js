@@ -1,6 +1,8 @@
 'use strict';
 
-const ChatUser = require('./../../chat/user');
+const ChatUser = require('../../chat/user');
+
+const DomTools = require('../../tools/dom');
 
 const {remote} = require('electron');
 
@@ -57,7 +59,7 @@ class UIChatLine {
     parse() {
         let userColor = UIChatLine._adjustColor(this._user.color);
 
-        let lineFrag = document.getElementById('chat-message-template').content.cloneNode(true);
+        let lineFrag = DomTools.getTemplateContent(document.getElementById('chat-message-template'));
         let timePart = lineFrag.querySelector('time');
         timePart.setAttribute('datetime', this._time.toISOString());
         timePart.appendChild(document.createTextNode(this._time.toLocaleTimeString()));

@@ -52,6 +52,19 @@ class DomTools {
         //noinspection BadExpressionStatementJS
         elem.scrollHeight;
     }
+
+    static getTemplateContent(template) {
+        return template.content.cloneNode(true);
+    }
+
+    static fixSvgUses(elem) {
+        // setTimeout(() => {
+            [].forEach.call(elem.querySelectorAll('use'), use => {
+                //noinspection SillyAssignmentJS
+                use.outerHTML = use.outerHTML;
+            });
+        // }, 0);
+    }
 }
 
 module.exports = DomTools;

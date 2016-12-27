@@ -20,6 +20,8 @@ class BasicContextMenu extends ContextMenu {
         menu.classList.add('context-menu');
         this._toggleElems = {};
 
+        let hasIcon = false;
+
         for (let itemName in this._items) {
             if (this._items.hasOwnProperty(itemName)) {
                 let item = this._items[itemName];
@@ -40,6 +42,10 @@ class BasicContextMenu extends ContextMenu {
                         this._toggleElems[itemName] = itemElem;
                     }
 
+                    if (item.icon) {
+                        hasIcon = true;
+                        itemElem.style.backgroundImage = `url(img/${item.icon}.svg)`;
+                    }
 
                     if (item.type !== 'label') {
                         itemElem.onclick = () => {
@@ -52,6 +58,9 @@ class BasicContextMenu extends ContextMenu {
             }
         }
 
+        if (hasIcon) {
+            menu.classList.add('has-icon');
+        }
         return menu;
     }
 
