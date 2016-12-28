@@ -1,8 +1,10 @@
 const settings = remote.require('./settings/settings');
 
-[].forEach.call(document.querySelectorAll('input[data-setting]'), input => {
+const refreshSettings = () => [].forEach.call(document.querySelectorAll('input[data-setting]'), input => {
     input.value = settings.get(input.dataset.setting) || '';
 });
+
+refreshSettings();
 
 DomEvents.delegate(document.body, 'blur', 'input[data-setting]', function () {
     if (this.value) {
@@ -42,4 +44,12 @@ function windowLoaded(thisBrowserWindow, options) {
     }
     DomEvents.delegate(document.body, 'click', '.reconnect-button', () => (remote.getGlobal('reconnect'))());
     document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
+
+    DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
+        e.preventDefault();
+        remote.require('./ui/window/manager').getWindow('auth').show().then(data => {
+            settings.set('connection:token', 'oauth:' + data.token);
+            refreshSettings();
+        }, () => {});
+    });
 }

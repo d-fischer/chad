@@ -16,6 +16,9 @@ class Window extends EventEmitter {
         this._title = 'Chad';
         this._backgroundColor = '#1e1e1e';
         this._resizable = true;
+        this._url = `file://${appRoot}/views/${this._name}.html`;
+        this._navigatable = false;
+        this._isInternal = true;
     }
 
     get name() {
@@ -32,7 +35,10 @@ class Window extends EventEmitter {
                 backgroundColor: this._backgroundColor,
                 resizable: this._resizable,
                 show: false,
-                transparent: !this._resizable
+                transparent: !(this._resizable || this._frame),
+                webPreferences: {
+                    nodeIntegration: this._isInternal
+                }
             };
             if (parentName) {
                 let win = require('./manager').getWindow(parentName, false);
@@ -42,11 +48,15 @@ class Window extends EventEmitter {
                 }
             }
             this._browserWindow = new BrowserWindow(windowConf);
-            this._browserWindow.webContents.on('will-navigate', e => e.preventDefault());
+            if (!this._navigatable) {
+                this._browserWindow.webContents.on('will-navigate', e => e.preventDefault());
+            }
             let optJSON = JSON.stringify(options || {});
-            let js = `window.windowLoaded && windowLoaded(BrowserWindow.fromId(${this._browserWindow.id}), ${optJSON});`;
-            this._browserWindow.webContents.executeJavaScript(js);
-            this._browserWindow.loadURL(`file://${appRoot}/views/${this._name}.html`);
+            this._browserWindow.loadURL(this._url);
+            if (this._isInternal) {
+                let js = `window.windowLoaded && windowLoaded(BrowserWindow.fromId(${this._browserWindow.id}), ${optJSON});`;
+                this._browserWindow.webContents.executeJavaScript(js);
+            }
             this._browserWindow.on('closed', () => {
                 this.emit('closed');
                 this._browserWindow = null;
