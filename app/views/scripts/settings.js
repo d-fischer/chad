@@ -1,19 +1,21 @@
 const settings = remote.require('./settings/settings');
 
-const refreshSettings = () => [].forEach.call(document.querySelectorAll('input[data-setting]'), input => {
+const s = '[data-setting]';
+const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input[type="password"]${s}`;
+const selectFieldSelector = `select${s}`;
+
+const refreshSettings = () => [].forEach.call(document.querySelectorAll(`${inputFieldSelector}, ${selectFieldSelector}`), input => {
     input.value = settings.get(input.dataset.setting) || '';
 });
 
 refreshSettings();
 
-DomEvents.delegate(document.body, 'blur', 'input[data-setting]', function () {
-    if (this.value) {
-        settings.set(this.dataset.setting, this.value);
-    }
-    else {
-        settings.delete(this.dataset.setting);
-    }
-}, true);
+const changeCallback = function () {
+    settings.set(this.dataset.setting, this.value || null);
+};
+
+DomEvents.delegate(document.body, 'blur', inputFieldSelector, changeCallback, true);
+DomEvents.delegate(document.body, 'change', selectFieldSelector, changeCallback, true);
 
 for (let panel of document.querySelectorAll('.dialog-panel')) {
     panel.addEventListener('tab:activate', function () {

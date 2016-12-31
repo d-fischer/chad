@@ -13,6 +13,7 @@ const chatConnection = remote.require('./chat/connection');
 const ChannelContextMenu = require('../src/ui/contextMenu/channel');
 const EmotesContextMenu = require('../src/ui/contextMenu/emotes');
 const SettingsContextMenu = require('../src/ui/contextMenu/settings');
+const settings = remote.require('./settings/settings');
 
 DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.message-form', function (e) {
     e.preventDefault();
@@ -28,6 +29,27 @@ uiChannelManager.addAll(channelManager.getAllNames());
 let channelAddHandler = channel => uiChannelManager.add(channel);
 channelManager.on('channel-added', channelAddHandler);
 chatEmotes.init();
+
+window.updateAppearance = (initial = false) => {
+    if (!initial) {
+        for (let cls of document.body.classList) {
+            if (cls.match(/^appearance-/)) {
+                document.body.classList.remove(cls);
+            }
+        }
+    }
+    let appearanceSettings = settings.get('appearance');
+    for (let setting of Reflect.ownKeys(appearanceSettings)) {
+        if (appearanceSettings[setting] === true) {
+            document.body.classList.add(`appearance-${setting}`);
+        }
+        else if (appearanceSettings[setting]) {
+            document.body.classList.add(`appearance-${setting}-${appearanceSettings[setting]}`);
+        }
+    }
+};
+
+window.updateAppearance(true);
 
 function windowLoaded(thisBrowserWindow) {
     window.closeWindow = () => {

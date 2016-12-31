@@ -122,12 +122,12 @@ button {
 }
 
 .menu-item:hover, .menu-item.has-context-menu {
-    color: #e3e3e3;
+    color: #ccc;
     background-color: #343434;
 }
 
 .menu-item.active {
-    color: #e3e3e3;
+    color: #cfcfcf;
     background-color: #4c4c4c;
 }
 
@@ -1011,4 +1011,94 @@ body.streamer-mode .channel-window .settings-footer {
     padding-left: 28px;
     background: 4px 4px no-repeat;
     background-size: 20px 20px;
+}
+
+.appearance-sidebar-pics-only .channel-link .name {
+    display: none;
+}
+
+.appearance-sidebar-pics-only #sidebar {
+    flex-basis: 60px;
+}
+
+.appearance-sidebar-pics-only .channel-link .name {
+    display: none;
+}
+
+.appearance-sidebar-pics-only #channel-add button {
+    overflow: hidden;
+    height: 42px;
+    width: 42px;
+    padding: 0;
+    position: relative;
+}
+
+.appearance-sidebar-pics-only #channel-add {
+    padding: 5px 9px 5px 9px;
+    position: relative;
+}
+
+.appearance-sidebar-pics-only #channel-add button:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 1px dotted;
+    border-radius: 50%;
+}
+
+.appearance-sidebar-pics-only #channel-add button:before {
+    content: '\FF0B';
+    display: block;
+    color: white;
+    font-size: 16px;
+    line-height: 42px;
+    text-align: center;
+}
+
+.appearance-sidebar-pics-only .channel-link {
+    padding: 5px 9px 5px 9px;
+}
+
+.appearance-sidebar-pics-only .channel-link .logo {
+    display: block;
+}
+
+.appearance-sidebar-pics-only .channel-link .logo-wrap {
+    display: block;
+    margin-right: 0;
+}
+
+.appearance-sidebar-names-only .channel-link .logo-wrap {
+    display: none;
+}
+
+.appearance-sidebar-names-only #channel-add button {
+    padding: 5px 10px 5px 5px;
+}
+
+.appearance-sidebar-names-only .channel-link.new-message:after {
+    top: 5px;
+    bottom: 5px;
+}
+
+.appearance-sidebar-names-only .channel-link.online:before {
+    content: '';
+    display: block;
+    height: 10px;
+    width: 10px;
+    border: 1px solid;
+    background-color: green;
+    border-radius: 100%;
+    margin-right: 5px;
+    vertical-align: text-bottom;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.appearance-sidebar-names-only #sidebar {
+    flex-basis: 165px;
 }
