@@ -1095,8 +1095,8 @@ body.streamer-mode .channel-window .settings-footer {
     margin-right: 5px;
     vertical-align: text-bottom;
     position: absolute;
-    left: 0;
-    top: 0;
+    right: 3px;
+    top: 7px;
 }
 
 .appearance-sidebar-names-only #sidebar {
