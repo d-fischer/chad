@@ -6,6 +6,7 @@ const selectFieldSelector = `select${s}`;
 
 const refreshSettings = () => [].forEach.call(document.querySelectorAll(`${inputFieldSelector}, ${selectFieldSelector}`), input => {
     input.value = settings.get(input.dataset.setting) || '';
+    input.dispatchEvent(new Event('change'));
 });
 
 refreshSettings();

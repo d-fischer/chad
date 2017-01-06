@@ -394,6 +394,7 @@ body.darwin .dialog {
 }
 
 .dialog-panel.active {
+    flex: 1 1 0;
     display: block;
 }
 
@@ -417,7 +418,8 @@ body.darwin .dialog {
     padding: 15px;
 }
 
-.dialog label input {
+.dialog label input, .chad-select .selected-item {
+    box-sizing: border-box;
     display: block;
     background: transparent;
     border: none;
@@ -425,6 +427,9 @@ body.darwin .dialog {
     border-bottom: 1px solid #6e6e6e;
     color: #c4c4c4;
     margin: .5em 0 1em;
+    width: 50%;
+    font-family: inherit;
+    font-size: 12px;
 }
 
 .dialog label input:focus {
@@ -885,7 +890,7 @@ body.streamer-mode .channel-window .settings-footer {
 }
 
 .emote-popover.hidden {
-    transform: translateY(10px);
+    transform: translateY(20px);
 }
 
 .emote-list {
@@ -1101,4 +1106,35 @@ body.streamer-mode .channel-window .settings-footer {
 
 .appearance-sidebar-names-only #sidebar {
     flex-basis: 165px;
+}
+
+.chad-select {
+    width: 50%;
+}
+
+.chad-select select {
+    display: none;
+}
+
+.chad-select .selected-item {
+    padding-right: 20px;
+    position: relative;
+    width: 100%;
+}
+
+.chad-select .selected-item:after {
+    content: '';
+    display: block;
+    position: absolute;
+    right: 5px;
+    top: 10px;
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-bottom: 0 none;
+    border-top-color: currentColor;
+}
+
+.chad-select-options.hidden {
+    transform: translateY(-20px);
 }

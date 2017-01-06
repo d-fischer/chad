@@ -49,7 +49,7 @@ class BasicContextMenu extends ContextMenu {
 
                     if (item.type !== 'label') {
                         itemElem.onclick = () => {
-                            this[itemName].call(this);
+                            this._selectItem(itemName);
                             this.hide();
                         };
                     }
@@ -79,6 +79,10 @@ class BasicContextMenu extends ContextMenu {
                 }
             }
         }
+    }
+
+    _selectItem(itemName) {
+        this[itemName].call(this);
     }
 }
 

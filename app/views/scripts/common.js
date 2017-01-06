@@ -2,6 +2,7 @@ const {remote} = require('electron');
 const {BrowserWindow, shell} = remote;
 const DomEvents = require('../src/dom/events');
 const DomTools = require('../src/tools/dom');
+const SelectOptionsMenu = require('../src/ui/contextMenu/select');
 
 DomEvents.delegate(document.body, 'click', '.external-link', function (e) {
     e.preventDefault();
@@ -58,5 +59,26 @@ DomEvents.delegate(document.body, 'mouseenter', '[data-title]', function(e) {
         });
     }
 }, true);
+
+[].forEach.call(document.querySelectorAll('select'), select => {
+    let wrapper = document.createElement('div');
+    wrapper.classList.add('chad-select');
+    select.parentNode.insertBefore(wrapper, select);
+    wrapper.appendChild(select);
+
+    let selectedItem = document.createElement('div');
+    selectedItem.classList.add('selected-item');
+    selectedItem.textContent = select.options[select.selectedIndex].textContent;
+    wrapper.appendChild(selectedItem);
+
+    selectedItem.addEventListener('click', e => {
+        e.stopImmediatePropagation();
+        (new SelectOptionsMenu(wrapper)).show(e);
+    });
+
+    select.addEventListener('change', function () {
+        selectedItem.textContent = this.options[this.selectedIndex].textContent;
+    });
+});
 
 document.body.classList.add(process.platform);

@@ -6,6 +6,7 @@ class ContextMenu {
     constructor(parentElem) {
         this._parentElem = parentElem;
         this._elem = undefined;
+        this._showing = false;
     }
 
     _refreshDom(force = false) {
@@ -29,6 +30,7 @@ class ContextMenu {
     }
 
     show(mouseEvent) {
+        this._showing = true;
         if (ContextMenu.current) {
             ContextMenu.current.hide();
         }
@@ -40,9 +42,14 @@ class ContextMenu {
         DomTools.redraw(this._elem);
         this._place(mouseEvent);
         this._elem.classList.remove('hidden');
+        setTimeout(() => this._showing = false, 0);
     }
 
     hide() {
+        if (this._showing) {
+            return;
+        }
+
         this._parentElem.classList.remove('has-context-menu');
         DomTools.doAfterTransition(this._elem, function () {
             document.body.removeChild(this);
