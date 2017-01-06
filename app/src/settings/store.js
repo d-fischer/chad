@@ -23,6 +23,12 @@ class SettingsStore {
         this._nconf.save();
         return result;
     }
+
+    delete(key) {
+        let result = this._nconf.remove(key);
+        this._nconf.save();
+        return result;
+    }
 }
 
 module.exports = SettingsStore;

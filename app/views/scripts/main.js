@@ -10,6 +10,11 @@ const chatEmotes = remote.require('./chat/emotes');
 const channelManager = remote.require('./chat/channelManager');
 const chatConnection = remote.require('./chat/connection');
 
+const ChannelContextMenu = require('../src/ui/contextMenu/channel');
+const EmotesContextMenu = require('../src/ui/contextMenu/emotes');
+const SettingsContextMenu = require('../src/ui/contextMenu/settings');
+const settings = remote.require('./settings/settings');
+
 DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.message-form', function (e) {
     e.preventDefault();
     let channelWindow = this.closest('.channel-window');
@@ -24,6 +29,27 @@ uiChannelManager.addAll(channelManager.getAllNames());
 let channelAddHandler = channel => uiChannelManager.add(channel);
 channelManager.on('channel-added', channelAddHandler);
 chatEmotes.init();
+
+window.updateAppearance = (initial = false) => {
+    if (!initial) {
+        for (let cls of document.body.classList) {
+            if (cls.match(/^appearance-/)) {
+                document.body.classList.remove(cls);
+            }
+        }
+    }
+    let appearanceSettings = settings.get('appearance');
+    for (let setting of Reflect.ownKeys(appearanceSettings)) {
+        if (appearanceSettings[setting] === true) {
+            document.body.classList.add(`appearance-${setting}`);
+        }
+        else if (appearanceSettings[setting]) {
+            document.body.classList.add(`appearance-${setting}-${appearanceSettings[setting]}`);
+        }
+    }
+};
+
+window.updateAppearance(true);
 
 function windowLoaded(thisBrowserWindow) {
     window.closeWindow = () => {
@@ -46,7 +72,7 @@ function windowLoaded(thisBrowserWindow) {
         remote.require('./ui/window/manager').getWindow('channel').show('main');
     });
 
-    let toggleStreamerMode = () => {
+    window.toggleStreamerMode = () => {
         let me = chatConnection.userName;
         if (!channelManager.get(me)) {
             uiChannelManager.on('channel-added', function addedCallback(channel) {
@@ -66,11 +92,28 @@ function windowLoaded(thisBrowserWindow) {
         }
     };
 
-    DomEvents.delegate(document.body, 'click', '.streamer-mode-toggle', toggleStreamerMode);
+    DomEvents.delegate(document.body, 'click', '.open-settings', function (e) {
+        if (!this._contextMenu) {
+            this._contextMenu = new SettingsContextMenu(this);
+        }
 
-    DomEvents.delegate(document.body, 'click', '.open-settings', () => {
-        remote.require('./ui/window/manager').getWindow('settings').show('main', {
-            selectedPanel: 'connection'
-        });
+        this._contextMenu.show(e);
     });
+
+    DomEvents.delegate(document.body, 'contextmenu', '.channel-link', function (e) {
+        if (!this._contextMenu) {
+            this._contextMenu = new ChannelContextMenu(this, uiChannelManager.get(this.dataset.tab));
+        }
+
+        this._contextMenu.show(e);
+    }, true);
+
+    DomEvents.delegate(document.body, 'click', '.message-emote-button', function (e) {
+        if (!this._contextMenu) {
+            let channelName = this.closest('.channel-window').dataset.name;
+            this._contextMenu = new EmotesContextMenu(this, uiChannelManager.get(channelName));
+        }
+
+        this._contextMenu.show(e);
+    }, true);
 }

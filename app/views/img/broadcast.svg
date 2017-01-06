@@ -5,11 +5,11 @@
             <polygon points="100,300 220,300 160,140" fill="white" stroke="black" stroke-width="20" />
         </mask>
     </defs>
-    <circle cx="160" cy="120" r="20" fill="#D3D3D3" />
+    <circle cx="160" cy="120" r="20" fill="#555" />
     <g mask="url(#tower-mask)">
-        <circle cx="160" cy="120" r="40" stroke-width="4" stroke="#D3D3D3" fill="none" />
-        <circle cx="160" cy="120" r="72" stroke-width="6" stroke="#D3D3D3" fill="none" />
-        <circle cx="160" cy="120" r="106" stroke-width="8" stroke="#D3D3D3" fill="none" />
+        <circle cx="160" cy="120" r="40" stroke-width="4" stroke="#555" fill="none" />
+        <circle cx="160" cy="120" r="72" stroke-width="6" stroke="#555" fill="none" />
+        <circle cx="160" cy="120" r="106" stroke-width="8" stroke="#555" fill="none" />
     </g>
-    <polygon points="100,300 220,300 160,140" fill="#D3D3D3" />
+    <polygon points="100,300 220,300 160,140" fill="#555" />
 </svg>

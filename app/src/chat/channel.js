@@ -51,7 +51,7 @@ class ChatChannel {
         if (data) {
             this._channelData = data;
             this._channelLogo = data.logo || this._channelLogo;
-            this._displayName = data.display_name;
+            this._displayName = data.display_name || this._name;
             this._gameName = data.game || '';
             this._statusText = data.status || '';
 
@@ -70,13 +70,13 @@ class ChatChannel {
                     this._online = false;
 
                     twitchAPIRequest(`https://api.twitch.tv/kraken/channels/${this._name}`, (data, success) => {
-                        if (success) {
+                        if (success && typeof data === 'object') {
                             this._setData(data);
                             this._internalEvents.emit('updated');
                         }
                     });
                 }
-                else {
+                else if (typeof data === 'object') {
                     this._online = true;
                     this._setData(data.stream.channel);
                     this._internalEvents.emit('updated');
@@ -114,6 +114,7 @@ class ChatChannel {
     }
 
     leave() {
+        this._internalEvents.emit('leaving');
         return require('./connection').chatInterface.part(this._name);
     }
 

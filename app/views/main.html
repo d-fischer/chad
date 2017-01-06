@@ -21,23 +21,6 @@
         <ul class="messages"></ul>
         <form class="message-form">
             <div class="settings-footer">
-                <div class="settings-button streamer-mode-toggle">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
-                        <defs>
-                            <mask id="tower-mask">
-                                <rect x="0" y="0" width="320" height="320" fill="white" ></rect>
-                                <polygon points="100,300 220,300 160,140" fill="white" stroke="black" stroke-width="20" ></polygon>
-                            </mask>
-                        </defs>
-                        <circle cx="160" cy="120" r="20" fill="currentColor" ></circle>
-                        <g mask="url(#tower-mask)">
-                            <circle cx="160" cy="120" r="40" stroke-width="4" stroke="currentColor" fill="none" ></circle>
-                            <circle cx="160" cy="120" r="72" stroke-width="6" stroke="currentColor" fill="none" ></circle>
-                            <circle cx="160" cy="120" r="106" stroke-width="8" stroke="currentColor" fill="none" ></circle>
-                        </g>
-                        <polygon points="100,300 220,300 160,140" fill="currentColor" ></polygon>
-                    </svg>
-                </div>
                 <div class="settings-button open-settings">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2">
                         <defs>
@@ -86,24 +69,42 @@
                     </svg>
                 </div>
             </div>
-            <input class="message-box"/>
+            <div class="message-box-wrap">
+                <input class="message-box" />
+                <div class="message-emote-button">
+                    <svg xmlns="http://www.w3.org/2000/svg"><use xlink:href="img/icons.svg#icon-emotes"></use></svg>
+                </div>
+            </div>
             <button type="submit">Send</button>
         </form>
     </div>
     <li></li>
 </template>
-<template id="channel-list-item-template">
-    <li class="channel-list-item">
-        <div class="user-picture"></div>
-        <div class="user-name"></div>
-        <div class="user-game"></div>
-        <div class="user-status"></div>
-    </li>
-</template>
+
 <template id="chat-message-template">
     <li>
         <time></time><span class="badges"></span><span class="username"></span><span class="sep"></span><span class="message"></span>
     </li>
+</template>
+
+<template id="emote-popover-template">
+    <div class="context-menu emote-popover tab-container">
+        <div class="emote-tab-wrapper tabs">
+            <div class="tab emote-list twitch active" data-name="twitch"></div>
+            <div class="tab emote-list" data-name="bttv">
+                <div class="emote-group bttv-emotes-channel"></div>
+                <div class="emote-group bttv-emotes-global"></div>
+            </div>
+        </div>
+        <div class="emote-tab-bar tab-list">
+            <a class="tab-link emote-tab active" data-tab="twitch" data-title="Twitch">
+                <svg xmlns="http://www.w3.org/2000/svg"><use xlink:href="img/icons.svg#icon-twitch"></use></svg>
+            </a>
+            <a class="tab-link emote-tab" data-tab="bttv" data-title="BTTV">
+                <svg xmlns="http://www.w3.org/2000/svg"><use xlink:href="img/icons.svg#icon-bttv"></use></svg>
+            </a>
+        </div>
+    </div>
 </template>
 
 <div id="main-window" class="tab-container">
@@ -115,32 +116,15 @@
             </li>
         </ul>
         <div class="settings-footer">
-            <div class="settings-button streamer-mode-toggle">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320">
-                    <defs>
-                        <mask id="tower-mask">
-                            <rect x="0" y="0" width="320" height="320" fill="white" ></rect>
-                            <polygon points="100,300 220,300 160,140" fill="white" stroke="black" stroke-width="20" ></polygon>
-                        </mask>
-                    </defs>
-                    <circle cx="160" cy="120" r="20" fill="currentColor" ></circle>
-                    <g mask="url(#tower-mask)">
-                        <circle cx="160" cy="120" r="40" stroke-width="4" stroke="currentColor" fill="none" ></circle>
-                        <circle cx="160" cy="120" r="72" stroke-width="6" stroke="currentColor" fill="none" ></circle>
-                        <circle cx="160" cy="120" r="106" stroke-width="8" stroke="currentColor" fill="none" ></circle>
-                    </g>
-                    <polygon points="100,300 220,300 160,140" fill="currentColor" ></polygon>
-                </svg>
-            </div>
             <div class="settings-button open-settings">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2">
+                <svg xmlns="http://www.w3.org/2000/svg" id="icon-settings" viewBox="0 0 2 2">
                     <defs>
-                        <mask id="center-circle-mask">
-                            <rect x="0" y="0" width="2" height="2" fill="white" ></rect>
-                            <circle cx="1" cy="1" r="0.4" fill="black" ></circle>
+                        <mask id="icon-settings-mask" maskContentUnits="objectBoundingBox">
+                            <rect x="0" y="0" width="1" height="1" fill="white" ></rect>
+                            <circle cx="0.5" cy="0.5" r="0.2" fill="black" ></circle>
                         </mask>
                     </defs>
-                    <g mask="url(#center-circle-mask)">
+                    <g mask="url(#icon-settings-mask)">
                         <path d="
                             M
                             1.7071067811865,1.7071067811865

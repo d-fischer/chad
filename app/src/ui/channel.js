@@ -7,6 +7,7 @@ const remote = require('electron').remote;
 const twitchAPIRequest = remote.require('./request/twitchAPI');
 
 const DomEvents = require('../dom/events');
+const DomTools = require('../tools/dom');
 
 class UIChannel {
     constructor(name) {
@@ -15,12 +16,15 @@ class UIChannel {
         let backend = this.backend;
         let updateGuiCb = this.updateGuiWithChannelData.bind(this);
         let onlineCb = this.notifyOnline.bind(this);
+        let destroyCb = this.destroy.bind(this);
         backend.on('updated', updateGuiCb);
         backend.on('online', onlineCb);
+        backend.on('leaving', destroyCb);
         this.destroyEvents = () => {
             let backend = this.backend;
             backend.off('updated', updateGuiCb);
             backend.off('online', onlineCb);
+            backend.off('leaving', destroyCb);
         };
         this._listElement = undefined;
         this._element = undefined;
@@ -32,6 +36,10 @@ class UIChannel {
 
     get backend() {
         return channelManager.get(this._name);
+    }
+
+    get name() {
+        return this._name;
     }
 
     updateBadges() {
@@ -98,7 +106,7 @@ class UIChannel {
             channelList.insertBefore(this._listElement, channelAdd);
 
             let channelWindows = document.getElementById('channel-windows');
-            let channelWindowFrag = document.querySelector('#channel-window-template').content.cloneNode(true);
+            let channelWindowFrag = DomTools.getTemplateContent(document.querySelector('#channel-window-template'));
             this._element = channelWindowFrag.querySelector('.channel-window');
             this._element.insertBefore(this._badgeStyle, this._element.firstChild);
             this._element.dataset.name = this._name;
@@ -117,6 +125,7 @@ class UIChannel {
             });
 
             channelWindows.appendChild(channelWindowFrag);
+            DomTools.fixSvgUses(this._element);
 
             this.updateGuiWithChannelData();
 

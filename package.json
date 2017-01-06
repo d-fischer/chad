@@ -1,7 +1,7 @@
 {
   "name": "chad",
   "productName": "Chad",
-  "version": "0.16.0",
+  "version": "0.20.1",
   "description": "A chat client for Twitch",
   "main": "app/main.js",
   "scripts": {
@@ -30,7 +30,7 @@
     }
   },
   "devDependencies": {
-    "electron-prebuilt": "^1.4.12",
+    "electron": "^1.4.13",
     "electron-builder": "^10.6.1"
   },
   "dependencies": {}

@@ -2,8 +2,7 @@ const settings = remote.require('./settings/settings');
 const twitchAPIRequest = remote.require('./request/twitchAPI');
 const channelManager = remote.require('./chat/channelManager');
 
-const FunctionTools = require('./../src/tools/function');
-const DomTools = require('./../src/tools/dom');
+const FunctionTools = require('../src/tools/function');
 
 const list = document.getElementById('channel-add-list');
 const itemTpl = document.getElementById('channel-list-item-template');
@@ -22,7 +21,7 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
         // have we already sent another request after this one? then ignore this one
         if (success && mySeq === seq) {
             for (let channel of data.channels) {
-                let itemFrag = itemTpl.content.cloneNode(true);
+                let itemFrag = DomTools.getTemplateContent(itemTpl);
                 let item = itemFrag.querySelector('.channel-list-item');
                 item.dataset.name = channel.name;
                 if (currentChannels.indexOf(channel.name) !== -1) {
@@ -42,16 +41,21 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
 
 function windowLoaded(thisBrowserWindow) {
     DomEvents.delegate(list, 'click', '.channel-list-item', function() {
-        let currentChannels = (settings.get('connection:channels') || []).slice();
         let newChannel = this.dataset.name;
+        let alreadyJoined = channelManager.has(newChannel);
+        let currentChannels = (settings.get('connection:channels') || []).slice();
         if (currentChannels.indexOf(newChannel) === -1) {
             currentChannels.push(newChannel);
-            this.classList.add('joined');
             settings.set('connection:channels', currentChannels);
-            channelManager.add(newChannel);
+            this.classList.add('joined');
+            if (!alreadyJoined) {
+                channelManager.add(newChannel);
+            }
             thisBrowserWindow.close();
         }
     });
 
     document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
+
+    document.getElementById('channel-add-search').focus();
 }

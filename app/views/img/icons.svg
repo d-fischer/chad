@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="icon-emotes" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" stroke-width="5" stroke="currentColor" fill="none"/>
+        <circle stroke="none" fill="currentColor" r="5" cx="34.822330470336" cy="34.822330470336"/>
+        <circle stroke="none" fill="currentColor" r="5" cx="65.177669529664" cy="34.822330470336"/>
+        <path stroke="currentColor" fill="none" stroke-width="5" d="
+            M
+            67.677669529664,65.177669529664
+            A
+            25,25 0 0 1 32.322330470336,65.177669529664"/>
+    </symbol>
+
+    <mask id="icon-settings-mask" maskContentUnits="objectBoundingBox">
+        <rect x="0" y="0" width="1" height="1" fill="white"/>
+        <circle cx="0.5" cy="0.5" r="0.2" fill="black"/>
+    </mask>
+
+    <symbol id="icon-settings" viewBox="0 0 2 2">
+        <g mask="url(#icon-settings-mask)">
+            <path d="
+                M
+                1.7071067811865,1.7071067811865
+                Q
+                1.1414213562373,0.8585786437627 0.2928932188135,0.2928932188135
+                0.8585786437627,1.1414213562373 1.7071067811865,1.7071067811865
+                Z
+                " stroke-width="0.3" stroke="currentColor"/>
+
+            <path d="
+                M
+                1.7071067811865,0.2928932188135
+                Q
+                1.1414213562373,1.1414213562373 0.2928932188135,1.7071067811865
+                0.8585786437627,0.8585786437627 1.7071067811865,0.2928932188135
+                Z
+                " stroke-width="0.3" stroke="currentColor"/>
+
+            <path d="
+                M
+                1,0
+                Q
+                0.8,1 1,2
+                1.2,1 1,0
+                " stroke-width="0.3" stroke="currentColor"/>
+
+            <path d="
+                M
+                0,1
+                Q
+                1,0.8 2,1
+                1,1.2 0,1
+                " stroke-width="0.3" stroke="currentColor"/>
+
+            <circle fill="currentColor" cx="1" cy="1" r="0.8"/>
+        </g>
+    </symbol>
+
+    <!-- from Twitch brand assets - do NOT change -->
+    <symbol id="icon-twitch" viewBox="0 0 128 134">
+        <path fill="currentColor" fill-rule="evenodd" transform="translate(-80 -77)"
+              d="M89,77l-9,23v94h32v17h18l17-17h26l35-35V77H89Zm107,76-20,20H144l-17,17V173H100V89h96v64Zm-20-41v35H164V112h12Zm-32,0v35H132V112h12Z"
+        />
+    </symbol>
+
+    <symbol id="icon-bttv" viewBox="0 0 16 16">
+        <polygon points="1,4 1,12 8,15 15,12 15,4 8,1" stroke="currentColor" stroke-width="1" fill="none"/>
+        <line x1="8" y1="7" x2="1" y2="4" stroke="currentColor" stroke-width="1"/>
+        <line x1="8" y1="7" x2="8" y2="15" stroke="currentColor" stroke-width="1"/>
+        <line x1="8" y1="7" x2="15" y2="4" stroke="currentColor" stroke-width="1"/>
+    </symbol>
+</svg>

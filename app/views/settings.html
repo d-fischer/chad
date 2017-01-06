@@ -10,7 +10,7 @@
     <div class="dialog-menu tab-list">
         <ul>
             <li class="menu-item tab-link" data-tab="connection">Connection</li>
-            <li class="menu-item tab-link" data-tab="other">Other</li>
+            <li class="menu-item tab-link" data-tab="appearance">Appearance</li>
         </ul>
     </div>
     <div class="dialog-body">
@@ -21,7 +21,7 @@
                     <input type="text" data-setting="connection:username"/>
                 </label>
                 <label>
-                    OAuth token <a href="https://twitchapps.com/tmi/" class="external-link" tabindex="-1">(get)</a>
+                    OAuth token <a href="#" class="get-oauth-token" tabindex="-1">(get)</a>
                     <input type="password" data-setting="connection:token"/>
                 </label>
                 <div id="connection-warning"></div>
@@ -29,8 +29,15 @@
                     <button class="reconnect-button">Reconnect</button>
                 </div>
             </div>
-            <div class="dialog-panel tab" data-name="other">
-                Nothing's here yet, stay tuned!
+            <div class="dialog-panel tab" data-name="appearance">
+                <label>
+                    Sidebar style
+                    <select data-setting="appearance:sidebar">
+                        <option value="">Show names and pictures</option>
+                        <option value="names-only">Names only</option>
+                        <option value="pics-only">Profile pictures only</option>
+                    </select>
+                </label>
             </div>
         </div>
         <div class="dialog-buttons">

@@ -1,19 +1,22 @@
 const settings = remote.require('./settings/settings');
 
-const DomTools = require('./../src/tools/dom');
+const s = '[data-setting]';
+const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input[type="password"]${s}`;
+const selectFieldSelector = `select${s}`;
 
-[].forEach.call(document.querySelectorAll('input[data-setting]'), input => {
+const refreshSettings = () => [].forEach.call(document.querySelectorAll(`${inputFieldSelector}, ${selectFieldSelector}`), input => {
     input.value = settings.get(input.dataset.setting) || '';
+    input.dispatchEvent(new Event('change'));
 });
 
-DomEvents.delegate(document.body, 'blur', 'input[data-setting]', function () {
-    if (this.value) {
-        settings.set(this.dataset.setting, this.value);
-    }
-    else {
-        settings.delete(this.dataset.setting);
-    }
-}, true);
+refreshSettings();
+
+const changeCallback = function () {
+    settings.set(this.dataset.setting, this.value || null);
+};
+
+DomEvents.delegate(document.body, 'blur', inputFieldSelector, changeCallback, true);
+DomEvents.delegate(document.body, 'change', selectFieldSelector, changeCallback, true);
 
 for (let panel of document.querySelectorAll('.dialog-panel')) {
     panel.addEventListener('tab:activate', function () {
@@ -36,7 +39,20 @@ function windowLoaded(thisBrowserWindow, options) {
         if (options.selectedPanel) {
             activateTab(document.getElementById('settings-dialog'), options.selectedPanel);
         }
+        if (options.connectError) {
+            let errElem = document.getElementById('connection-warning');
+            errElem.classList.remove('hidden');
+            errElem.textContent = 'Connection error: ' + options.connectError;
+        }
     }
     DomEvents.delegate(document.body, 'click', '.reconnect-button', () => (remote.getGlobal('reconnect'))());
     document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
+
+    DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
+        e.preventDefault();
+        remote.require('./ui/window/manager').getWindow('auth').show().then(data => {
+            settings.set('connection:token', 'oauth:' + data.token);
+            refreshSettings();
+        }, () => {});
+    });
 }

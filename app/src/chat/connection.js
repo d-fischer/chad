@@ -51,15 +51,17 @@ class ChatConnection {
                 reject(new SettingsMissingError);
             }
         };
-        if (this.isConnected) {
-            return this._chatInterface.disconnect().then(() => {
-                this._chatInterface = undefined;
-                return new Promise(connectFn);
-            });
+        if (this._chatInterface) {
+            let oldInterface = this._chatInterface;
+            let isConnected = this.isConnected;
+            this._chatInterface = undefined;
+            if (isConnected) {
+                return oldInterface.disconnect().then(() => {
+                    return new Promise(connectFn);
+                });
+            }
         }
-        else {
-            return new Promise(connectFn);
-        }
+        return new Promise(connectFn);
     }
 
     get isConnected() {

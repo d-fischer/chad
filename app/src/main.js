@@ -10,6 +10,7 @@ const windowManager = require('./ui/window/manager');
 const chatEvents = require('./chat/events');
 
 let chatConnection;
+let initialConnection = false;
 
 function createWindow() {
     if (chatConnection) {
@@ -24,7 +25,10 @@ function createWindow() {
     }
 }
 
-function initConnection() {
+function initConnection(allowReconnect) {
+    if (chatConnection && allowReconnect) {
+        chatConnection = undefined;
+    }
     if (!chatConnection)
     {
         let connection = settings.get('connection');
@@ -35,29 +39,40 @@ function initConnection() {
                 chatChannelManager.addAll(channels);
             });
 
+            initialConnection = true;
             chatEvents.on('connected', () => {
-                windowManager.getWindow('main').show();
-                let loadingWindow = windowManager.getWindow('loading', false);
-                if (loadingWindow) {
-                    loadingWindow.close();
+                if (initialConnection) {
+                    initialConnection = false;
+                    windowManager.getWindow('main').show();
+                    let loadingWindow = windowManager.getWindow('loading', false);
+                    if (loadingWindow) {
+                        loadingWindow.close();
+                    }
                 }
             });
 
             chatEvents.on('disconnected', reason => {
-                console.log(`Disconnected: ${reason}`)
+                if (initialConnection) {
+                    initialConnection = false;
+                    windowManager.getWindow('settings').show(null, {
+                        initial: true,
+                        selectedPanel: 'connection',
+                        connectError: reason
+                    });
+                    let loadingWindow = windowManager.getWindow('loading', false);
+                    if (loadingWindow) {
+                        loadingWindow.close();
+                    }
+                }
             });
         }
     }
 }
 
 global.reconnect = () => {
+    initialConnection = true;
     windowManager.closeAll();
-    if (chatConnection) {
-        chatConnection.connect();
-    }
-    else {
-        initConnection();
-    }
+    initConnection(true);
     createWindow();
 };
 
@@ -69,7 +84,7 @@ app.on('ready', function () {
 
 // TODO: tray icon for Windows here
 app.on('window-all-closed', function () {
-    if (process.platform !== 'darwin') {
+    if (process.platform !== 'darwin' && !initialConnection) {
         app.quit();
     }
 });
