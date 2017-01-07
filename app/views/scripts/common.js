@@ -1,6 +1,7 @@
 require('app-module-path').addPath(__dirname + '/../src');
 
 const {remote} = require('electron');
+//noinspection JSUnusedLocalSymbols
 const {shell, BrowserWindow} = remote;
 const DomEvents = require('dom/events');
 const DomTools = require('tools/dom');
@@ -50,10 +51,10 @@ DomEvents.delegate(document.body, 'mouseenter', '[data-title]', function() {
         tip.textContent = this.dataset.title;
         let left = DomTools.getScrollLeftFrom(this, document.body);
         left += this.offsetWidth / 2;
-        tip.style.left = left + 'px';
+        tip.style.left = `${left}px`;
         let top = DomTools.getScrollTopFrom(this, document.body);
         top += this.offsetHeight;
-        tip.style.top = top + 'px';
+        tip.style.top = `${top}px`;
         document.body.appendChild(tip);
         this.addEventListener('mouseleave', function removeTooltip() {
             document.body.removeChild(tip);
