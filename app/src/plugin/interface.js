@@ -1,6 +1,6 @@
 'use strict';
 
-const PluginEventInterface = require('./interface/events');
+const PluginEventInterface = require('plugin/interface/events');
 
 class PluginInterface {
     constructor(name) {

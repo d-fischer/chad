@@ -1,7 +1,7 @@
 'use strict';
 
 function twitchAPIRequest(url, callback) {
-    require('../chat/connection').chatInterface.api({
+    require('chat/connection').chatInterface.api({
         url: url,
         headers: {
             'Client-ID': 'etkg90uv09c04nadunxf64wp5ueqcdv'

@@ -1,11 +1,11 @@
 'use strict';
 
-const UIChatLine = require('./../line');
-const UIEventHandler = require('./../../eventHandler');
-const uiChannelManager = require('./../../channelManager');
+const UIChatLine = require('ui/chat/line');
+const UIEventHandler = require('ui/eventHandler');
+const uiChannelManager = require('ui/channelManager');
 
 const remote = require('electron').remote;
-const chatEvents = remote.require('./chat/events');
+const chatEvents = remote.require('chat/events');
 
 class UIChatMessageHandler extends UIEventHandler {
     constructor() {

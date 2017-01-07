@@ -1,11 +1,9 @@
 'use strict';
 
-const ChatUser = require('../../chat/user');
-
-const DomTools = require('../../tools/dom');
+const ChatUser = require('chat/user');
+const DomTools = require('tools/dom');
 
 const {remote} = require('electron');
-
 const TinyColor = require('tinycolor2');
 
 /** @var RegExp */
@@ -194,7 +192,7 @@ class UIChatLine {
     }
 
     parseWord(word) {
-        let chatEmotes = remote.require('./chat/emotes');
+        let chatEmotes = remote.require('chat/emotes');
         let twitchEmotes = chatEmotes.getOwnTwitchEmotes();
         let bttvEmotes = chatEmotes.getBttvEmotes(this._channel);
         let cheerMatch = word.match(new RegExp(`^(${_cheerAlternation})(\\d+)$`, 'i'));

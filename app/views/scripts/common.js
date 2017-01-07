@@ -1,8 +1,10 @@
+require('app-module-path').addPath(__dirname + '/../src');
+
 const {remote} = require('electron');
-const {BrowserWindow, shell} = remote;
-const DomEvents = require('../src/dom/events');
-const DomTools = require('../src/tools/dom');
-const SelectOptionsMenu = require('../src/ui/contextMenu/select');
+const {shell, BrowserWindow} = remote;
+const DomEvents = require('dom/events');
+const DomTools = require('tools/dom');
+const SelectOptionsMenu = require('ui/contextMenu/select');
 
 DomEvents.delegate(document.body, 'click', '.external-link', function (e) {
     e.preventDefault();
@@ -41,7 +43,7 @@ function activateTab(tabContainer, tabName) {
     });
 }
 
-DomEvents.delegate(document.body, 'mouseenter', '[data-title]', function(e) {
+DomEvents.delegate(document.body, 'mouseenter', '[data-title]', function() {
     if (this.dataset.title) {
         let tip = document.createElement('div');
         tip.classList.add('tooltip');

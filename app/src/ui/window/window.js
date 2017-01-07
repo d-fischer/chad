@@ -41,7 +41,7 @@ class Window extends EventEmitter {
                 }
             };
             if (parentName) {
-                let win = require('./manager').getWindow(parentName, false);
+                let win = require('ui/window/manager').getWindow(parentName, false);
                 if (win) {
                     windowConf.modal = true;
                     windowConf.parent = win._browserWindow;

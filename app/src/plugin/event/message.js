@@ -1,6 +1,6 @@
 'use strict';
 
-const PluginEvent = require('../event');
+const PluginEvent = require('plugin/event');
 
 class MessageEvent extends PluginEvent {
     constructor(channel, line, userState, relatedElement) {

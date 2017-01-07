@@ -1,7 +1,7 @@
 'use strict';
 
-const Plugin = require('./plugin');
-const pluginEvents = require('./events');
+const Plugin = require('plugin/plugin');
+const pluginEvents = require('plugin/events');
 
 class PluginManager {
     constructor() {

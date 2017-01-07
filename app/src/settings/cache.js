@@ -1,6 +1,6 @@
 'use strict';
 
-const SettingsStore = require('./store');
+const SettingsStore = require('settings/store');
 
 class Cache extends SettingsStore {
     constructor() {

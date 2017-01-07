@@ -1,4 +1,4 @@
-const settings = remote.require('./settings/settings');
+const settings = remote.require('settings/settings');
 
 const s = '[data-setting]';
 const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input[type="password"]${s}`;
@@ -50,7 +50,7 @@ function windowLoaded(thisBrowserWindow, options) {
 
     DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
         e.preventDefault();
-        remote.require('./ui/window/manager').getWindow('auth').show().then(data => {
+        remote.require('ui/window/manager').getWindow('auth').show().then(data => {
             settings.set('connection:token', 'oauth:' + data.token);
             refreshSettings();
         }, () => {});

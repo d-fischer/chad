@@ -1,11 +1,11 @@
 'use strict';
 
 const tmi = require('tmi.js');
-const settings = require('../settings/settings');
-const chatEvents = require('./events');
+const settings = require('settings/settings');
+const chatEvents = require('chat/events');
 
-const ChatConnectionError = require('../error/chat-connection');
-const SettingsMissingError = require('../error/settings-missing');
+const ChatConnectionError = require('error/chat-connection');
+const SettingsMissingError = require('error/settings-missing');
 
 class ChatConnection {
     constructor() {

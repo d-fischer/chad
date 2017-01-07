@@ -1,6 +1,6 @@
 'use strict';
 
-const Window = require('./window');
+const Window = require('ui/window/window');
 
 const URL = require('url');
 const QueryString = require('querystring');

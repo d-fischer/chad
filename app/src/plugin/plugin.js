@@ -3,7 +3,7 @@
 const {NodeVM} = require('vm2');
 const fs = require('fs');
 const {app} = require('electron');
-const PluginInterface = require('./interface');
+const PluginInterface = require('plugin/interface');
 
 class Plugin {
     constructor(name) {

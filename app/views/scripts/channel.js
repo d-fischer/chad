@@ -1,8 +1,8 @@
-const settings = remote.require('./settings/settings');
-const twitchAPIRequest = remote.require('./request/twitchAPI');
-const channelManager = remote.require('./chat/channelManager');
+const settings = remote.require('settings/settings');
+const twitchAPIRequest = remote.require('request/twitchAPI');
+const channelManager = remote.require('chat/channelManager');
 
-const FunctionTools = require('../src/tools/function');
+const FunctionTools = require('tools/function');
 
 const list = document.getElementById('channel-add-list');
 const itemTpl = document.getElementById('channel-list-item-template');

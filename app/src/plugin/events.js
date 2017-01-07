@@ -2,7 +2,17 @@
 
 const {EventEmitter} = require('events');
 
-const MessageEvent = require('./event/message');
+const MessageEvent = require('plugin/event/message');
+const isRenderer = require('is-electron-renderer');
+
+let nodeRequire;
+if (isRenderer) {
+    const {remote} = require('electron');
+    nodeRequire = remote.require.bind(remote);
+}
+else {
+    nodeRequire = require;
+}
 
 class PluginEvents {
     constructor() {
@@ -112,7 +122,7 @@ PluginEvents.prototype.catchEvent = PluginEvents.prototype.addCatchingEventListe
 
 module.exports = new PluginEvents;
 
-const chatEvents = require('../chat/events');
+const chatEvents = nodeRequire('chat/events');
 
 chatEvents.on('chat', (channelName, userData, message, self) =>
     module.exports.handle('message', channelName, message, userData, undefined));

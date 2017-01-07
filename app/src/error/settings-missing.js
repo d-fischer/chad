@@ -1,6 +1,6 @@
 'use strict';
 
-const ExtendableError = require('./extendable');
+const ExtendableError = require('error/extendable');
 
 class SettingsMissingError extends ExtendableError {}
 

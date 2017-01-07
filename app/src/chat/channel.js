@@ -2,9 +2,9 @@
 
 const {EventEmitter} = require('events');
 
-const twitchAPIRequest = require('../request/twitchAPI');
+const twitchAPIRequest = require('request/twitchAPI');
 const request = require('request');
-const cache = require('../settings/cache');
+const cache = require('settings/cache');
 
 let channels = {};
 
@@ -110,16 +110,16 @@ class ChatChannel {
     }
 
     join() {
-        return require('./connection').chatInterface.join(this._name);
+        return require('chat/connection').chatInterface.join(this._name);
     }
 
     leave() {
         this._internalEvents.emit('leaving');
-        return require('./connection').chatInterface.part(this._name);
+        return require('chat/connection').chatInterface.part(this._name);
     }
 
     say(message) {
-        return require('./connection').chatInterface.say(this._name, message);
+        return require('chat/connection').chatInterface.say(this._name, message);
     }
 }
 
