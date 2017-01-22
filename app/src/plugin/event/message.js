@@ -3,12 +3,17 @@
 const PluginEvent = require('plugin/event');
 
 class MessageEvent extends PluginEvent {
-    constructor(channel, line, userState, relatedElement) {
+    constructor(type, channel, line, userState, relatedElement) {
         super();
+        this._type = type;
         this._channel = channel;
         this._message = line;
         this._userState = userState;
-        this.withRelatedElement = fn => fn(relatedElement);
+        this._relatedElement = relatedElement;
+    }
+
+    get type() {
+        return this._type;
     }
 
     get channel() {
@@ -19,8 +24,14 @@ class MessageEvent extends PluginEvent {
         return this._message;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     get userState() {
         return this._userState;
+    }
+
+    //noinspection JSUnusedGlobalSymbols
+    get relatedElement() {
+        return this._relatedElement;
     }
 }
 

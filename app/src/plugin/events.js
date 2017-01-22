@@ -1,128 +1,82 @@
 'use strict';
 
 const {EventEmitter} = require('events');
-
-const MessageEvent = require('plugin/event/message');
 const isRenderer = require('is-electron-renderer');
 
-let nodeRequire;
-if (isRenderer) {
-    const {remote} = require('electron');
-    nodeRequire = remote.require.bind(remote);
-}
-else {
-    nodeRequire = require;
-}
+const MessageEvent = require('plugin/event/message');
+
+const pluginManager = require('plugin/manager');
 
 class PluginEvents {
     constructor() {
         this._events = {};
-        this._catchEvents = {};
         this._emitter = new EventEmitter;
-        this._catchEmitter = new EventEmitter;
-    }
-
-    addEventListener(eventName, module, listener) {
-        return this._addEventListener(false, eventName, module, listener);
-    }
-
-    addCatchingEventListener(eventName, module, listener) {
-        return this._addEventListener(true, eventName, module, listener);
-    }
-
-    _addEventListener(catching, eventName, pluginName, listener) {
-        let emitter = catching ? this._catchEmitter : this._emitter;
-        let events = catching ? this._catchEvents : this._events;
-        if (typeof pluginName === 'function') {
-            listener = pluginName;
-        }
-
-        if (!(eventName in events)) {
-            events[eventName] = {};
-        }
-
-        if (!(pluginName in events[eventName])) {
-            events[eventName][pluginName] = [];
-        }
-
-        events[eventName][pluginName].push(listener);
-        emitter.on(eventName, listener);
-
-        return this;
     }
 
     handle(eventName, ...args) {
-        let catchingEvents = this._catchEvents[eventName];
-        let events = this._events[eventName];
         let evt = this._makeEvent(eventName, ...args);
 
-        if (catchingEvents) {
-            for (let pluginName in catchingEvents) {
-                if (catchingEvents.hasOwnProperty(pluginName)) {
-                    for (let handler of catchingEvents[pluginName]) {
-                        try {
-                            handler.call(this, evt);
-                        }
-                        catch (e) {
-                            console.log(`Uncaught exception in plugin ${pluginName}:`, e);
-                        }
-                    }
-                }
-            }
-        }
-
-        // can't overwrite that anymore after this
-        let wasCaught = evt.caught;
-
-        if (!wasCaught) {
-            for (let pluginName in events) {
-                if (events.hasOwnProperty(pluginName)) {
-                    for (let handler of events[pluginName]) {
-                        try {
-                            handler.call(this, evt);
-                        }
-                        catch (e) {
-                            console.log(`Uncaught exception in plugin ${pluginName}:`, e);
+        if (evt) {
+            let handlerMethod = this._getHandlerMethod(eventName);
+            if (handlerMethod) {
+                let plugins = pluginManager.getAll();
+                for (let pluginName in plugins) {
+                    if (plugins.hasOwnProperty(pluginName)) {
+                        let plugin = plugins[pluginName].getPlugin();
+                        if (handlerMethod in plugin) {
+                            plugin[handlerMethod].call(plugin, evt);
                         }
                     }
                 }
             }
         }
-
-        return wasCaught;
     }
 
+    //noinspection JSMethodCanBeStatic
     _makeEvent(eventName, ...args) {
         switch (eventName) {
-            case 'message': {
-                return new MessageEvent(...args);
+            case 'chat':
+            case 'action':
+            case 'resubmsg':
+            case 'cheer': {
+                return new MessageEvent(eventName, ...args);
             }
         }
+
+        return null;
     }
 
-    _removeAllForPlugin(pluginName) {
-        for (let eventName in this._events) {
-            if (this._events.hasOwnProperty(eventName) && pluginName in this._events[eventName]) {
-                this._events[eventName][pluginName].forEach(handler => this._emitter.removeListener(eventName, handler));
-                delete this._events[eventName][pluginName];
+    //noinspection JSMethodCanBeStatic
+    _getHandlerMethod(eventName) {
+        switch (eventName) {
+            case 'chat':
+            case 'action':
+            case 'resubmsg':
+            case 'cheer': {
+                return 'handleMessage';
             }
         }
 
-        for (let eventName in this._catchEvents) {
-            if (this._catchEvents.hasOwnProperty(eventName) && pluginName in this._catchEvents[eventName]) {
-                this._catchEvents[eventName][pluginName].forEach(handler => this._catchEmitter.removeListener(eventName, handler));
-                delete this._catchEvents[eventName][pluginName];
-            }
-        }
+        return null;
     }
 }
 
 PluginEvents.prototype.on = PluginEvents.prototype.addEventListener;
-PluginEvents.prototype.catchEvent = PluginEvents.prototype.addCatchingEventListener;
 
 module.exports = new PluginEvents;
 
-const chatEvents = nodeRequire('chat/events');
+if (!isRenderer) {
+    const chatEvents = require('chat/events');
 
-chatEvents.on('chat', (channelName, userData, message, self) =>
-    module.exports.handle('message', channelName, message, userData, undefined));
+    chatEvents.on('chat', (channelName, userData, message, self) =>
+        module.exports.handle('chat', channelName, message, userData, undefined));
+
+    chatEvents.on('action', (channelName, userData, message, self) =>
+        module.exports.handle('action', channelName, message, userData, undefined));
+
+    chatEvents.on('resubmsg', (channelName, userData, message, self) =>
+        module.exports.handle('resubmsg', channelName, message, userData, undefined));
+
+    chatEvents.on('cheer', (channelName, userData, message, self) =>
+        module.exports.handle('cheer', channelName, message, userData, undefined));
+}

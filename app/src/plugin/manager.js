@@ -1,7 +1,6 @@
 'use strict';
 
-const Plugin = require('plugin/plugin');
-const pluginEvents = require('plugin/events');
+const PluginExecutor = require('plugin/executor');
 
 class PluginManager {
     constructor() {
@@ -13,7 +12,7 @@ class PluginManager {
             throw new Error(`trying to load plugin that is already loaded: '${name}'`);
         }
 
-        this._plugins[name] = new Plugin(name);
+        this._plugins[name] = new PluginExecutor(name);
     }
 
     unload(name) {
@@ -21,8 +20,11 @@ class PluginManager {
             throw new Error(`trying to unload plugin that is not loaded: '${name}'`)
         }
 
-        pluginEvents._removeAllForPlugin(name);
         delete this._plugins[name];
+    }
+
+    getAll() {
+        return this._plugins;
     }
 }
 
