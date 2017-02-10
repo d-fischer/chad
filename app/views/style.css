@@ -523,8 +523,56 @@ body.darwin .dialog {
     background: url(https://static-cdn.jtvnw.net/badges/v1/68af213b-a771-4124-b6e3-9bb6d98aa732/2);
 }
 
+.badges .cheer-25000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/64ca5920-c663-4bd8-bfb1-751b4caea2dd/2);
+}
+
+.badges .cheer-50000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/62310ba7-9916-4235-9eba-40110d67f85d/2);
+}
+
+.badges .cheer-75000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/ce491fa4-b24f-4f3b-b6ff-44b080202792/2);
+}
+
 .badges .cheer-100000 {
     background: url(https://static-cdn.jtvnw.net/badges/v1/96f0540f-aa63-49e1-a8b3-259ece3bd098/2);
+}
+
+.badges .cheer-200000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/4a0b90c4-e4ef-407f-84fe-36b14aebdbb6/2);
+}
+
+.badges .cheer-300000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/ac13372d-2e94-41d1-ae11-ecd677f69bb6/2);
+}
+
+.badges .cheer-400000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/a8f393af-76e6-4aa2-9dd0-7dcc1c34f036/2);
+}
+
+.badges .cheer-500000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/f6932b57-6a6e-4062-a770-dfbd9f4302e5/2);
+}
+
+.badges .cheer-600000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/4d908059-f91c-4aef-9acb-634434f4c32e/2);
+}
+
+.badges .cheer-700000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/a1d2a824-f216-4b9f-9642-3de8ed370957/2);
+}
+
+.badges .cheer-800000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/5ec2ee3e-5633-4c2a-8e77-77473fe409e6/2);
+}
+
+.badges .cheer-900000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/088c58c6-7c38-45ba-8f73-63ef24189b84/2);
+}
+
+.badges .cheer-1000000 {
+    background: url(https://static-cdn.jtvnw.net/badges/v1/494d1c8e-c3b2-4d88-8528-baff57c9bd3f/2);
 }
 
 .badges .badge {
