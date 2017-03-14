@@ -38,7 +38,12 @@ class PluginManager {
 
     load(name) {
         let manifestFile = `${pluginFolder}/${name}/plugin.json`;
-        let manifest = require(manifestFile);
+        let manifest;
+        try {
+            manifest = require(manifestFile);
+        }
+        catch (e) {
+        }
         let absoluteFiles;
         if (manifest) {
             console.log(manifest);
