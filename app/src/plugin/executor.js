@@ -2,53 +2,38 @@
 
 const {NodeVM} = require('vm2');
 const fs = require('fs');
-const electron = require('electron');
+const path = require('path');
 const isRenderer = require('is-electron-renderer');
 
 const Plugin = require('plugin/plugin');
 
-let app;
-if (isRenderer) {
-    app = electron.remote.app;
-}
-else {
-    app = electron.app;
-}
-
-const userDataPath = app.getPath('userData');
-
 class PluginExecutor {
-    constructor(name, domAware) {
-        if (!/^\w+$/.test(name)) {
-            throw new Error(`trying to load invalid plugin name: '${name}'`);
-        }
+    constructor(name, file) {
         this._name = name;
 
-        if (domAware === undefined) {
-            domAware = isRenderer;
-        }
-
-        if (domAware) {
+        if (isRenderer) {
             // TODO find a way to virtualize this without crashing :(
 
-            // actually reload plugin, clearing cache and all that
-            const pluginFile = `${userDataPath}/plugins/${name}`;
-            const resolvedPlugin = require.resolve(pluginFile);
+            // actually reload plugin, clearing cache and all that. the files might have changed!
+            const resolvedPlugin = require.resolve(file);
             if (resolvedPlugin in require.cache) {
                 delete require.cache[resolvedPlugin];
             }
-            this._plugin = new (require(pluginFile))(this._name, domAware);
+            this._plugin = new (require(file))(this._name);
         }
         else {
             this._vm = new NodeVM({
-                sandbox: {
-                    Plugin: Plugin
+                require: {
+                    external: true,
+                    builtin: ['fs', 'path'],
+                    context: 'sandbox'
                 }
             });
 
-            fs.readFile(`${userDataPath}/plugins/${name}.js`, 'utf8', (err, code) => {
+            fs.readFile(file, 'utf8', (err, code) => {
                 if (err) throw err;
-                this._plugin = new (this._vm.run(code))(this._name, domAware);
+                let cls = this._vm.run(code, path.join(__dirname, '../main.js'));
+                this._plugin = new cls(this._name);
             });
         }
     }

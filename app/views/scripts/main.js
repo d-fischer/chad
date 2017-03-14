@@ -117,3 +117,5 @@ function windowLoaded(thisBrowserWindow) {
         this._contextMenu.show(e);
     }, true);
 }
+
+window.pluginLoader = require('plugin/loader');

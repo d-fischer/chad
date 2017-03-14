@@ -29,7 +29,7 @@ class ChatConnection {
                     },
                     identity: {
                         username: this._config.username,
-                        password: this._config.token
+                        password: 'oauth:' + this._config.token
                     }
                 });
                 // forward events

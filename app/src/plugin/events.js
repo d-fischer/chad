@@ -5,7 +5,7 @@ const isRenderer = require('is-electron-renderer');
 
 const MessageEvent = require('plugin/event/message');
 
-const pluginManager = require('plugin/manager');
+const pluginLoader = require('plugin/loader');
 
 class PluginEvents {
     constructor() {
@@ -19,7 +19,7 @@ class PluginEvents {
         if (evt) {
             let handlerMethod = this._getHandlerMethod(eventName);
             if (handlerMethod) {
-                let plugins = pluginManager.getAll();
+                let plugins = pluginLoader.getAll();
                 for (let pluginName in plugins) {
                     if (plugins.hasOwnProperty(pluginName)) {
                         let plugin = plugins[pluginName].getPlugin();

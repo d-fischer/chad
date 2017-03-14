@@ -1,6 +1,9 @@
 'use strict';
 
 function twitchAPIRequest(url, callback) {
+    if (url.search(/^https?:\/\//) === -1) {
+        url = 'https://' + url;
+    }
     require('chat/connection').chatInterface.api({
         url: url,
         headers: {

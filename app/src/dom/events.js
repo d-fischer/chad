@@ -7,7 +7,7 @@ class DomEvents {
         }
         if (parent instanceof NodeList) {
             [].forEach.call(parent, parentElem => {
-                DomEvents.delegate(parentElem, event, childSel, callback)
+                DomEvents.delegate(parentElem, event, childSel, callback);
             });
         }
         else {

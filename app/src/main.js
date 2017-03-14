@@ -3,6 +3,7 @@
 require('app-module-path').addPath(__dirname);
 
 const electron = require('electron');
+//noinspection JSUnusedLocalSymbols
 const {Menu, app, BrowserWindow} = electron;
 
 global['chatChannelManager'] = require('chat/channelManager');
@@ -10,6 +11,8 @@ global['chatChannelManager'] = require('chat/channelManager');
 const settings = require('settings/settings');
 const windowManager = require('ui/window/manager');
 const chatEvents = require('chat/events');
+//noinspection JSUnusedLocalSymbols
+const pluginEvents = require('plugin/events');
 
 let chatConnection;
 let initialConnection = false;

@@ -30,8 +30,10 @@
     }
   },
   "devDependencies": {
-    "electron": "^1.4.13",
-    "electron-builder": "^10.6.1"
+    "electron": "^1.6.2",
+    "electron-builder": "^15.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "electron-remote": "^1.1.2"
+  }
 }

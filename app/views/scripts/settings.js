@@ -51,7 +51,7 @@ function windowLoaded(thisBrowserWindow, options) {
     DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
         e.preventDefault();
         remote.require('ui/window/manager').getWindow('auth').show().then(data => {
-            settings.set('connection:token', 'oauth:' + data.token);
+            settings.set('connection:token', data.token);
             refreshSettings();
         }, () => {});
     });
