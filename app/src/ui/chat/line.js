@@ -3,6 +3,7 @@
 const ChatUser = require('../../chat/user');
 
 const DomTools = require('../../tools/dom');
+const StringTools = require('../../tools/string');
 
 const {remote} = require('electron');
 
@@ -166,15 +167,15 @@ class UIChatLine {
                 let emote = emotesByStart[emoteStart];
 
                 if (currentPosition < emoteStart) {
-                    this.parseTokenized(text.substring(currentPosition, emote.start));
+                    this.parseTokenized(StringTools.utf8Substring(text, currentPosition, emote.start));
                 }
 
-                this.appendEmote(emote, text.substring(emote.start, emote.end));
+                this.appendEmote(emote, StringTools.utf8Substring(text, emote.start, emote.end));
                 currentPosition = emote.end;
             }
 
             if (currentPosition < length) {
-                this.parseTokenized(text.substring(currentPosition, length));
+                this.parseTokenized(StringTools.utf8Substring(text, currentPosition, length));
             }
         }
     }

@@ -5,6 +5,7 @@ class StringTools {
         return new Array(cnt + 1).join(str);
     }
 
+    //noinspection JSUnusedGlobalSymbols
     static padLeft(str, length, padChar) {
         if (str.length >= length) {
             return str;
@@ -17,6 +18,10 @@ class StringTools {
         str = str.toString();
 
         return StringTools.repeat(padChar, length - str.length) + str;
+    }
+
+    static utf8Substring(str, start, end) {
+        return [...str].slice(start, end).join('');
     }
 }
 
