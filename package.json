@@ -19,19 +19,9 @@
   ],
   "author": "D_4_ni",
   "license": "GPL-3.0",
-  "build": {
-    "appId": "com.d-4-ni.chad",
-    "mac": {
-      "category": "public.app-category.entertainment",
-      "iconUrl": "https://raw.githubusercontent.com/d-4-ni/chad/master/build/chad.icns"
-    },
-    "win": {
-      "iconUrl": "https://raw.githubusercontent.com/d-4-ni/chad/master/build/chad.ico"
-    }
-  },
   "devDependencies": {
     "electron": "^1.4.13",
-    "electron-builder": "^10.6.1"
+    "electron-builder": "^15.6.2"
   },
   "dependencies": {}
 }
