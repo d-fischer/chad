@@ -1,7 +1,7 @@
 {
   "name": "chad",
   "productName": "Chad",
-  "version": "0.20.2",
+  "version": "0.20.3",
   "description": "A chat client for Twitch",
   "main": "src/main.js",
   "keywords": [
