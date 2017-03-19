@@ -1024,7 +1024,7 @@ body.streamer-mode .channel-window .settings-footer {
 .emote-tab.active {
     color: #d3d3d3;
     border-top: 1px solid;
-    padding-top: 5px;
+    margin-top: -1px;
     cursor: initial;
 }
 
