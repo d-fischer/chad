@@ -1,5 +1,5 @@
 const settings = remote.require('./settings/settings');
-const twitchAPIRequest = remote.require('./request/twitchAPI');
+const twitchAPIRequest = remote.require('./request/twitchAPI').request;
 const channelManager = remote.require('./chat/channelManager');
 
 const FunctionTools = require('../src/tools/function');

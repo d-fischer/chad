@@ -2,7 +2,7 @@
 
 const {EventEmitter} = require('events');
 
-const twitchAPIRequest = require('../request/twitchAPI');
+const twitchAPIRequest = require('../request/twitchAPI').request;
 const request = require('request');
 const cache = require('../settings/cache');
 

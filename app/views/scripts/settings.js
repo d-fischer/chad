@@ -1,8 +1,11 @@
+"use strict";
+
 const settings = remote.require('./settings/settings');
 
 const s = '[data-setting]';
 const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input[type="password"]${s}`;
 const selectFieldSelector = `select${s}`;
+const TwitchAPI = require('../src/request/twitchAPI');
 
 const refreshSettings = () => [].forEach.call(document.querySelectorAll(`${inputFieldSelector}, ${selectFieldSelector}`), input => {
     input.value = settings.get(input.dataset.setting) || '';
@@ -50,9 +53,9 @@ function windowLoaded(thisBrowserWindow, options) {
 
     DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
         e.preventDefault();
-        remote.require('./ui/window/manager').getWindow('auth').show().then(data => {
-            settings.set('connection:token', 'oauth:' + data.token);
+        TwitchAPI.getOAuthToken().then(token => {
+            settings.set('connection:token', 'oauth:' + token);
             refreshSettings();
-        }, () => {});
+        });
     });
 }

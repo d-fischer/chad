@@ -27,19 +27,7 @@ class Window extends EventEmitter {
 
     show(parentName, options) {
         if (!this._browserWindow) {
-            let windowConf = {
-                width: this._width,
-                height: this._height,
-                title: this._title,
-                frame: this._frame,
-                backgroundColor: this._backgroundColor,
-                resizable: this._resizable,
-                show: false,
-                transparent: !(this._resizable || this._frame),
-                webPreferences: {
-                    nodeIntegration: this._isInternal
-                }
-            };
+            let windowConf = this.getWindowConf();
             if (parentName) {
                 let win = require('./manager').getWindow(parentName, false);
                 if (win) {
@@ -48,20 +36,42 @@ class Window extends EventEmitter {
                 }
             }
             this._browserWindow = new BrowserWindow(windowConf);
-            if (!this._navigatable) {
-                this._browserWindow.webContents.on('will-navigate', e => e.preventDefault());
-            }
             let optJSON = JSON.stringify(options || {});
+            this.setupEvents();
             this._browserWindow.loadURL(this._url);
             if (this._isInternal) {
                 let js = `window.windowLoaded && windowLoaded(BrowserWindow.fromId(${this._browserWindow.id}), ${optJSON});`;
                 this._browserWindow.webContents.executeJavaScript(js);
             }
-            this._browserWindow.on('closed', () => {
-                this.emit('closed');
-                this._browserWindow = null;
-            });
-            this._browserWindow.once('ready-to-show', () => this._browserWindow.show());
+        }
+    }
+
+    getWindowConf() {
+        return {
+            width: this._width,
+            height: this._height,
+            title: this._title,
+            frame: this._frame,
+            backgroundColor: this._backgroundColor,
+            resizable: this._resizable,
+            show: false,
+            transparent: !(this._resizable || this._frame),
+            webPreferences: {
+                nodeIntegration: this._isInternal
+            }
+        };
+    }
+
+    setupEvents() {
+        this._browserWindow.on('closed', () => {
+            this.emit('closed');
+            this._browserWindow = null;
+        });
+        this._browserWindow.once('ready-to-show', () => {
+            this._browserWindow.show()
+        });
+        if (!this._navigatable) {
+            this._browserWindow.webContents.on('will-navigate', e => e.preventDefault());
         }
     }
 
