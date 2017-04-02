@@ -1,6 +1,6 @@
 'use strict';
 
-const ChatChannel = require('./channel');
+const ChatChannel = require('chat/channel');
 const {EventEmitter} = require('events');
 
 class ChatChannelManager extends EventEmitter {

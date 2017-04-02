@@ -1,9 +1,9 @@
 'use strict';
 
-const BasicContextMenu = require('./basic');
+const BasicContextMenu = require('ui/contextMenu/basic');
 
-const settings = remote.require('./settings/settings');
-const channelManager = remote.require('./chat/channelManager');
+const settings = remote.require('settings/settings');
+const channelManager = remote.require('chat/channelManager');
 
 class SettingsContextMenu extends BasicContextMenu {
     constructor(parentElem) {
@@ -21,7 +21,7 @@ class SettingsContextMenu extends BasicContextMenu {
     }
 
     settings() {
-        remote.require('./ui/window/manager').getWindow('settings').show('main', {
+        remote.require('ui/window/manager').getWindow('settings').show('main', {
             selectedPanel: 'connection'
         });
     }

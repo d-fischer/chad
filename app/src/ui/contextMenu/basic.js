@@ -1,6 +1,6 @@
 'use strict';
 
-const ContextMenu = require('./contextMenu');
+const ContextMenu = require('ui/contextMenu/contextMenu');
 
 class BasicContextMenu extends ContextMenu {
     constructor(parentElem) {

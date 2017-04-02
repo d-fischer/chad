@@ -1,9 +1,9 @@
 'use strict';
 
-const BasicContextMenu = require('./basic');
+const BasicContextMenu = require('ui/contextMenu/basic');
 
-const settings = remote.require('./settings/settings');
-const channelManager = remote.require('./chat/channelManager');
+const settings = remote.require('settings/settings');
+const channelManager = remote.require('chat/channelManager');
 
 class ChannelContextMenu extends BasicContextMenu {
     constructor(parentElem, channel) {

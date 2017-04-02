@@ -1,6 +1,6 @@
 'use strict';
 
-const Token = require('../token');
+const Token = require('regex/token');
 
 class CharacterToken extends Token {
     constructor(character) {

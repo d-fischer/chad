@@ -1,6 +1,6 @@
 'use strict';
 
-const UIChannel = require('./channel');
+const UIChannel = require('ui/channel');
 
 const {EventEmitter} = require('events');
 

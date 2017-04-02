@@ -1,6 +1,6 @@
 "use strict";
 
-const settings = remote.require('./settings/settings');
+const settings = remote.require('settings/settings');
 
 const s = '[data-setting]';
 const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input[type="password"]${s}`;
@@ -54,7 +54,7 @@ function windowLoaded(thisBrowserWindow, options) {
     DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
         e.preventDefault();
         TwitchAPI.getOAuthToken().then(token => {
-            settings.set('connection:token', 'oauth:' + token);
+            settings.set('connection:token', token);
             refreshSettings();
         });
     });

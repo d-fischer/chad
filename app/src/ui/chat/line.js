@@ -1,12 +1,10 @@
 'use strict';
 
-const ChatUser = require('../../chat/user');
-
-const DomTools = require('../../tools/dom');
-const StringTools = require('../../tools/string');
+const ChatUser = require('chat/user');
+const DomTools = require('tools/dom');
+const StringTools = require('tools/string');
 
 const {remote} = require('electron');
-
 const TinyColor = require('tinycolor2');
 
 /** @var RegExp */
@@ -60,12 +58,12 @@ class UIChatLine {
     parse() {
         let userColor = UIChatLine._adjustColor(this._user.color);
 
-        let lineFrag = DomTools.getTemplateContent(document.getElementById('chat-message-template'));
-        let timePart = lineFrag.querySelector('time');
+        let lineElem = DomTools.getTemplateContent(document.getElementById('chat-message-template')).firstElementChild;
+        let timePart = lineElem.querySelector('time');
         timePart.setAttribute('datetime', this._time.toISOString());
         timePart.appendChild(document.createTextNode(this._time.toLocaleTimeString()));
 
-        let badgesPart = lineFrag.querySelector('.badges');
+        let badgesPart = lineElem.querySelector('.badges');
 
         if (this._user.isBroadcaster) {
             let modBadge = document.createElement('i');
@@ -116,20 +114,20 @@ class UIChatLine {
             badgesPart.appendChild(cheerBadge);
         }
 
-        let userPart = lineFrag.querySelector('.username');
+        let userPart = lineElem.querySelector('.username');
         userPart.classList.add('username');
         userPart.style.color = userColor;
         userPart.textContent = this._user.displayName;
 
-        lineFrag.querySelector('.sep').textContent = this.isAction ? ' ' : ': ';
+        lineElem.querySelector('.sep').textContent = this.isAction ? ' ' : ': ';
 
-        let textPart = lineFrag.querySelector('.message');
+        let textPart = lineElem.querySelector('.message');
         if (this.isAction) {
             textPart.style.color = userColor;
         }
         this.parseTextInto(textPart);
 
-        return lineFrag;
+        return lineElem;
     }
 
     parseTextInto(elem) {
@@ -195,7 +193,7 @@ class UIChatLine {
     }
 
     parseWord(word) {
-        let chatEmotes = remote.require('./chat/emotes');
+        let chatEmotes = remote.require('chat/emotes');
         let twitchEmotes = chatEmotes.getOwnTwitchEmotes();
         let bttvEmotes = chatEmotes.getBttvEmotes(this._channel);
         let cheerMatch = word.match(new RegExp(`^(${_cheerAlternation})(\\d+)$`, 'i'));

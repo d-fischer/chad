@@ -1,19 +1,19 @@
 'use strict';
 
-const uiChannelManager = require('../src/ui/channelManager');
-const uiChatMessageHandler = require('../src/ui/chat/handler/message');
-const uiChatEventHandler = require('../src/ui/chat/handler/event');
+const uiChannelManager = require('ui/channelManager');
+const uiChatMessageHandler = require('ui/chat/handler/message');
+const uiChatEventHandler = require('ui/chat/handler/event');
 
-const UIEventHandler = require('../src/ui/eventHandler');
+const UIEventHandler = require('ui/eventHandler');
 
-const chatEmotes = remote.require('./chat/emotes');
-const channelManager = remote.require('./chat/channelManager');
-const chatConnection = remote.require('./chat/connection');
+const chatEmotes = remote.require('chat/emotes');
+const channelManager = remote.require('chat/channelManager');
+const chatConnection = remote.require('chat/connection');
 
-const ChannelContextMenu = require('../src/ui/contextMenu/channel');
-const EmotesContextMenu = require('../src/ui/contextMenu/emotes');
-const SettingsContextMenu = require('../src/ui/contextMenu/settings');
-const settings = remote.require('./settings/settings');
+const ChannelContextMenu = require('ui/contextMenu/channel');
+const EmotesContextMenu = require('ui/contextMenu/emotes');
+const SettingsContextMenu = require('ui/contextMenu/settings');
+const settings = remote.require('settings/settings');
 
 DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.message-form', function (e) {
     e.preventDefault();
@@ -69,7 +69,7 @@ function windowLoaded(thisBrowserWindow) {
         button => button.addEventListener("click", window.closeWindow));
 
     document.getElementById('channel-add').addEventListener('click', () => {
-        remote.require('./ui/window/manager').getWindow('channel').show('main');
+        remote.require('ui/window/manager').getWindow('channel').show('main');
     });
 
     window.toggleStreamerMode = () => {
@@ -117,3 +117,5 @@ function windowLoaded(thisBrowserWindow) {
         this._contextMenu.show(e);
     }, true);
 }
+
+window.pluginLoader = require('plugin/loader');

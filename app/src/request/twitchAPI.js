@@ -21,13 +21,16 @@ const redirectURI = 'http://chad.bogus/login';
 const scopes = ['chat_login'];
 
 function twitchAPIRequest(url, callback) {
+    if (url.search(/^https?:\/\//) === -1) {
+        url = 'https://' + url;
+    }
     let headers = {
         'Client-ID': clientId,
     };
     if (token) {
         headers.Authorization = `OAuth ${token}`;
     }
-    require('../chat/connection').chatInterface.api({
+    require('chat/connection').chatInterface.api({
         url: url,
         headers: headers
     }, (err, res, body) => {

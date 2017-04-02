@@ -1,10 +1,10 @@
 'use strict';
 
-const OpenGroupToken = require('./token/open-group');
-const CloseGroupToken = require('./token/close-group');
-const AlternationToken = require('./token/alternation');
-const CharacterToken = require('./token/character');
-const OptionalToken = require('./token/optional');
+const OpenGroupToken = require('regex/token/open-group');
+const CloseGroupToken = require('regex/token/close-group');
+const AlternationToken = require('regex/token/alternation');
+const CharacterToken = require('regex/token/character');
+const OptionalToken = require('regex/token/optional');
 
 class RegexDictionary {
     static getAllMatches(regex) {

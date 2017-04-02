@@ -2,14 +2,18 @@
 
 const {BrowserWindow} = require('electron');
 const {EventEmitter} = require('events');
+const {createProxyForRemote} = require('electron-remote');
 
 const appRoot = require('app-root-path');
+
+const pluginManager = require('plugin/manager');
 
 class Window extends EventEmitter {
     constructor(name) {
         super();
         this._name = name;
         this._browserWindow = undefined;
+        this._windowProxy = undefined;
         this._width = 1024;
         this._height = 768;
         this._frame = false;
@@ -19,6 +23,7 @@ class Window extends EventEmitter {
         this._url = `file://${appRoot}/views/${this._name}.html`;
         this._navigatable = false;
         this._isInternal = true;
+        this._promise = undefined;
     }
 
     get name() {
@@ -26,24 +31,29 @@ class Window extends EventEmitter {
     }
 
     show(parentName, options) {
-        if (!this._browserWindow) {
-            let windowConf = this.getWindowConf();
-            if (parentName) {
-                let win = require('./manager').getWindow(parentName, false);
-                if (win) {
-                    windowConf.modal = true;
-                    windowConf.parent = win._browserWindow;
-                }
-            }
-            this._browserWindow = new BrowserWindow(windowConf);
-            let optJSON = JSON.stringify(options || {});
-            this.setupEvents();
-            this._browserWindow.loadURL(this._url);
-            if (this._isInternal) {
-                let js = `window.windowLoaded && windowLoaded(BrowserWindow.fromId(${this._browserWindow.id}), ${optJSON});`;
-                this._browserWindow.webContents.executeJavaScript(js);
-            }
+        if (this._promise) {
+            return this._promise;
         }
+
+        return this._promise = new Promise((resolve, reject) => {
+            if (this._browserWindow) {
+                resolve();
+            }
+            else {
+                let windowConf = this.getWindowConf();
+                if (parentName) {
+                    let win = require('ui/window/manager').getWindow(parentName, false);
+                    if (win) {
+                        windowConf.modal = true;
+                        windowConf.parent = win._browserWindow;
+                    }
+                }
+                this._browserWindow = new BrowserWindow(windowConf);
+
+                this.setupEvents(resolve, reject, options);
+                this._browserWindow.loadURL(this._url);
+            }
+        });
     }
 
     getWindowConf() {
@@ -62,13 +72,34 @@ class Window extends EventEmitter {
         };
     }
 
-    setupEvents() {
+    setupEvents(resolve, reject, options) {
+        this._browserWindow.webContents.once('dom-ready', () => {
+            this._loaded = true;
+
+            if (this._isInternal) {
+                let optJson = JSON.stringify(options || {});
+                this._browserWindow.webContents.executeJavaScript(`window.windowLoaded && windowLoaded(BrowserWindow.fromId(${this._browserWindow.id}), ${optJson})`);
+                this._browserWindow.webContents.executeJavaScript('require(\'electron-remote\').initializeEvalHandler();');
+                this._windowProxy = createProxyForRemote(this._browserWindow);
+                pluginManager.registerWindow(this);
+            }
+
+            resolve();
+        });
+
         this._browserWindow.on('closed', () => {
             this.emit('closed');
-            this._browserWindow = null;
+            pluginManager.unregisterWindow(this);
+            this._browserWindow = undefined;
+            this._windowProxy = undefined;
+            this._promise = undefined;
+            if (!this._loaded) {
+                reject();
+            }
+            this._loaded = false;
         });
         this._browserWindow.once('ready-to-show', () => {
-            this._browserWindow.show()
+            this._browserWindow.show();
         });
         if (!this._navigatable) {
             this._browserWindow.webContents.on('will-navigate', e => e.preventDefault());

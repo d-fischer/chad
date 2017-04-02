@@ -1,8 +1,6 @@
 'use strict';
 
-const Window = require('./window');
-
-const ObjectTools = require('../../tools/object');
+const ObjectTools = require('tools/object');
 
 class WindowManager {
     constructor() {
@@ -14,21 +12,20 @@ class WindowManager {
             return this._windows[name];
         }
         else if (construct) {
-            let cls = require('./' + name);
+            let cls = require('ui/window/' + name);
             if (cls) {
                 let wnd = new cls();
                 wnd.on('closed', () => this.destroyWindow(name));
-                return this._windows[name] = wnd;
+                this._windows[name] = wnd;
+                return wnd;
             }
         }
 
         return null;
     }
 
-    destroyWindow(wnd) {
-        let wndName;
-        wndName = (wnd instanceof Window) ? wnd.name : wnd;
-        delete this._windows[wndName];
+    destroyWindow(name) {
+        delete this._windows[name];
     }
 
     closeAll() {
@@ -44,4 +41,4 @@ class WindowManager {
     }
 }
 
-module.exports = new WindowManager();
+module.exports = new WindowManager;

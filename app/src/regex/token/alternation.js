@@ -1,6 +1,6 @@
 'use strict';
 
-const Token = require('../token');
+const Token = require('regex/token');
 
 class AlternationToken extends Token {
     get literalValue() {

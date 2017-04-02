@@ -1,12 +1,11 @@
 'use strict';
 
-const channelManager = require('./channelManager');
+const channelManager = require('chat/channelManager');
+const chatEvents = require('chat/events');
 
-const ObjectTools = require('../tools/object');
+const ObjectTools = require('tools/object');
 
-const chatEvents = require('./events');
-
-const RegexDictionary = require('../regex/dictionary');
+const RegexDictionary = require('regex/dictionary');
 const htmlEntities = new require('html-entities').AllHtmlEntities;
 
 const request = require('request');

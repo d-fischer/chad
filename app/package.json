@@ -13,6 +13,7 @@
   "author": "D_4_ni",
   "license": "GPL-3.0",
   "dependencies": {
+    "app-module-path": "^2.2.0",
     "app-root-path": "^2.0.1",
     "html-entities": "^1.2.0",
     "is-electron-renderer": "^2.0.1",
@@ -20,6 +21,7 @@
     "nconf": "^0.8.4",
     "request": "^2.71.0",
     "tinycolor2": "^1.4.1",
-    "tmi.js": "d-4-ni/tmi.js#resub-message"
+    "tmi.js": "d-4-ni/tmi.js#resub-message",
+    "vm2": "^3.1.0"
   }
 }

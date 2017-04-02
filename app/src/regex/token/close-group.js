@@ -1,6 +1,6 @@
 'use strict';
 
-const Token = require('../token');
+const Token = require('regex/token');
 
 class CloseGroupToken extends Token {
     constructor(currentDepth) {

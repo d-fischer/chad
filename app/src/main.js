@@ -1,13 +1,18 @@
 'use strict';
 
+require('app-module-path').addPath(__dirname);
+
 const electron = require('electron');
+//noinspection JSUnusedLocalSymbols
 const {Menu, app, BrowserWindow} = electron;
 
-global['chatChannelManager'] = require('./chat/channelManager');
+global['chatChannelManager'] = require('chat/channelManager');
 
-const settings = require('./settings/settings');
-const windowManager = require('./ui/window/manager');
-const chatEvents = require('./chat/events');
+const settings = require('settings/settings');
+const windowManager = require('ui/window/manager');
+const chatEvents = require('chat/events');
+//noinspection JSUnusedLocalSymbols
+const pluginEvents = require('plugin/events');
 
 // this needs to exist early for the emote event to be registered before connecting
 //noinspection JSUnusedLocalSymbols
@@ -37,7 +42,7 @@ function initConnection(allowReconnect) {
     {
         let connection = settings.get('connection');
         if (connection && connection.username && connection.token) {
-            chatConnection = require('./chat/connection');
+            chatConnection = require('chat/connection');
             chatConnection.connect().then(() => {
                 let channels = settings.get('connection:channels') || [];
                 chatChannelManager.addAll(channels);
@@ -188,7 +193,7 @@ function initMenu() {
                     label: 'Preferences',
                     accelerator: 'Command+,',
                     click: function () {
-                        require('./ui/window/manager').getWindow('settings').show('main')
+                        require('ui/window/manager').getWindow('settings').show('main')
                     }
                 },
                 {

@@ -8,6 +8,10 @@ class ObjectTools {
         }, {}) : null;
     }
 
+    static map(obj, fn) {
+        return Object.assign(...Object.entries(obj).map(([key, value]) => ({[key]: fn(value)})));
+    }
+
     static isEmpty(o) {
         return Object.getOwnPropertyNames(o).length === 0;
     }

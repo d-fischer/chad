@@ -1,6 +1,6 @@
 'use strict';
 
-const DomTools = require('../../tools/dom');
+const DomTools = require('tools/dom');
 
 class ContextMenu {
     constructor(parentElem) {

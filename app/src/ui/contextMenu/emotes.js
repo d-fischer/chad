@@ -1,11 +1,11 @@
 'use strict';
 
-const ContextMenu = require('./contextMenu');
-const DomTools = require('../../tools/dom');
+const ContextMenu = require('ui/contextMenu/contextMenu');
+const DomTools = require('tools/dom');
 
 const {remote} = require('electron');
 
-const arrayContains = require('../../tools/array').contains;
+const arrayContains = require('tools/array').contains;
 
 class EmotesContextMenu extends ContextMenu {
     constructor(parentElem, channel) {
@@ -19,7 +19,7 @@ class EmotesContextMenu extends ContextMenu {
 
         let emoteList = menuFrag.querySelector('.emote-list.twitch');
 
-        let emotes = remote.require('./chat/emotes');
+        let emotes = remote.require('chat/emotes');
         let ownTwitchEmotes = emotes.getOwnTwitchEmotes();
         let ownTwitchEmoteSetMap = emotes.getOwnTwitchEmoteSetMap();
         let ownTwitchEmoteSets = Reflect.ownKeys(ownTwitchEmoteSetMap);

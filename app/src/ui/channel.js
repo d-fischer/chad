@@ -4,10 +4,10 @@ const request = require('request');
 
 const remote = require('electron').remote;
 
-const twitchAPIRequest = remote.require('./request/twitchAPI').request;
+const twitchAPIRequest = remote.require('request/twitchAPI').request;
 
-const DomEvents = require('../dom/events');
-const DomTools = require('../tools/dom');
+const DomEvents = require('dom/events');
+const DomTools = require('tools/dom');
 
 class UIChannel {
     constructor(name) {
