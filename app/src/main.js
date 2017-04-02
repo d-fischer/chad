@@ -9,6 +9,10 @@ const settings = require('./settings/settings');
 const windowManager = require('./ui/window/manager');
 const chatEvents = require('./chat/events');
 
+// this needs to exist early for the emote event to be registered before connecting
+//noinspection JSUnusedLocalSymbols
+const chatEmotes = require('./chat/emotes');
+
 let chatConnection;
 let initialConnection = false;
 
