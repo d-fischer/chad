@@ -17,7 +17,8 @@ class ChatChannelManager extends EventEmitter {
         let channel = new ChatChannel(channelName);
         this._channels[channelName] = channel;
         this.emit('channel-added', channelName);
-        channel.join();
+        // do nothing on error - twitch is weird about responding to joins
+        channel.join().then(undefined, () => {});
     }
 
     getAll() {

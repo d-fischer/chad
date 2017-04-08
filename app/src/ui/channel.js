@@ -49,35 +49,33 @@ class UIChannel {
             return;
         }
         // twitchAPIRequest(`https://api.twitch.tv/kraken/chat/${this._name}/badges`, (data, success) => {
-        twitchAPIRequest(`https://badges.twitch.tv/v1/badges/channels/${backend._channelData._id}/display`, (data, success) => {
-            if (success) {
-                if (data && data.badge_sets && data.badge_sets.subscriber && data.badge_sets.subscriber.versions) {
-                    let style = '';
-                    let badges = data.badge_sets.subscriber.versions;
-                    for (let badgeVersion in badges) {
-                        if (badges.hasOwnProperty(badgeVersion)) {
-                            style += `
+        twitchAPIRequest(`https://badges.twitch.tv/v1/badges/channels/${backend._channelData._id}/display`).then(data => {
+            if (data && data.badge_sets && data.badge_sets.subscriber && data.badge_sets.subscriber.versions) {
+                let style = '';
+                let badges = data.badge_sets.subscriber.versions;
+                for (let badgeVersion in badges) {
+                    if (badges.hasOwnProperty(badgeVersion)) {
+                        style += `
+                            .channel-window[data-name=${this._name}] .badges .sub-${badgeVersion} {
+                                background-image: url(${badges[badgeVersion].image_url_1x});
+                            }
+                            
+                            @media (min-resolution: 1.5dppx) {
                                 .channel-window[data-name=${this._name}] .badges .sub-${badgeVersion} {
-                                    background-image: url(${badges[badgeVersion].image_url_1x});
+                                    background-image: url(${badges[badgeVersion].image_url_2x});
                                 }
-                                
-                                @media (min-resolution: 1.5dppx) {
-                                    .channel-window[data-name=${this._name}] .badges .sub-${badgeVersion} {
-                                        background-image: url(${badges[badgeVersion].image_url_2x});
-                                    }
+                            }
+                            
+                            @media (min-resolution: 2.5dppx) {
+                                .channel-window[data-name=${this._name}] .badges .sub-${badgeVersion} {
+                                    background-image: url(${badges[badgeVersion].image_url_4x});
                                 }
-                                
-                                @media (min-resolution: 2.5dppx) {
-                                    .channel-window[data-name=${this._name}] .badges .sub-${badgeVersion} {
-                                        background-image: url(${badges[badgeVersion].image_url_4x});
-                                    }
-                                }
-                            `;
-                        }
+                            }
+                        `;
                     }
-
-                    this._badgeStyle.textContent = style;
                 }
+
+                this._badgeStyle.textContent = style;
             }
         });
     }

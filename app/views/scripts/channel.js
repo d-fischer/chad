@@ -17,9 +17,9 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
     }
     let currentChannels = settings.get('connection:channels') || [];
     const url = 'https://api.twitch.tv/kraken/search/channels?limit=25&q=' + encodeURIComponent(e.target.value);
-    twitchAPIRequest(url, (data, success) => {
+    twitchAPIRequest(url).then(data => {
         // have we already sent another request after this one? then ignore this one
-        if (success && mySeq === seq) {
+        if (mySeq === seq) {
             for (let channel of data.channels) {
                 let itemFrag = DomTools.getTemplateContent(itemTpl);
                 let item = itemFrag.querySelector('.channel-list-item');

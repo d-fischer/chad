@@ -34,7 +34,7 @@ class ChatChannel {
     }
 
     initData() {
-        this._setData(cache.get(`channel:${this._name}`));
+        this._setData(cache.get(`channel:${this._name}`), true);
         this.updateData();
         this.startAutoUpdate();
         this.updateBttvData();
@@ -62,29 +62,27 @@ class ChatChannel {
     }
 
     updateData() {
-        twitchAPIRequest(`https://api.twitch.tv/kraken/streams/${this._name}`, (data, success) => {
-            if (success) {
-                let oldOnline = this._online;
+        twitchAPIRequest(`https://api.twitch.tv/kraken/streams/${this._name}`).then(data => {
+            let oldOnline = this._online;
 
-                if (!data.stream) {
-                    this._online = false;
+            if (!data.stream) {
+                this._online = false;
 
-                    twitchAPIRequest(`https://api.twitch.tv/kraken/channels/${this._name}`, (data, success) => {
-                        if (success && typeof data === 'object') {
-                            this._setData(data);
-                            this._internalEvents.emit('updated');
-                        }
-                    });
-                }
-                else if (typeof data === 'object') {
-                    this._online = true;
-                    this._setData(data.stream.channel);
-                    this._internalEvents.emit('updated');
-                }
+                twitchAPIRequest(`https://api.twitch.tv/kraken/channels/${this._name}`).then(data => {
+                    if (typeof data === 'object') {
+                        this._setData(data);
+                        this._internalEvents.emit('updated');
+                    }
+                });
+            }
+            else if (typeof data === 'object') {
+                this._online = true;
+                this._setData(data.stream.channel);
+                this._internalEvents.emit('updated');
+            }
 
-                if (oldOnline === false && this._online) {
-                    this._internalEvents.emit('online');
-                }
+            if (oldOnline === false && this._online) {
+                this._internalEvents.emit('online');
             }
         });
     }

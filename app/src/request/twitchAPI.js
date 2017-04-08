@@ -4,44 +4,49 @@ const URL = require('url');
 const QueryString = require('querystring');
 
 const isRenderer = require('is-electron-renderer');
-let BrowserWindow;
+let BrowserWindow, settings;
 
 if (isRenderer) {
-    BrowserWindow = require('electron').remote.BrowserWindow;
+    let remote = require('electron').remote;
+    BrowserWindow = remote.BrowserWindow;
+    settings = remote.require('settings/settings');
 }
 else {
     BrowserWindow = require('electron').BrowserWindow;
+    settings = require('settings/settings');
 }
 
-let token;
-let scope;
 const authURL = 'https://api.twitch.tv/kraken/oauth2/authorize';
 const clientId = 'etkg90uv09c04nadunxf64wp5ueqcdv';
 const redirectURI = 'http://chad.bogus/login';
 const scopes = ['chat_login'];
 
-function twitchAPIRequest(url, callback) {
-    if (url.search(/^https?:\/\//) === -1) {
-        url = 'https://' + url;
-    }
-    let headers = {
-        'Client-ID': clientId,
-    };
-    if (token) {
-        headers.Authorization = `OAuth ${token}`;
-    }
-    require('chat/connection').chatInterface.api({
-        url: url,
-        headers: headers
-    }, (err, res, body) => {
-        if (typeof callback === 'function') {
+let token = settings.get('connection:token');
+let authDetails;
+let authDetailsRefreshStamp = 0;
+
+function twitchAPIRequest(url) {
+    return new Promise((resolve, reject) => {
+        if (url.search(/^https?:\/\//) === -1) {
+            url = 'https://' + url;
+        }
+        let headers = {
+            'Client-ID': clientId,
+        };
+        if (token) {
+            headers.Authorization = `OAuth ${token}`;
+        }
+        require('chat/connection').chatInterface.api({
+            url: url,
+            headers: headers
+        }, (err, res, body) => {
             if (err) {
-                callback.call(undefined, undefined, false);
+                reject(err);
             }
             else {
-                callback.call(undefined, body, true);
+                resolve(body);
             }
-        }
+        });
     });
 }
 
@@ -71,6 +76,7 @@ function getTwitchAPIOAuthToken(refresh = false) {
         const handleCallback = (urlStr) => {
             let url = URL.parse(urlStr);
             let params = QueryString.parse(url.hash.substr(1));
+
             if (params.error || params.access_token) {
                 authWindow.destroy();
                 done = true;
@@ -79,9 +85,11 @@ function getTwitchAPIOAuthToken(refresh = false) {
                 reject(params.error);
             }
             else if (params.access_token) {
-                token = params.access_token;
-                scope = params.scope;
-                resolve(token);
+                getTwitchAuthDetails().then(authDetails => {
+                    settings.set('connection:username', authDetails.userName);
+                    settings.set('connection:token', token = params.access_token);
+                    resolve(token);
+                }, reject);
             }
         };
 
@@ -101,7 +109,35 @@ function getTwitchAPIOAuthToken(refresh = false) {
     });
 }
 
+function getTwitchAuthDetails() {
+    return new Promise((resolve, reject) => {
+        if (!token) {
+            reject();
+        }
+        // cache for 5 minutes
+        else if (authDetailsRefreshStamp + 5 * 60 * 1000 > Date.now()) {
+            resolve(authDetails);
+        }
+        else {
+            twitchAPIRequest('https://api.twitch.tv/kraken/').then(data => {
+                if (typeof data === 'object' && data.token.valid) {
+                    authDetails = {
+                        userName: data.token.user_name,
+                        scopes: data.token.authorization.scopes
+                    };
+                    authDetailsRefreshStamp = Date.now();
+                    resolve(authDetails);
+                }
+                else {
+                    reject();
+                }
+            }, reject);
+        }
+    });
+}
+
 module.exports = {
     request: twitchAPIRequest,
-    getOAuthToken: getTwitchAPIOAuthToken
+    getOAuthToken: getTwitchAPIOAuthToken,
+    getAuthDetails: getTwitchAuthDetails
 };
