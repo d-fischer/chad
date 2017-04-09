@@ -6,6 +6,10 @@ const settings = remote.require('settings/settings');
 const channelManager = remote.require('chat/channelManager');
 
 class ChannelContextMenu extends BasicContextMenu {
+    /**
+     * @param {HTMLElement} parentElem
+     * @param {UIChannel} channel
+     */
     constructor(parentElem, channel) {
         super(parentElem);
         this._items = {
@@ -16,6 +20,7 @@ class ChannelContextMenu extends BasicContextMenu {
         this._channel = channel;
     }
 
+    //noinspection JSUnusedGlobalSymbols
     leave() {
         let removedChannel = this._channel.name;
         if (channelManager.has(removedChannel)) {
@@ -25,7 +30,7 @@ class ChannelContextMenu extends BasicContextMenu {
                 currentChannels.splice(index, 1);
                 settings.set('connection:channels', currentChannels);
             }
-            channelManager.remove(removedChannel);
+            this._channel.backend.leave();
         }
     }
 }

@@ -1,13 +1,30 @@
 'use strict';
 
+/**
+ * @external DomEvents
+ * @constructs DomEvents
+ */
+
+/**
+ * @external activateTab
+ * @type {Function}
+ */
+
+/**
+ * @type {UIChannelManager}
+ */
 const uiChannelManager = require('ui/channelManager');
+//noinspection JSUnusedLocalSymbols
 const uiChatMessageHandler = require('ui/chat/handler/message');
+//noinspection JSUnusedLocalSymbols
 const uiChatEventHandler = require('ui/chat/handler/event');
 
 const UIEventHandler = require('ui/eventHandler');
 
 const chatEmotes = remote.require('chat/emotes');
+/** @type {ChatChannelManager} */
 const channelManager = remote.require('chat/channelManager');
+/** @type {ChatConnection} */
 const chatConnection = remote.require('chat/connection');
 
 const ChannelContextMenu = require('ui/contextMenu/channel');
@@ -25,9 +42,18 @@ DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.messa
     channel.say(message);
 });
 
-uiChannelManager.addAll(channelManager.getAllNames());
-let channelAddHandler = channel => uiChannelManager.add(channel);
-channelManager.on('channel-added', channelAddHandler);
+uiChannelManager.addAll(
+    Object.values(channelManager.getAll())
+        .filter(/**ChatChannel*/channel => channel.isJoined)
+        .map(/**ChatChannel*/channel => channel.name)
+);
+
+let channelJoinHandler = (channel, username, self) => {
+    if (self) {
+        uiChannelManager.add(channel);
+    }
+};
+chatConnection.chatInterface.on('join', channelJoinHandler);
 chatEmotes.init();
 
 window.updateAppearance = (initial = false) => {
@@ -51,71 +77,65 @@ window.updateAppearance = (initial = false) => {
 
 window.updateAppearance(true);
 
-function windowLoaded(thisBrowserWindow) {
-    window.closeWindow = () => {
-        UIEventHandler.removeAll();
-        uiChannelManager.removeAll();
-        channelManager.removeListener('channel-added', channelAddHandler);
-        thisBrowserWindow.close();
-    };
+const thisBrowserWindow = remote.getCurrentWindow();
 
-    [].forEach.call(document.querySelectorAll(".system-button.min"),
-        button => button.addEventListener("click", () => thisBrowserWindow.minimize()));
+window.closeWindow = () => {
+    UIEventHandler.removeAll();
+    uiChannelManager.removeAll();
+    chatConnection.chatInterface.removeListener('join', channelJoinHandler);
+    thisBrowserWindow.close();
+};
 
-    [].forEach.call(document.querySelectorAll(".system-button.max"),
-        button => button.addEventListener("click", () => thisBrowserWindow.maximize()));
+[].forEach.call(document.querySelectorAll(".system-button.min"),
+    button => button.addEventListener("click", () => thisBrowserWindow.minimize()));
 
-    [].forEach.call(document.querySelectorAll(".system-button.close"),
-        button => button.addEventListener("click", window.closeWindow));
+[].forEach.call(document.querySelectorAll(".system-button.max"),
+    button => button.addEventListener("click", () => thisBrowserWindow.maximize()));
 
-    document.getElementById('channel-add').addEventListener('click', () => {
-        remote.require('ui/window/manager').getWindow('channel').show('main');
-    });
+[].forEach.call(document.querySelectorAll(".system-button.close"),
+    button => button.addEventListener("click", window.closeWindow));
 
-    window.toggleStreamerMode = () => {
-        let me = chatConnection.userName;
-        if (!channelManager.get(me)) {
-            uiChannelManager.on('channel-added', function addedCallback(channel) {
-                if (channel === me) {
-                    uiChannelManager.removeListener('channel-added', addedCallback);
-                    toggleStreamerMode();
-                }
-            });
-            channelManager.add(me);
-        }
-        else if (document.body.classList.contains('streamer-mode')) {
-            document.body.classList.remove('streamer-mode');
-        }
-        else {
+document.getElementById('channel-add').addEventListener('click', () => {
+    remote.require('ui/window/manager').getWindow('channel').show('main');
+});
+
+window.toggleStreamerMode = () => {
+    if (document.body.classList.contains('streamer-mode')) {
+        document.body.classList.remove('streamer-mode');
+    }
+    else {
+        const me = chatConnection.userName;
+        const myChannel = channelManager.get(me);
+        myChannel.join().then(() => {
             activateTab(document.getElementById('main-window'), me);
             document.body.classList.add('streamer-mode');
-        }
-    };
+        });
+    }
+};
 
-    DomEvents.delegate(document.body, 'click', '.open-settings', function (e) {
-        if (!this._contextMenu) {
-            this._contextMenu = new SettingsContextMenu(this);
-        }
+DomEvents.delegate(document.body, 'click', '.open-settings', function (e) {
+    if (!this._contextMenu) {
+        this._contextMenu = new SettingsContextMenu(this);
+    }
 
-        this._contextMenu.show(e);
-    });
+    this._contextMenu.show(e);
+});
 
-    DomEvents.delegate(document.body, 'contextmenu', '.channel-link', function (e) {
-        if (!this._contextMenu) {
-            this._contextMenu = new ChannelContextMenu(this, uiChannelManager.get(this.dataset.tab));
-        }
+DomEvents.delegate(document.body, 'contextmenu', '.channel-link', function (e) {
+    if (!this._contextMenu) {
+        this._contextMenu = new ChannelContextMenu(this, uiChannelManager.get(this.dataset.tab));
+    }
 
-        this._contextMenu.show(e);
-    }, true);
+    this._contextMenu.show(e);
+}, true);
 
-    DomEvents.delegate(document.body, 'click', '.message-emote-button', function (e) {
-        if (!this._contextMenu) {
-            let channelName = this.closest('.channel-window').dataset.name;
-            this._contextMenu = new EmotesContextMenu(this, uiChannelManager.get(channelName));
-        }
+DomEvents.delegate(document.body, 'click', '.message-emote-button', function (e) {
+    if (!this._contextMenu) {
+        let channelName = this.closest('.channel-window').dataset.name;
+        this._contextMenu = new EmotesContextMenu(this, uiChannelManager.get(channelName));
+    }
 
-        this._contextMenu.show(e);
-    }, true);
-}
+    this._contextMenu.show(e);
+}, true);
 
 window.pluginLoader = require('plugin/loader');

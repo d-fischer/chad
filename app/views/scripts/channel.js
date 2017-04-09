@@ -1,3 +1,13 @@
+/**
+ * @external DomEvents
+ * @constructs DomEvents
+ */
+
+/**
+ * @external DomTools
+ * @constructs DomTools
+ */
+
 const settings = remote.require('settings/settings');
 const twitchAPIRequest = remote.require('request/twitchAPI').request;
 const channelManager = remote.require('chat/channelManager');
@@ -20,6 +30,13 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
     twitchAPIRequest(url).then(data => {
         // have we already sent another request after this one? then ignore this one
         if (mySeq === seq) {
+            /**
+             * @type object
+             * @property {String} logo
+             * @property {String} display_name
+             * @property {String} game
+             * @property {String} status
+             */
             for (let channel of data.channels) {
                 let itemFrag = DomTools.getTemplateContent(itemTpl);
                 let item = itemFrag.querySelector('.channel-list-item');
@@ -39,23 +56,23 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
     });
 }));
 
-function windowLoaded(thisBrowserWindow) {
-    DomEvents.delegate(list, 'click', '.channel-list-item', function() {
-        let newChannel = this.dataset.name;
-        let alreadyJoined = channelManager.has(newChannel);
-        let currentChannels = (settings.get('connection:channels') || []).slice();
-        if (currentChannels.indexOf(newChannel) === -1) {
-            currentChannels.push(newChannel);
-            settings.set('connection:channels', currentChannels);
-            this.classList.add('joined');
-            if (!alreadyJoined) {
-                channelManager.add(newChannel);
-            }
-            thisBrowserWindow.close();
+const thisBrowserWindow = remote.getCurrentWindow();
+
+DomEvents.delegate(list, 'click', '.channel-list-item', function() {
+    let newChannel = this.dataset.name;
+    let alreadyJoined = channelManager.has(newChannel);
+    let currentChannels = (settings.get('connection:channels') || []).slice();
+    if (currentChannels.indexOf(newChannel) === -1) {
+        currentChannels.push(newChannel);
+        settings.set('connection:channels', currentChannels);
+        this.classList.add('joined');
+        if (!alreadyJoined) {
+            channelManager.add(newChannel);
         }
-    });
+        thisBrowserWindow.close();
+    }
+});
 
-    document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
+document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
 
-    document.getElementById('channel-add-search').focus();
-}
+document.getElementById('channel-add-search').focus();

@@ -1,6 +1,7 @@
 'use strict';
 
-const tmi = require('tmi.js');
+/** @constructs {TwitchClient} */
+const TwitchClient = require('tmi.js').client;
 const settings = require('settings/settings');
 const chatEvents = require('chat/events');
 
@@ -9,20 +10,30 @@ const SettingsMissingError = require('error/settings-missing');
 
 class ChatConnection {
     constructor() {
-        this._chatInterface = undefined;
+        /**
+         * @type {?TwitchClient}
+         * @private
+         */
+        this._chatInterface = null;
+
+        /**
+         * @type {Object} this._config
+         * @property {string} username
+         * @property {string} token
+         * @property {string[]} channels
+         * @private
+         */
         this._config = settings.get('connection') || {};
-        this._userName = undefined;
     }
 
     connect() {
         let connectFn = (resolve, reject) => {
             this._config = settings.get('connection') || {};
             if (this._config && this._config.username && this._config.token) {
-                this._userName = this._config.username;
                 if (this._chatInterface) {
                     throw new Error('can\'t connect twice at the same time');
                 }
-                this._chatInterface = new tmi.client({
+                this._chatInterface = new TwitchClient({
                     debug: true,
                     connection: {
                         reconnect: true
@@ -54,7 +65,7 @@ class ChatConnection {
         if (this._chatInterface) {
             let oldInterface = this._chatInterface;
             let isConnected = this.isConnected;
-            this._chatInterface = undefined;
+            this._chatInterface = null;
             if (isConnected) {
                 return oldInterface.disconnect().then(() => {
                     return new Promise(connectFn);
@@ -72,12 +83,16 @@ class ChatConnection {
         return this._chatInterface && this._chatInterface.readyState() === 'CONNECTING';
     }
 
+    /**
+     *
+     * @returns {?TwitchClient}
+     */
     get chatInterface() {
         return this._chatInterface;
     }
 
     get userName() {
-        return this._userName;
+        return this._config.username;
     }
 }
 

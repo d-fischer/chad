@@ -45,7 +45,7 @@ function initConnection(allowReconnect) {
             chatConnection = require('chat/connection');
             chatConnection.connect().then(() => {
                 let channels = settings.get('connection:channels') || [];
-                chatChannelManager.addAll(channels);
+                chatChannelManager.joinAll(channels);
             });
 
             initialConnection = true;
@@ -178,7 +178,7 @@ function initMenu() {
         }
     ];
 
-    if (process.platform == 'darwin') {
+    if (process.platform === 'darwin') {
         let name = app.getName();
         template.unshift({
             label: name,

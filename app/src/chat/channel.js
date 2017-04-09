@@ -10,10 +10,17 @@ let channels = {};
 
 class ChatChannel {
     constructor(name) {
-        this._name = name;
+        this._name = name.replace(/^#/, '');
+        this._joined = true;
         this._displayName = name;
         this._element = undefined;
+
+        /**
+         * @type {Object}
+         * @property {number} _id
+         */
         this._channelData = undefined;
+
         this._bttvEmotes = {};
         this._channelLogo = 'img/default-user.svg';
         this._gameName = '';
@@ -103,17 +110,55 @@ class ChatChannel {
         return this._name;
     }
 
+    get ircName() {
+        return '#' + this.name;
+    }
+
     get bttvEmotes() {
         return this._bttvEmotes;
     }
 
+    get isJoined() {
+        return this._joined;
+    }
+
     join() {
-        return require('chat/connection').chatInterface.join(this._name);
+        return new Promise((resolve, reject) => {
+            const chatInterface = require('chat/connection').chatInterface;
+            if (this._joined) {
+                resolve();
+                return;
+            }
+            const myResolve = () => {
+                this._joined = true;
+                resolve();
+            };
+            chatInterface.join(this._name).then(myResolve, () => {
+                // twitch is weird here, check if we joined even though we got an error
+                if (chatInterface.getChannels().includes(this.ircName)) {
+                    myResolve();
+                }
+                else {
+                    // check again in a second
+                    setTimeout(() => {
+                        if (chatInterface.getChannels().includes(this.ircName)) {
+                            myResolve();
+                        }
+                        else {
+                            // all hope is lost
+                            reject();
+                        }
+                    }, 1000);
+                }
+            });
+        });
     }
 
     leave() {
         this._internalEvents.emit('leaving');
-        return require('chat/connection').chatInterface.part(this._name);
+        return require('chat/connection').chatInterface.part(this._name).then(() =>  {
+            this._joined = false;
+        });
     }
 
     say(message) {

@@ -9,6 +9,8 @@ const twitchAPIRequest = remote.require('request/twitchAPI').request;
 const DomEvents = require('dom/events');
 const DomTools = require('tools/dom');
 
+const channelManager = remote.require('chat/channelManager');
+
 class UIChannel {
     constructor(name) {
         this._name = name;
@@ -48,8 +50,22 @@ class UIChannel {
             setTimeout(this.updateBadges.bind(this), 500);
             return;
         }
-        // twitchAPIRequest(`https://api.twitch.tv/kraken/chat/${this._name}/badges`, (data, success) => {
-        twitchAPIRequest(`https://badges.twitch.tv/v1/badges/channels/${backend._channelData._id}/display`).then(data => {
+        twitchAPIRequest(`https://badges.twitch.tv/v1/badges/channels/${backend._channelData._id}/display`).then(
+            /**
+             * @typedef {Object} Badge
+             * @property {string} image_url_1x
+             * @property {string} image_url_2x
+             * @property {string} image_url_4x
+             */
+            /**
+             * @typedef {Object} BadgeSet
+             * @property {Object.<number, Badge>} versions
+             */
+            /**
+             * @param {Object.<string, Object>} data
+             * @property {Object.<string, BadgeSet>} data.badge_sets
+             */
+            data => {
             if (data && data.badge_sets && data.badge_sets.subscriber && data.badge_sets.subscriber.versions) {
                 let style = '';
                 let badges = data.badge_sets.subscriber.versions;
@@ -201,7 +217,7 @@ class UIChannel {
 
     notifyOnline() {
         let backend = this.backend;
-        let ntf = new Notification(`${backend._displayName} is now online`, {
+        new Notification(`${backend._displayName} is now online`, {
             body: backend._statusText,
             icon: backend._channelLogo,
             silent: true

@@ -12,6 +12,10 @@ class ObjectTools {
         return Object.assign(...Object.entries(obj).map(([key, value]) => ({[key]: fn(value)})));
     }
 
+    static filter(obj, fn) {
+        return Object.assign(...Object.entries(obj).filter(([key, value]) => fn(value, key)).map(([key, value]) => ({[key]: value})));
+    }
+
     static isEmpty(o) {
         return Object.getOwnPropertyNames(o).length === 0;
     }

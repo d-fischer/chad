@@ -1,11 +1,30 @@
 "use strict";
 
+/**
+ * @external DomEvents
+ * @constructs DomEvents
+ */
+
+/**
+ * @external DomTools
+ * @constructs DomTools
+ */
+
+/**
+ * @external activateTab
+ * @type {Function}
+ */
+
+/**
+ *
+ * @type {SettingsStore}
+ */
 const settings = remote.require('settings/settings');
 
 const s = '[data-setting]';
 const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input[type="password"]${s}`;
 const selectFieldSelector = `select${s}`;
-const TwitchAPI = require('../src/request/twitchAPI');
+const TwitchAPI = require('request/twitchAPI');
 
 const refreshSettings = () => [].forEach.call(document.querySelectorAll(`${inputFieldSelector}, ${selectFieldSelector}`), input => {
     input.value = settings.get(input.dataset.setting) || '';
@@ -34,7 +53,10 @@ for (let panel of document.querySelectorAll('.dialog-panel')) {
     });
 }
 
-function windowLoaded(thisBrowserWindow, options) {
+const thisBrowserWindow = remote.getCurrentWindow();
+
+//noinspection JSUnusedLocalSymbols
+function initOptions(options) {
     if (options) {
         if (options.initial) {
             document.querySelector('.reconnect-button').textContent = 'Connect';
@@ -48,14 +70,15 @@ function windowLoaded(thisBrowserWindow, options) {
             errElem.textContent = 'Connection error: ' + options.connectError;
         }
     }
-    DomEvents.delegate(document.body, 'click', '.reconnect-button', () => (remote.getGlobal('reconnect'))());
-    document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
-
-    DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
-        e.preventDefault();
-        TwitchAPI.getOAuthToken().then(token => {
-            settings.set('connection:token', token);
-            refreshSettings();
-        });
-    });
 }
+
+DomEvents.delegate(document.body, 'click', '.reconnect-button', () => (remote.getGlobal('reconnect'))());
+document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
+
+DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
+    e.preventDefault();
+    TwitchAPI.getOAuthToken().then(token => {
+        settings.set('connection:token', token);
+        refreshSettings();
+    });
+});

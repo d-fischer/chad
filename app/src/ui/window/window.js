@@ -78,7 +78,7 @@ class Window extends EventEmitter {
 
             if (this._isInternal) {
                 let optJson = JSON.stringify(options || {});
-                this._browserWindow.webContents.executeJavaScript(`window.windowLoaded && windowLoaded(BrowserWindow.fromId(${this._browserWindow.id}), ${optJson})`);
+                this._browserWindow.webContents.executeJavaScript(`window.initOptions && initOptions(${optJson})`);
                 this._browserWindow.webContents.executeJavaScript('require(\'electron-remote\').initializeEvalHandler();');
                 this._windowProxy = createProxyForRemote(this._browserWindow);
                 pluginManager.registerWindow(this);
