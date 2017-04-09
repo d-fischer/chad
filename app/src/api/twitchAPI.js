@@ -32,6 +32,7 @@ function twitchAPIRequest(url) {
         }
         let headers = {
             'Client-ID': clientId,
+            'Accept': 'application/vnd.twitchtv.v5+json'
         };
         if (token) {
             headers.Authorization = `OAuth ${token}`;

@@ -30,18 +30,15 @@ class ChatChannelManager extends EventEmitter {
         return this._channels[channelName];
     }
 
-    add(channelName) {
-        let channel = new ChatChannel(channelName);
-        this._channels[channelName] = channel;
-        // do nothing on error - twitch is weird about responding to joins
-        return channel.join();
-    }
-
     /**
      * @returns {Object.<string, ChatChannel>}
      */
     getAll() {
         return this._channels;
+    }
+
+    getAllNames() {
+        return Object.keys(this._channels);
     }
 
     has(channelName) {

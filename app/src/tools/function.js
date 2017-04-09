@@ -2,9 +2,10 @@
 
 class FunctionTools {
     static debounce(fn, duration) {
-        var timeout;
+        let timeout;
         return function debounced() {
-            var obj = this, args = arguments;
+            let obj = this, args = arguments;
+            //noinspection NestedFunctionJS
             function delayed() {
                 fn.apply(obj, args);
                 timeout = null;

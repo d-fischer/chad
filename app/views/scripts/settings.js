@@ -24,7 +24,7 @@ const settings = remote.require('settings/settings');
 const s = '[data-setting]';
 const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input[type="password"]${s}`;
 const selectFieldSelector = `select${s}`;
-const TwitchAPI = require('request/twitchAPI');
+const TwitchAPI = require('api/twitchAPI');
 
 const refreshSettings = () => [].forEach.call(document.querySelectorAll(`${inputFieldSelector}, ${selectFieldSelector}`), input => {
     input.value = settings.get(input.dataset.setting) || '';

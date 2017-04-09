@@ -9,7 +9,7 @@
  */
 
 const settings = remote.require('settings/settings');
-const twitchAPIRequest = remote.require('request/twitchAPI').request;
+const twitchAPIRequest = remote.require('api/twitchAPI').request;
 const channelManager = remote.require('chat/channelManager');
 
 const FunctionTools = require('tools/function');

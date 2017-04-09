@@ -6,6 +6,11 @@
  */
 
 /**
+ * @external StringTools
+ * @constructs StringTools
+ */
+
+/**
  * @external activateTab
  * @type {Function}
  */
@@ -42,14 +47,11 @@ DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.messa
     channel.say(message);
 });
 
-uiChannelManager.addAll(
-    Object.values(channelManager.getAll())
-        .filter(/**ChatChannel*/channel => channel.isJoined)
-        .map(/**ChatChannel*/channel => channel.name)
-);
+uiChannelManager.addAll(channelManager.getAllNames());
 
 let channelJoinHandler = (channel, username, self) => {
-    if (self) {
+    channel = StringTools.makeUsername(channel);
+    if (self && !uiChannelManager.has(channel)) {
         uiChannelManager.add(channel);
     }
 };

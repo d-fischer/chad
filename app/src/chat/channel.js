@@ -2,16 +2,18 @@
 
 const {EventEmitter} = require('events');
 
-const twitchAPIRequest = require('request/twitchAPI').request;
+const twitchAPIRequest = require('api/twitchAPI').request;
+const userIDFetcher = require('api/userIDFetcher');
 const request = require('request');
 const cache = require('settings/cache');
 
 let channels = {};
 
 class ChatChannel {
-    constructor(name) {
+    constructor(name, id = null) {
         this._name = name.replace(/^#/, '');
-        this._joined = true;
+        this._id = id;
+        this._joined = false;
         this._displayName = name;
         this._element = undefined;
 
@@ -69,28 +71,30 @@ class ChatChannel {
     }
 
     updateData() {
-        twitchAPIRequest(`https://api.twitch.tv/kraken/streams/${this._name}`).then(data => {
-            let oldOnline = this._online;
+        this.getId().then(id => {
+            twitchAPIRequest(`https://api.twitch.tv/kraken/streams/${id}`).then(data => {
+                let oldOnline = this._online;
 
-            if (!data.stream) {
-                this._online = false;
+                if (!data.stream) {
+                    this._online = false;
 
-                twitchAPIRequest(`https://api.twitch.tv/kraken/channels/${this._name}`).then(data => {
-                    if (typeof data === 'object') {
-                        this._setData(data);
-                        this._internalEvents.emit('updated');
-                    }
-                });
-            }
-            else if (typeof data === 'object') {
-                this._online = true;
-                this._setData(data.stream.channel);
-                this._internalEvents.emit('updated');
-            }
+                    twitchAPIRequest(`https://api.twitch.tv/kraken/channels/${id}`).then(data => {
+                        if (typeof data === 'object') {
+                            this._setData(data);
+                            this._internalEvents.emit('updated');
+                        }
+                    });
+                }
+                else if (typeof data === 'object') {
+                    this._online = true;
+                    this._setData(data.stream.channel);
+                    this._internalEvents.emit('updated');
+                }
 
-            if (oldOnline === false && this._online) {
-                this._internalEvents.emit('online');
-            }
+                if (oldOnline === false && this._online) {
+                    this._internalEvents.emit('online');
+                }
+            });
         });
     }
 
@@ -163,6 +167,20 @@ class ChatChannel {
 
     say(message) {
         return require('chat/connection').chatInterface.say(this._name, message);
+    }
+
+    getId() {
+        return new Promise((resolve, reject) => {
+            if (this._id) {
+                resolve(this._id);
+                return;
+            }
+
+            userIDFetcher.get(this._name, id => {
+                this._id = id;
+                resolve(this._id);
+            }, reject);
+        });
     }
 }
 

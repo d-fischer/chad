@@ -23,6 +23,14 @@ class StringTools {
     static utf8Substring(str, start, end) {
         return [...str].slice(start, end).join('');
     }
+
+    static makeUsername(str) {
+        return str.replace(/^#/, '');
+    }
+
+    static makeChannel(str) {
+        return '#' + StringTools.makeUsername(str);
+    }
 }
 
 module.exports = StringTools;

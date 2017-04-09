@@ -25,6 +25,9 @@ class UIChatMessageHandler extends UIEventHandler {
     handleMessage(type, channelName, userData, message, self) {
         channelName = channelName.substring(1);
         let channel = uiChannelManager.get(channelName);
+        if (!channel) {
+            return;
+        }
         let linesList = channel._element.querySelector('.messages');
         let line = new UIChatLine(message, channel.name, userData, self);
         let lineContainer = line.parse(false);

@@ -16,15 +16,14 @@ class UIChannelManager extends EventEmitter {
 
     add(channelName) {
         this._channels[channelName] = new UIChannel(channelName);
-        this.emit('channel-added', channelName);
     }
 
     getAll() {
         return Object.assign({}, this._channels);
     }
 
-    getAllNames() {
-        return Object.keys(this._channels);
+    has(channelName) {
+        return channelName in this._channels;
     }
 
     addAll(channelNames) {
