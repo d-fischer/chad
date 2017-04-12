@@ -68,8 +68,10 @@ function getTwitchAPIOAuthToken(refresh = false) {
             width: 800,
             height: 600,
             show: false,
-            'node-integration': false,
-            modal: true
+            modal: true,
+            webPreferences: {
+                nodeIntegration: false
+            }
         });
         authWindow.loadURL(url);
         authWindow.show();
