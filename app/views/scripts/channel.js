@@ -26,7 +26,7 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
         return;
     }
     let currentChannels = settings.get('connection:channels') || [];
-    const url = 'https://api.twitch.tv/kraken/search/channels?limit=25&q=' + encodeURIComponent(e.target.value);
+    const url = 'https://api.twitch.tv/kraken/search/channels?limit=25&query=' + encodeURIComponent(e.target.value);
     twitchAPIRequest(url).then(data => {
         // have we already sent another request after this one? then ignore this one
         if (mySeq === seq) {
@@ -41,7 +41,7 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
                 let itemFrag = DomTools.getTemplateContent(itemTpl);
                 let item = itemFrag.querySelector('.channel-list-item');
                 item.dataset.name = channel.name;
-                if (currentChannels.indexOf(channel.name) !== -1) {
+                if (currentChannels.includes(channel.name)) {
                     item.classList.add('joined');
                 }
                 if (channel.logo) {
@@ -59,16 +59,14 @@ document.querySelector('#channel-add-search').addEventListener('keyup', Function
 const thisBrowserWindow = remote.getCurrentWindow();
 
 DomEvents.delegate(list, 'click', '.channel-list-item', function() {
-    let newChannel = this.dataset.name;
-    let alreadyJoined = channelManager.has(newChannel);
+    let channelName = this.dataset.name;
+    let channel = channelManager.get(channelName);
     let currentChannels = (settings.get('connection:channels') || []).slice();
-    if (currentChannels.indexOf(newChannel) === -1) {
-        currentChannels.push(newChannel);
+    if (!currentChannels.includes(channelName)) {
+        currentChannels.push(channelName);
         settings.set('connection:channels', currentChannels);
         this.classList.add('joined');
-        if (!alreadyJoined) {
-            channelManager.add(newChannel);
-        }
+        channel.isJoined || channel.join();
         thisBrowserWindow.close();
     }
 });

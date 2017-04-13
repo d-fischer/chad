@@ -3,6 +3,7 @@
 const channelManager = require('chat/channelManager');
 const chatEvents = require('chat/events');
 
+const ArrayTools = require('tools/array');
 const ObjectTools = require('tools/object');
 
 const RegexDictionary = require('regex/dictionary');
@@ -35,10 +36,7 @@ class ChatEmotes {
                             emoteName = htmlEntities.decode(emoteName);
                             if (emoteName in _this._ownTwitchEmotes) {
                                 let oldSet = _this._ownTwitchEmotes[emoteName].set;
-                                let oldIndex = _this._ownTwitchEmoteSetMap[oldSet].indexOf(emoteName);
-                                if (oldIndex > -1) {
-                                    _this._ownTwitchEmoteSetMap[oldSet].splice(oldIndex, 1);
-                                }
+                                ArrayTools.removeItem(_this._ownTwitchEmoteSetMap[oldSet], emoteName);
                             }
                             _this._ownTwitchEmotes[emoteName] = emote;
                             _this._ownTwitchEmoteSetMap[emoteSet].push(emoteName);
@@ -80,6 +78,7 @@ class ChatEmotes {
         return this._globalBttvEmotes;
     }
 
+    //noinspection JSMethodCanBeStatic
     getChannelBttvEmotes(channelName) {
         return channelManager.get(channelName).bttvEmotes;
     }

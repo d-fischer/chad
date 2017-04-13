@@ -8,6 +8,8 @@ const DomEvents = require('dom/events');
 const DomTools = require('tools/dom');
 //noinspection JSUnusedLocalSymbols
 const StringTools = require('tools/string');
+//noinspection JSUnusedLocalSymbols
+const ObjectTools = require('tools/object');
 const SelectOptionsMenu = require('ui/contextMenu/select');
 
 DomEvents.delegate(document.body, 'click', '.external-link', function (e) {

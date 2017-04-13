@@ -1,11 +1,10 @@
 'use strict';
 
+/** @constructs {ContextMenu} */
 const ContextMenu = require('ui/contextMenu/contextMenu');
 const DomTools = require('tools/dom');
 
 const {remote} = require('electron');
-
-const arrayContains = require('tools/array').contains;
 
 class EmotesContextMenu extends ContextMenu {
     constructor(parentElem, channel) {
@@ -13,6 +12,10 @@ class EmotesContextMenu extends ContextMenu {
         this._channel = channel;
     }
 
+    /**
+     * @returns {Element}
+     * @protected
+     */
     _buildDom() {
         let menuFrag = DomTools.getTemplateContent(document.getElementById('emote-popover-template'));
         let menu = menuFrag.firstElementChild;
@@ -60,7 +63,7 @@ class EmotesContextMenu extends ContextMenu {
 
             for (let ownEmote of ownTwitchEmoteSetMap[ownEmoteSet]) {
                 let emote = ownTwitchEmotes[ownEmote];
-                if (!arrayContains(twitchEmotesAdded, emote.id)) {
+                if (!twitchEmotesAdded.includes(emote.id)) {
                     twitchEmotesAdded.push(emote.id);
 
                     let emoteItem = document.createElement('button');

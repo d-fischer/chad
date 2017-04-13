@@ -12,8 +12,15 @@ class ObjectTools {
         return Object.assign(...Object.entries(obj).map(([key, value]) => ({[key]: fn(value)})));
     }
 
+    /**
+     * Filters an object by a given predicate
+     * @param {Object.<K, V>} obj
+     * @param {function(V, K)} fn
+     * @return {Object.<K, V>}
+     * @template K, V
+     */
     static filter(obj, fn) {
-        return Object.assign(...Object.entries(obj).filter(([key, value]) => fn(value, key)).map(([key, value]) => ({[key]: value})));
+        return Object.assign({}, ...Object.entries(obj).filter(([key, value]) => fn(value, key)).map(([key, value]) => ({[key]: value})));
     }
 
     static isEmpty(o) {

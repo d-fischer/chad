@@ -6,8 +6,18 @@
  */
 
 /**
+ * @external ObjectTools
+ * @constructs ObjectTools
+ */
+
+/**
  * @external StringTools
  * @constructs StringTools
+ */
+
+/**
+ * @external ChatChannel
+ * @constructs ChatChannel
  */
 
 /**
@@ -47,7 +57,7 @@ DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.messa
     channel.say(message);
 });
 
-uiChannelManager.addAll(channelManager.getAllNames());
+uiChannelManager.addAll(Object.keys(ObjectTools.filter(channelManager.getAll(), channel => channel.isJoined)));
 
 let channelJoinHandler = (channel, username, self) => {
     channel = StringTools.makeUsername(channel);

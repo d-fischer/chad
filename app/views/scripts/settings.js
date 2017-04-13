@@ -26,6 +26,8 @@ const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input
 const selectFieldSelector = `select${s}`;
 const TwitchAPI = remote.require('api/twitchAPI');
 
+const SettingsMissingError = require('error/settings-missing');
+
 /** @type {ChatChannelManager} */
 const channelManager = remote.require('chat/channelManager');
 /** @type {UIWindowManager} */
@@ -44,8 +46,27 @@ const refreshSettings = async () => {
         }
     });
 
-    const auth = await TwitchAPI.getAuthDetails();
+    let auth;
+    try {
+        auth = await TwitchAPI.getAuthDetails();
+    }
+    catch (e) {
+        if (e.name === 'SettingsMissingError') {
+            document.querySelector('.login-user-block .logged-in-headline').innerText = 'Not logged in';
+            document.querySelector('.logged-in-username').innerText = '';
+            document.querySelector('.login-user-block .change-user').innerText = 'Log in';
+            document.querySelector('.login-user-block .user-picture img').src = 'img/default-user.svg';
+        }
+        else {
+            console.log(e);
+        }
+
+        return true;
+    }
+
+    document.querySelector('.login-user-block .logged-in-headline').innerText = 'Logged in as';
     document.querySelector('.logged-in-username').innerText = auth.userName;
+    document.querySelector('.login-user-block .change-user').innerText = 'Change user';
 
     const channel = channelManager.get(auth.userName, auth.userId);
     await channel.getData();
@@ -55,6 +76,10 @@ const refreshSettings = async () => {
 
     return true;
 };
+
+window.addEventListener("unhandledrejection", function(err, promise) {
+    console.log(err, promise);
+});
 
 refreshSettings();
 
@@ -86,7 +111,7 @@ for (let panel of document.querySelectorAll('.dialog-panel')) {
 
 const thisBrowserWindow = remote.getCurrentWindow();
 
-//noinspection JSUnusedGlobalSymbols
+//noinspection JSUnusedLocalSymbols
 function initOptions(options) {
     if (options) {
         if (options.initial) {

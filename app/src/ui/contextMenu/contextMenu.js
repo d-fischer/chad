@@ -9,6 +9,11 @@ class ContextMenu {
         this._showing = false;
     }
 
+    /**
+     * @abstract
+     */
+    _buildDom() {}
+
     _refreshDom(force = false) {
         if (!this._elem || this._elem.parentNode || force) {
             this._elem = this._buildDom();

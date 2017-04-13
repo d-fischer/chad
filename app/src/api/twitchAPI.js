@@ -17,6 +17,8 @@ else {
     settings = require('settings/settings');
 }
 
+const SettingsMissingError = require('error/settings-missing');
+
 const authURL = 'https://api.twitch.tv/kraken/oauth2/authorize';
 const clientId = 'etkg90uv09c04nadunxf64wp5ueqcdv';
 const redirectURI = 'http://chad.bogus/login';
@@ -121,7 +123,7 @@ function getTwitchAPIOAuthToken(refresh = false) {
 function getTwitchAuthDetails(authToken = null) {
     return new Promise((resolve, reject) => {
         if (!authToken && !token) {
-            reject();
+            reject(new SettingsMissingError);
         }
         // cache for 5 minutes
         else if (!authToken && authDetailsRefreshStamp + 5 * 60 * 1000 > Date.now()) {
