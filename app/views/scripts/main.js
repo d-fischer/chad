@@ -57,7 +57,7 @@ DomEvents.delegate(document.getElementById('channel-windows'), 'submit', '.messa
     channel.say(message);
 });
 
-uiChannelManager.addAll(Object.keys(ObjectTools.filter(channelManager.getAll(), channel => channel.isJoined)));
+uiChannelManager.addAll(Object.keys(ObjectTools.filter(channelManager.getAll(), channel => channel.shouldJoin)));
 
 let channelJoinHandler = (channel, username, self) => {
     channel = StringTools.makeUsername(channel);

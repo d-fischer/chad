@@ -7,12 +7,15 @@ const userIDFetcher = require('api/userIDFetcher');
 const request = require('request');
 const cache = require('settings/cache');
 
+const chatEvents = require('chat/events');
+
 let channels = {};
 
 class ChatChannel {
     constructor(name, id = null) {
         this._name = name.replace(/^#/, '');
         this._id = id;
+        this._shouldJoin = false;
         this._joined = false;
         this._displayName = name;
         this._element = undefined;
@@ -32,6 +35,7 @@ class ChatChannel {
         this._updateInterval = 10;
         this._internalEvents = new EventEmitter();
         this.initData();
+        this.initEvents();
     }
 
     on(...args) {
@@ -47,6 +51,22 @@ class ChatChannel {
         this.updateData();
         this.startAutoUpdate();
         this.updateBttvData();
+    }
+
+    initEvents() {
+        chatEvents.on('join', (channel, userName, self) => {
+            if (self && channel === this.ircName) {
+                this._joined = true;
+                this._internalEvents.emit('joined');
+            }
+        });
+
+        chatEvents.on('part', (channel, userName, self) => {
+            if (self && channel === this.ircName) {
+                this._joined = false;
+                this._internalEvents.emit('left');
+            }
+        });
     }
 
     startAutoUpdate() {
@@ -130,47 +150,33 @@ class ChatChannel {
         return this._bttvEmotes;
     }
 
-    get isJoined() {
-        return this._joined;
+    get shouldJoin() {
+        return this._shouldJoin;
     }
 
     join() {
+        this._shouldJoin = true;
         return new Promise((resolve, reject) => {
-            const chatInterface = require('chat/connection').chatInterface;
             if (this._joined) {
                 resolve();
                 return;
             }
-            const myResolve = () => {
-                this._joined = true;
-                resolve();
-            };
-            chatInterface.join(this._name).then(myResolve, () => {
-                // twitch is weird here, check if we joined even though we got an error
-                if (chatInterface.getChannels().includes(this.ircName)) {
-                    myResolve();
-                }
-                else {
-                    // check again in a second
-                    setTimeout(() => {
-                        if (chatInterface.getChannels().includes(this.ircName)) {
-                            myResolve();
-                        }
-                        else {
-                            // all hope is lost
-                            reject();
-                        }
-                    }, 1000);
-                }
+            const chatInterface = require('chat/connection').chatInterface;
+            chatInterface.join(this._name).then(resolve, () => {
+                // twitch is weird here, we'll still wait for the join event
+                this._internalEvents.once('joined', resolve);
+                setTimeout(() => {
+                    this._internalEvents.removeListener('joined', resolve);
+                    reject();
+                }, 1000);
             });
         });
     }
 
     leave() {
         this._internalEvents.emit('leaving');
-        return require('chat/connection').chatInterface.part(this._name).then(() =>  {
-            this._joined = false;
-        });
+        this._shouldJoin = false;
+        return require('chat/connection').chatInterface.part(this._name);
     }
 
     say(message) {

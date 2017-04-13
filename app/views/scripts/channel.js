@@ -66,7 +66,7 @@ DomEvents.delegate(list, 'click', '.channel-list-item', function() {
         currentChannels.push(channelName);
         settings.set('connection:channels', currentChannels);
         this.classList.add('joined');
-        channel.isJoined || channel.join();
+        channel.shouldJoin || channel.join();
         thisBrowserWindow.close();
     }
 });

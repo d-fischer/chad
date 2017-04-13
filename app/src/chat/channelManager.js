@@ -35,10 +35,6 @@ class ChatChannelManager extends EventEmitter {
         return this._channels;
     }
 
-    getAllNames() {
-        return Object.keys(this._channels);
-    }
-
     has(channelName) {
         return channelName in this._channels;
     }
@@ -46,25 +42,6 @@ class ChatChannelManager extends EventEmitter {
     joinAll(channelNames) {
         // catch all promises even if failing to join
         return Promise.all(channelNames.map(channel => this.get(channel).join().catch(e => e)));
-    }
-
-    remove(channelName) {
-        return new Promise((resolve, reject) => {
-            let channel = this._channels[channelName];
-            if (!channel) {
-                reject('We don\'t know this channel');
-            }
-            let deleteChannel = () => {
-                delete this._channels[channelName];
-                resolve();
-            };
-            if (channel.isJoined) {
-                channel.leave().then(deleteChannel, reject);
-            }
-            else {
-                deleteChannel();
-            }
-        });
     }
 }
 
