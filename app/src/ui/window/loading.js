@@ -1,8 +1,8 @@
 'use strict';
 
-const Window = require('ui/window/window');
+const UIWindow = require('ui/window/window');
 
-class LoadingWindow extends Window {
+class LoadingWindow extends UIWindow {
     constructor() {
         super('loading');
         this._width = 200;

@@ -70,32 +70,40 @@ class ChatChannel {
         }
     }
 
-    updateData() {
-        this.getId().then(id => {
-            twitchAPIRequest(`https://api.twitch.tv/kraken/streams/${id}`).then(data => {
-                let oldOnline = this._online;
+    async getData() {
+        if (this._channelData) {
+            return this._channelData;
+        }
 
-                if (!data.stream) {
-                    this._online = false;
+        return await this.updateData();
+    }
 
-                    twitchAPIRequest(`https://api.twitch.tv/kraken/channels/${id}`).then(data => {
-                        if (typeof data === 'object') {
-                            this._setData(data);
-                            this._internalEvents.emit('updated');
-                        }
-                    });
-                }
-                else if (typeof data === 'object') {
-                    this._online = true;
-                    this._setData(data.stream.channel);
-                    this._internalEvents.emit('updated');
-                }
+    async updateData() {
+        const id = await this.getId();
 
-                if (oldOnline === false && this._online) {
-                    this._internalEvents.emit('online');
-                }
-            });
-        });
+        let data = await twitchAPIRequest(`https://api.twitch.tv/kraken/streams/${id}`);
+        let oldOnline = this._online;
+
+        if (!data.stream) {
+            this._online = false;
+
+            let data = await twitchAPIRequest(`https://api.twitch.tv/kraken/channels/${id}`);
+            if (typeof data === 'object') {
+                this._setData(data);
+                this._internalEvents.emit('updated');
+            }
+        }
+        else if (typeof data === 'object') {
+            this._online = true;
+            this._setData(data.stream.channel);
+            this._internalEvents.emit('updated');
+        }
+
+        if (oldOnline === false && this._online) {
+            this._internalEvents.emit('online');
+        }
+
+        return this._channelData;
     }
 
     updateBttvData() {
@@ -181,6 +189,14 @@ class ChatChannel {
                 resolve(this._id);
             }, reject);
         });
+    }
+
+    get logo() {
+        return this._channelLogo;
+    }
+
+    get displayName() {
+        return this._displayName;
     }
 }
 

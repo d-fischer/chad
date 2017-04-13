@@ -1,8 +1,8 @@
 'use strict';
 
-const Window = require('ui/window/window');
+const UIWindow = require('ui/window/window');
 
-class MainWindow extends Window {
+class MainWindow extends UIWindow {
     constructor() {
         super('main');
     }

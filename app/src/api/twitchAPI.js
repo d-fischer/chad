@@ -2,6 +2,7 @@
 
 const URL = require('url');
 const QueryString = require('querystring');
+const request = require("request");
 
 const isRenderer = require('is-electron-renderer');
 let BrowserWindow, settings;
@@ -25,22 +26,27 @@ let token = settings.get('connection:token');
 let authDetails;
 let authDetailsRefreshStamp = 0;
 
-function twitchAPIRequest(url) {
+function twitchAPIRequest(url, authToken = null) {
     return new Promise((resolve, reject) => {
         if (url.search(/^https?:\/\//) === -1) {
             url = 'https://' + url;
         }
+
         let headers = {
             'Client-ID': clientId,
             'Accept': 'application/vnd.twitchtv.v5+json'
         };
-        if (token) {
-            headers.Authorization = `OAuth ${token}`;
+        authToken = authToken || token;
+        if (authToken) {
+            headers.Authorization = `OAuth ${authToken}`;
         }
-        require('chat/connection').chatInterface.api({
+
+        request({
             url: url,
+            method: "GET",
+            json: true,
             headers: headers
-        }, (err, res, body) => {
+        }, function (err, res, body) {
             if (err) {
                 reject(err);
             }
@@ -78,17 +84,17 @@ function getTwitchAPIOAuthToken(refresh = false) {
 
         const handleCallback = (urlStr) => {
             let url = URL.parse(urlStr);
-            let params = QueryString.parse(url.hash.substr(1));
+            let params = QueryString.parse(url.hash ? url.hash.substr(1) : url.query);
 
             if (params.error || params.access_token) {
-                authWindow.destroy();
                 done = true;
+                authWindow.destroy();
             }
             if (params.error) {
                 reject(params.error);
             }
             else if (params.access_token) {
-                getTwitchAuthDetails().then(authDetails => {
+                getTwitchAuthDetails(params.access_token).then(authDetails => {
                     settings.set('connection:username', authDetails.userName);
                     settings.set('connection:token', token = params.access_token);
                     resolve(token);
@@ -112,20 +118,22 @@ function getTwitchAPIOAuthToken(refresh = false) {
     });
 }
 
-function getTwitchAuthDetails() {
+function getTwitchAuthDetails(authToken = null) {
     return new Promise((resolve, reject) => {
-        if (!token) {
+        if (!authToken && !token) {
             reject();
         }
         // cache for 5 minutes
-        else if (authDetailsRefreshStamp + 5 * 60 * 1000 > Date.now()) {
+        else if (!authToken && authDetailsRefreshStamp + 5 * 60 * 1000 > Date.now()) {
             resolve(authDetails);
         }
         else {
-            twitchAPIRequest('https://api.twitch.tv/kraken/').then(data => {
+            authToken = authToken || token;
+            twitchAPIRequest('https://api.twitch.tv/kraken/', authToken).then(data => {
                 if (typeof data === 'object' && data.token.valid) {
                     authDetails = {
                         userName: data.token.user_name,
+                        userId: data.token.user_id,
                         scopes: data.token.authorization.scopes
                     };
                     authDetailsRefreshStamp = Date.now();

@@ -16,14 +16,14 @@
     <div class="dialog-body">
         <div class="dialog-panels tabs">
             <div class="dialog-panel tab" data-name="connection">
-                <label>
-                    Username
-                    <input type="text" data-setting="connection:username"/>
-                </label>
-                <label>
-                    OAuth token <a href="#" class="get-oauth-token" tabindex="-1">(get)</a>
-                    <input type="password" data-setting="connection:token"/>
-                </label>
+                <div class="login-user-block">
+                    <div class="user-picture"><img src="img/default-user.svg" /></div>
+                    <div class="user-info">
+                        <div>Logged in as</div>
+                        <div class="logged-in-username"></div>
+                        <a href="#" class="change-user" tabindex="-1">Change user</a>
+                    </div>
+                </div>
                 <div id="connection-warning"></div>
                 <div class="panel-buttons">
                     <button class="reconnect-button">Reconnect</button>

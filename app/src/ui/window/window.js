@@ -1,6 +1,9 @@
 'use strict';
 
-const {BrowserWindow} = require('electron');
+
+const electron = require('electron');
+const BrowserWindow = electron.BrowserWindow;
+
 const {EventEmitter} = require('events');
 const {createProxyForRemote} = require('electron-remote');
 
@@ -8,11 +11,16 @@ const appRoot = require('app-root-path');
 
 const pluginManager = require('plugin/manager');
 
-class Window extends EventEmitter {
+class UIWindow extends EventEmitter {
     constructor(name) {
         super();
+
+        /** @type {string} */
         this._name = name;
+
+        /** @type {BrowserWindow} */
         this._browserWindow = undefined;
+
         this._windowProxy = undefined;
         this._width = 1024;
         this._height = 768;
@@ -26,6 +34,9 @@ class Window extends EventEmitter {
         this._promise = undefined;
     }
 
+    /**
+     * @returns {string}
+     */
     get name() {
         return this._name;
     }
@@ -106,9 +117,13 @@ class Window extends EventEmitter {
         }
     }
 
+    ipcSend(channel, ...args) {
+        this._browserWindow && this._browserWindow.send(channel, ...args);
+    }
+
     close() {
         this._browserWindow && this._browserWindow.close();
     }
 }
 
-module.exports = Window;
+module.exports = UIWindow;

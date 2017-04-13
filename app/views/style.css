@@ -1190,3 +1190,35 @@ body.streamer-mode .channel-window .settings-footer {
 .chad-select-options.hidden {
     transform: translateY(-20px);
 }
+
+.login-user-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.login-user-block .user-picture {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.login-user-block .user-picture img {
+    width: 80px;
+    height: 80px;
+    display: block;
+    border: 1px solid;
+    border-radius: 50%;
+}
+
+.login-user-block .user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.login-user-block .user-info > :-webkit-any(div, a) {
+    padding: 3px;
+}
+
+.login-user-block .user-info .logged-in-username {
+    font-weight: bold;
+}

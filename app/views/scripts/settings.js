@@ -24,17 +24,48 @@ const settings = remote.require('settings/settings');
 const s = '[data-setting]';
 const inputFieldSelector = `input:not([type])${s}, input[type="text"]${s}, input[type="password"]${s}`;
 const selectFieldSelector = `select${s}`;
-const TwitchAPI = require('api/twitchAPI');
+const TwitchAPI = remote.require('api/twitchAPI');
 
-const refreshSettings = () => [].forEach.call(document.querySelectorAll(`${inputFieldSelector}, ${selectFieldSelector}`), input => {
-    input.value = settings.get(input.dataset.setting) || '';
-    input.dispatchEvent(new Event('change'));
-});
+/** @type {ChatChannelManager} */
+const channelManager = remote.require('chat/channelManager');
+/** @type {UIWindowManager} */
+const windowManager = remote.require('ui/window/manager');
+
+const refreshSettings = async () => {
+    [].forEach.call(document.querySelectorAll(s), elem => {
+        const setting = settings.get(elem.dataset.setting) || '';
+
+        if (elem instanceof HTMLInputElement || elem instanceof HTMLSelectElement) {
+            elem.value = setting;
+            elem.dispatchEvent(new Event('change'));
+        }
+        else {
+            elem.innerText = setting;
+        }
+    });
+
+    const auth = await TwitchAPI.getAuthDetails();
+    document.querySelector('.logged-in-username').innerText = auth.userName;
+
+    const channel = channelManager.get(auth.userName, auth.userId);
+    await channel.getData();
+
+    document.querySelector('.login-user-block .user-picture img').src = channel.logo;
+    document.querySelector('.logged-in-username').innerText = channel.displayName;
+
+    return true;
+};
 
 refreshSettings();
 
 const changeCallback = function () {
-    settings.set(this.dataset.setting, this.value || null);
+    let settingName = this.dataset.setting;
+    settings.set(settingName, this.value || null);
+
+    const settingPath = settingName.split(':');
+    if (settingPath[0] === 'appearance') {
+        windowManager.getWindow('main').ipcSend('update-appearance');
+    }
 };
 
 DomEvents.delegate(document.body, 'blur', inputFieldSelector, changeCallback, true);
@@ -55,7 +86,7 @@ for (let panel of document.querySelectorAll('.dialog-panel')) {
 
 const thisBrowserWindow = remote.getCurrentWindow();
 
-//noinspection JSUnusedLocalSymbols
+//noinspection JSUnusedGlobalSymbols
 function initOptions(options) {
     if (options) {
         if (options.initial) {
@@ -75,10 +106,9 @@ function initOptions(options) {
 DomEvents.delegate(document.body, 'click', '.reconnect-button', () => (remote.getGlobal('reconnect'))());
 document.getElementById('close-button').addEventListener('click', () => thisBrowserWindow.close());
 
-DomEvents.delegate(document.body, 'click', '.get-oauth-token', e => {
+DomEvents.delegate(document.body, 'click', '.change-user', e => {
     e.preventDefault();
-    TwitchAPI.getOAuthToken().then(token => {
-        settings.set('connection:token', token);
+    TwitchAPI.getOAuthToken(true).then(() => {
         refreshSettings();
     });
 });

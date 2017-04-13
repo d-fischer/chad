@@ -2,11 +2,20 @@
 
 const ObjectTools = require('tools/object');
 
-class WindowManager {
+class UIWindowManager {
     constructor() {
+        /**
+         * @type {Object.<string, UIWindow>}
+         * @private
+         */
         this._windows = {};
     }
 
+    /**
+     * @param {string} name
+     * @param {boolean} construct
+     * @returns {UIWindow}
+     */
     getWindow(name, construct = true) {
         if (this._windows[name]) {
             return this._windows[name];
@@ -36,9 +45,12 @@ class WindowManager {
         }
     }
 
+    /**
+     * @returns {boolean}
+     */
     anyOpened() {
         return !ObjectTools.isEmpty(this._windows);
     }
 }
 
-module.exports = new WindowManager;
+module.exports = new UIWindowManager;

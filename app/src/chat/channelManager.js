@@ -3,9 +3,6 @@
 const ChatChannel = require('chat/channel');
 const {EventEmitter} = require('events');
 
-/**
- * @class ChatChannelManager
- */
 class ChatChannelManager extends EventEmitter {
     constructor() {
         super();
@@ -21,11 +18,12 @@ class ChatChannelManager extends EventEmitter {
 
     /**
      * @param {string} channelName
+     * @param {?number} channelId
      * @returns {ChatChannel}
      */
-    get(channelName) {
+    get(channelName, channelId = null) {
         if (!this._channels.hasOwnProperty(channelName)) {
-            this._channels[channelName] = new ChatChannel(channelName);
+            this._channels[channelName] = new ChatChannel(channelName, channelId);
         }
         return this._channels[channelName];
     }

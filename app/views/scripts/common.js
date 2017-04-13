@@ -1,6 +1,7 @@
 require('app-module-path').addPath(__dirname + '/../src');
 
-const {remote} = require('electron');
+//noinspection JSUnusedLocalSymbols
+const {remote, ipcRenderer} = require('electron');
 //noinspection JSUnusedLocalSymbols
 const {shell, BrowserWindow} = remote;
 const DomEvents = require('dom/events');

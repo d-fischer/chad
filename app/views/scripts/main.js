@@ -79,6 +79,10 @@ window.updateAppearance = (initial = false) => {
 
 window.updateAppearance(true);
 
+ipcRenderer.on('update-appearance', () => {
+    window.updateAppearance();
+});
+
 const thisBrowserWindow = remote.getCurrentWindow();
 
 window.closeWindow = () => {

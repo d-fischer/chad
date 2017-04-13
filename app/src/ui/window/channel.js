@@ -1,8 +1,8 @@
 'use strict';
 
-const Window = require('ui/window/window');
+const UIWindow = require('ui/window/window');
 
-class ChannelWindow extends Window {
+class ChannelWindow extends UIWindow {
     constructor() {
         super('channel');
         this._width = 600;
